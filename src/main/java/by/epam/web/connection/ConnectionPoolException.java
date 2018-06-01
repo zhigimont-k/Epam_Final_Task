@@ -1,4 +1,4 @@
-package by.epam.web.connection.exception;
+package by.epam.web.connection;
 
 public class ConnectionPoolException extends RuntimeException{
     public ConnectionPoolException(String message) {
