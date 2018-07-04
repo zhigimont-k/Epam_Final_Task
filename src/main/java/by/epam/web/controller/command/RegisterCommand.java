@@ -1,9 +1,9 @@
 package by.epam.web.controller.command;
 
-import by.epam.task4.service.ServiceException;
-import by.epam.task4.service.UserService;
-import by.epam.task4.util.JspAddress;
-import by.epam.task4.util.JspParameter;
+import by.epam.web.controller.constant.JspAddress;
+import by.epam.web.controller.constant.JspParameter;
+import by.epam.web.service.ServiceException;
+import by.epam.web.service.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
