@@ -1,11 +1,13 @@
 package by.epam.web.dao.connection;
 
 public final class ConnectionData {
-    public static final String BASE_NAME = "db";
-    public static final String DATABASE_USER = "db.user";
-    public static final String DATABASE_PASSWORD = "db.password";
-    public static final String DATABASE_POOL_SIZE = "db.poolSize";
-    public static final String DATABASE_URL = "db.url";
-    public static final String DATABASE_DRIVER = "db.driver";
-    private ConnectionData(){}
+    public static final String BASE_NAME = "database";
+    public static final String DATABASE_USER = BASE_NAME + ".user";
+    public static final String DATABASE_PASSWORD = BASE_NAME + ".password";
+    public static final String DATABASE_POOL_SIZE = BASE_NAME + ".poolSize";
+    public static final String DATABASE_URL = BASE_NAME + ".url";
+    public static final String DATABASE_DRIVER = BASE_NAME + ".driver";
+
+    private ConnectionData() {
+    }
 }

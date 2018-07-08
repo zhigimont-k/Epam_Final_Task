@@ -66,8 +66,8 @@ public class ConnectionPool {
         }
 
         if (availableConnections.size() == 0) {
-            logger.fatal("Couldn't init connection pool");
-            throw new RuntimeException("Couldn't init connection pool");
+            logger.fatal("Couldn't create any connections");
+            throw new RuntimeException("Couldn't create any connections");
         } else if (availableConnections.size() < INITIAL_POOL_SIZE) {
             for (int i = availableConnections.size() - 1; i < poolSize; i++) {
                 try {
@@ -101,7 +101,7 @@ public class ConnectionPool {
         }
 
         try {
-            DriverManager.registerDriver(new com.mysql.jdbc.Driver ());
+            DriverManager.registerDriver(new com.mysql.jdbc.Driver());
         } catch (SQLException e) {
             logger.fatal("Couldn't register driver", e);
             throw new RuntimeException("Couldn't register driver", e);

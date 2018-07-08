@@ -1,35 +1,47 @@
 package by.epam.web.service;
 
-import by.epam.web.dao.DAOException;
-import by.epam.web.dao.user.impl.UserDAOImpl;
+import by.epam.web.dao.DaoException;
+import by.epam.web.dao.user.impl.IncorrectPasswordException;
+import by.epam.web.dao.user.impl.NoSuchUserException;
+import by.epam.web.dao.user.impl.UserDaoImpl;
 import by.epam.web.entity.User;
-import by.epam.web.service.ServiceException;
 
 public class UserService {
 
-    public boolean registerUser(String login, String password) throws ServiceException {
-        UserDAOImpl dao = new UserDAOImpl();
+    public User registerUser(String login, String password, String email, String phoneNumber, String userName) throws ServiceException {
+        UserDaoImpl dao = new UserDaoImpl();
         User newUser;
         try {
             newUser = new User();
             newUser.setLogin(login);
             newUser.setPassword(password);
-            return dao.register(newUser);
-        } catch (DAOException e) {
+            newUser.setEmail(email);
+            newUser.setName(userName);
+            newUser.setPhoneNumber(phoneNumber);
+            dao.register(newUser);
+            return newUser;
+        } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    public boolean userLogin(String login, String password) throws ServiceException{
-        UserDAOImpl dao = new UserDAOImpl();
+    public User userLogin(String login, String password) throws ServiceException, NoSuchUserException, IncorrectPasswordException{
+        UserDaoImpl dao = new UserDaoImpl();
         User user;
         try {
             user = new User();
             user.setLogin(login);
             user.setPassword(password);
-            return dao.login(user);
-        } catch (DAOException e) {
+            dao.login(user);
+            return user;
+        } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
+
+    public boolean banUser(){
+        return false;
+    }
+
+    //public boolean changeUserStatus(){}
 }

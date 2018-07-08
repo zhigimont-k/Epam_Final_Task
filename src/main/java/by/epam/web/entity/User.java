@@ -79,16 +79,18 @@ public class User extends Entity {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return id == user.id &&
-                Objects.equals(login, user.login) &&
-                Objects.equals(password, user.password) &&
-                Objects.equals(name, user.name) &&
-                Objects.equals(email, user.email) &&
-                Objects.equals(phoneNumber, user.phoneNumber);
+                login.equals(user.login) &&
+                password.equals(user.password) &&
+                name.equals(user.name) &&
+                email.equals(user.email) &&
+                phoneNumber.equals(user.phoneNumber);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(id, login, password, name, email, phoneNumber);
+        int hash = 31;
+        hash += id + login.hashCode() + password.hashCode() + name.hashCode() +
+                email.hashCode() + phoneNumber.hashCode();
+        return hash;
     }
 }

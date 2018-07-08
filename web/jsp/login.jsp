@@ -15,15 +15,16 @@
     <title>${pageTitle} | Cat Beauty Bar</title>
 </head>
 <body>
+
+<jsp:include page="/WEB-INF/jsp/header.jsp"/>
 <form name="loginForm" method="POST" action="app">
     <input type="hidden" name="command" value="login"/>
-    ${login}<br/>
-    <input type="text" name="login" maxlength="20" minlength="4"/>
-    <br/>${password}<br/>
-    <input type="password" name="password" maxlength="32" minlength="10"/>
+    <label>${login}
+    <input type="text" name="login" maxlength="20" minlength="4"/></label>
+    <label>${password}
+    <input type="password" name="password" maxlength="32" minlength="10"/></label>
     <br/>
     <input type="submit" value="${button}"/>
-    <br/>
 </form>
 </body>
 </html>

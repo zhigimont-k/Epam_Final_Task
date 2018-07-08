@@ -1,6 +1,7 @@
 package by.epam.web.controller.command;
 
 import by.epam.web.controller.constant.JspAddress;
+import by.epam.web.controller.constant.JspAttribute;
 import by.epam.web.controller.constant.JspParameter;
 
 import javax.servlet.ServletException;
@@ -12,7 +13,7 @@ public class ChangeLocaleCommand implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String lang = request.getParameter(JspParameter.LANGUAGE);
-        request.getSession().setAttribute(JspParameter.LOCAL, lang);
-        request.getRequestDispatcher(JspAddress.MAIN).forward(request, response);
+        request.getSession().setAttribute(JspAttribute.LOCAL, lang);
+        request.getRequestDispatcher("CURRENT_PAGE_NAME").forward(request, response);
     }
 }

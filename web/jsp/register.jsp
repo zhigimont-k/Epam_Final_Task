@@ -15,27 +15,33 @@
     <fmt:message bundle="${locale}" key="locale.user.label.phonenumber" var="phoneNumber"/>
     <fmt:message bundle="${locale}" key="locale.user.button.signup" var="button"/>
 
+    <fmt:message bundle="${locale}" key="locale.user.text.haveAccountAlready" var="toLogin"/>
+    <fmt:message bundle="${locale}" key="locale.user.button.signin" var="signIn"/>
+
     <title>${pageTitle} | Cat Beauty Bar</title>
 </head>
 <body>
+<jsp:include page="/WEB-INF/jsp/header.jsp"/>
 <form name="registerForm" method="POST" action="app">
     <input type="hidden" name="command" value="register"/>
-    ${login}<br/>
-    <input type="text" name="login" maxlength="20" minlength="4"/>
-    <br/>${password}<br/>
-    <input type="password" name="password" maxlength="32" minlength="10"/>
+    <label>${login}
+    <input type="text" name="login" maxlength="20" minlength="4"/></label>
     <br/>
-    <br/>${email}<br/>
-    <input type="email" name="email" maxlength="40" minlength="10"/>
+    <label>${password}
+    <input type="password" name="password" maxlength="32" minlength="10"/></label>
     <br/>
-    <br/>${phoneNumber}<br/>
-    <input type="number" name="phoneNumber" maxlength="32" minlength="10"/>
+    <label>${email}
+    <input type="email" name="email" maxlength="40" minlength="10"/></label>
     <br/>
-    <br/>${userName}<br/>
-    <input type="text" name="userName" maxlength="20" minlength="3"/>
+    <label>${phoneNumber}
+    <input type="text" name="phoneNumber" maxlength="32" minlength="10"/></label>
+    <br/>
+    <label>${userName}
+    <input type="text" name="userName" maxlength="20" minlength="3"/></label>
     <br/>
     <input type="submit" value="${button}"/>
-    <br/>
 </form>
+
+${toLogin} <a href="login.jsp">${signIn}</a>
 </body>
 </html>
