@@ -1,4 +1,4 @@
-package by.epam.web.dao.connection;
+package by.epam.web.pool;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.ResourceBundle;
@@ -142,6 +143,15 @@ public class ConnectionPool {
             logger.log(Level.ERROR, e);
         } catch (SQLException e) {
             throw new ConnectionPoolException("Couldn't release connection", e);
+        }
+    }
+
+    public void releaseConnection(ProxyConnection connection, Statement st) throws ConnectionPoolException {
+        try {
+            st.close();
+            releaseConnection(connection);
+        } catch (SQLException e){
+            throw new ConnectionPoolException("Couldn't close statement", e);
         }
     }
 

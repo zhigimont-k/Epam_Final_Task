@@ -1,12 +1,10 @@
 package by.epam.web.entity;
 
-import java.util.Objects;
-
 public class User extends Entity {
     private long id;
     private String login;
     private String password;
-    private String name;
+    private String userName;
     private String email;
     private String phoneNumber;
 
@@ -37,12 +35,12 @@ public class User extends Entity {
         this.password = password;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getEmail() {
@@ -67,7 +65,7 @@ public class User extends Entity {
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
+                ", userName='" + userName + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
@@ -81,7 +79,7 @@ public class User extends Entity {
         return id == user.id &&
                 login.equals(user.login) &&
                 password.equals(user.password) &&
-                name.equals(user.name) &&
+                userName.equals(user.userName) &&
                 email.equals(user.email) &&
                 phoneNumber.equals(user.phoneNumber);
     }
@@ -89,7 +87,7 @@ public class User extends Entity {
     @Override
     public int hashCode() {
         int hash = 31;
-        hash += id + login.hashCode() + password.hashCode() + name.hashCode() +
+        hash += id + login.hashCode() + password.hashCode() + userName.hashCode() +
                 email.hashCode() + phoneNumber.hashCode();
         return hash;
     }

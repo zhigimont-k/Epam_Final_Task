@@ -5,7 +5,7 @@ public class ServiceFactory {
     private static ServiceFactory instance = new ServiceFactory();
     private OrderService orderService = new OrderService();
     private UserService userService = new UserService();
-    private ServiceService serviceService = new ServiceService();
+    private ActivityService activityService = new ActivityService();
 
     public static ServiceFactory getInstance() {
         return instance;
@@ -19,8 +19,8 @@ public class ServiceFactory {
         return userService;
     }
 
-    public ServiceService getServiceService() {
-        return serviceService;
+    public ActivityService getActivityService() {
+        return activityService;
     }
 
     private ServiceFactory(){}

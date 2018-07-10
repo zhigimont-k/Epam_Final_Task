@@ -28,8 +28,9 @@ public class RegisterCommand implements Command {
             UserService service = new UserService();
             User user = service.registerUser(login, password, email, phoneNumber, userName);
             session.setAttribute(JspAttribute.USER, user);
-            response.sendRedirect(JspAddress.MAIN);
-        } catch (ServiceException e){
+//            response.sendRedirect(JspAddress.HOME_PAGE);
+            request.getRequestDispatcher(JspAddress.HOME_PAGE).forward(request, response);
+        } catch (ServiceException e) {
             throw new ServletException(e);
         }
 

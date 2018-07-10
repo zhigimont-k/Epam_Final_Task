@@ -2,7 +2,6 @@ package by.epam.web.controller;
 
 import by.epam.web.controller.command.Command;
 import by.epam.web.controller.command.CommandFactory;
-import by.epam.web.controller.command.UnknownCommandException;
 import by.epam.web.controller.constant.JspAddress;
 import by.epam.web.controller.constant.JspParameter;
 
@@ -13,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = {"/app"})
+@WebServlet(name = "FrontController", urlPatterns = {"/app"})
 public class FrontController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -29,12 +28,8 @@ public class FrontController extends HttpServlet {
         response.setContentType("text/html");
         String commandName = request.getParameter(JspParameter.COMMAND);
 
-        try {
-            Command command = CommandFactory.getInstance().initCommand(commandName);
-            command.execute(request, response);
-        } catch (UnknownCommandException e) {
-            request.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
-            request.getRequestDispatcher(JspAddress.ERROR).forward(request, response);
-        }
+        Command command = CommandFactory.getInstance().defineCommand(commandName);
+        command.execute(request, response);
+        //request.getRequestDispatcher(JspAddress.ERROR).forward(request, response);
     }
 }

@@ -13,10 +13,9 @@
 </head>
 <body>
 <c:if test="${empty sessionScope.user}">
-    <jsp:forward page="/jsp/register.jsp"/>
+    <jsp:forward page="${pageContext.request.contextPath}/login"/>
 </c:if>
 
 <jsp:include page="/WEB-INF/jsp/header.jsp"/>
-${welcome}
 </body>
 </html>

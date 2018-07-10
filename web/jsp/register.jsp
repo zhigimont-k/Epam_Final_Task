@@ -22,6 +22,11 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/header.jsp"/>
+<c:choose>
+    <c:when test = "${not empty sessionScope.user}">
+        <jsp:forward page="/home" />
+    </c:when>
+</c:choose>
 <form name="registerForm" method="POST" action="app">
     <input type="hidden" name="command" value="register"/>
     <label>${login}
@@ -42,6 +47,6 @@
     <input type="submit" value="${button}"/>
 </form>
 
-${toLogin} <a href="login.jsp">${signIn}</a>
+${toLogin} <a href="${pageContext.request.contextPath}/login">${signIn}</a>
 </body>
 </html>

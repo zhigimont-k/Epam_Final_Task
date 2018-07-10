@@ -1,8 +1,6 @@
 package by.epam.web.service;
 
 import by.epam.web.dao.DaoException;
-import by.epam.web.dao.user.impl.IncorrectPasswordException;
-import by.epam.web.dao.user.impl.NoSuchUserException;
 import by.epam.web.dao.user.impl.UserDaoImpl;
 import by.epam.web.entity.User;
 
@@ -16,7 +14,7 @@ public class UserService {
             newUser.setLogin(login);
             newUser.setPassword(password);
             newUser.setEmail(email);
-            newUser.setName(userName);
+            newUser.setUserName(userName);
             newUser.setPhoneNumber(phoneNumber);
             dao.register(newUser);
             return newUser;
@@ -25,7 +23,7 @@ public class UserService {
         }
     }
 
-    public User userLogin(String login, String password) throws ServiceException, NoSuchUserException, IncorrectPasswordException{
+    public User userLogin(String login, String password) throws ServiceException {
         UserDaoImpl dao = new UserDaoImpl();
         User user;
         try {
@@ -39,7 +37,7 @@ public class UserService {
         }
     }
 
-    public boolean banUser(){
+    public boolean banUser() {
         return false;
     }
 

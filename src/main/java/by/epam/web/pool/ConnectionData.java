@@ -1,4 +1,4 @@
-package by.epam.web.dao.connection;
+package by.epam.web.pool;
 
 public final class ConnectionData {
     public static final String BASE_NAME = "database";

@@ -12,11 +12,16 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/chooseLang.jsp"/>
-<a href="/jsp/register.jsp">${signUp}</a>
-<a href="/jsp/login.jsp">${login}</a>
+<c:if test="${empty sessionScope.user}">
+    <a href="${pageContext.request.contextPath}/register">${signUp}</a>
+    <a href="${pageContext.request.contextPath}/login">${login}</a>
+</c:if>
 <br/>
-<%--<c:if test="${sessionScope.user ne null}">--%>
-    <%--<jsp:include page="/WEB-INF/jsp/welcomePanel.jsp"/>--%>
-<%--</c:if>--%>
+<c:if test="${sessionScope.user ne null}">
+    <jsp:include page="/WEB-INF/jsp/welcomePanel.jsp"/>
+</c:if>
+<c:if test="${sessionScope.user ne null}">
+    <jsp:include page="/WEB-INF/jsp/logout.jsp"/>
+</c:if>
 </body>
 </html>

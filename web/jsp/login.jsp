@@ -12,11 +12,19 @@
     <fmt:message bundle="${locale}" key="locale.user.label.password" var="password"/>
     <fmt:message bundle="${locale}" key="locale.user.button.signin" var="button"/>
 
+    <fmt:message bundle="${locale}" key="locale.user.text.noAccountYet" var="toRegister"/>
+    <fmt:message bundle="${locale}" key="locale.user.button.signup" var="signUp"/>
+
     <title>${pageTitle} | Cat Beauty Bar</title>
 </head>
 <body>
 
 <jsp:include page="/WEB-INF/jsp/header.jsp"/>
+<c:choose>
+    <c:when test = "${not empty sessionScope.user}">
+        <jsp:forward page="/home" />
+    </c:when>
+</c:choose>
 <form name="loginForm" method="POST" action="app">
     <input type="hidden" name="command" value="login"/>
     <label>${login}
@@ -26,5 +34,7 @@
     <br/>
     <input type="submit" value="${button}"/>
 </form>
+
+${toRegister} <a href="${pageContext.request.contextPath}/register">${signUp}</a>
 </body>
 </html>

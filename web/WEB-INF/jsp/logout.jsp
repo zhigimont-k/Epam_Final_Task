@@ -7,9 +7,13 @@
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
 
-    <fmt:message bundle="${locale}" key="locale.user.text.welcome" var="welcome"/>
+    <fmt:message bundle="${locale}" key="locale.user.button.logout" var="logout"/>
+
 </head>
 <body>
-${welcome}, ${sessionScope.user.login}!
+<form name="logoutForm" method="POST" action="app">
+    <input type="hidden" name="command" value="logout"/>
+    ${logout}
+</form>
 </body>
 </html>

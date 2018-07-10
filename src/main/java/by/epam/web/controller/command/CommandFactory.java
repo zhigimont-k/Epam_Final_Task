@@ -13,8 +13,11 @@ public final class CommandFactory {
         return instance;
     }
 
-    public Command initCommand(String commandName) throws UnknownCommandException{
-        Command command;
+    public Command defineCommand(String commandName){ //return optional или emptycommand сделать статитечским полем
+        Command command = new EmptyCommand();
+        if (commandName == null || commandName.isEmpty()){
+            return command;
+        }
         switch (commandName) {
             case "register":
                 command = new RegisterCommand();
@@ -25,7 +28,9 @@ public final class CommandFactory {
             case "locale":
                 command = new ChangeLocaleCommand();
                 break;
-            default: throw new UnknownCommandException("Unknown command");
+            case "logout":
+                command = new LogoutCommand();
+                break;
         }
         return command;
     }
