@@ -2,13 +2,24 @@
 <taglib version="2.1"
         xmlns="http://java.sun.com/xml/ns/javaee"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd">
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+    http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd">
     <tlib-version>1.0</tlib-version>
-    <short-userName>ctg</short-userName>
-    <uri>customtags</uri>
+    <short-name>cbb</short-name>
+    <uri>cbbtaglib</uri>
     <tag>
-        <userName>info-time</userName>
-        <tag-class>by.epam.web.tag.</tag-class>
+        <name>welcome</name>
+        <tag-class>by.epam.web.tag.WelcomeTag</tag-class>
         <body-content>empty</body-content>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>lang</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
 </taglib>

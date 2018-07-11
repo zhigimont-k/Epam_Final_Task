@@ -11,17 +11,17 @@
     <fmt:message bundle="${locale}" key="locale.user.button.signin" var="login"/>
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/chooseLang.jsp"/>
+<jsp:include page="/WEB-INF/jsp/page_structure/chooseLang.jsp"/>
 <c:if test="${empty sessionScope.user}">
     <a href="${pageContext.request.contextPath}/register">${signUp}</a>
     <a href="${pageContext.request.contextPath}/login">${login}</a>
 </c:if>
 <br/>
 <c:if test="${sessionScope.user ne null}">
-    <jsp:include page="/WEB-INF/jsp/welcomePanel.jsp"/>
+    <jsp:include page="/WEB-INF/jsp/page_structure/welcomePanel.jsp"/>
 </c:if>
 <c:if test="${sessionScope.user ne null}">
-    <jsp:include page="/WEB-INF/jsp/logout.jsp"/>
+    <jsp:include page="/WEB-INF/jsp/page_structure/logout.jsp"/>
 </c:if>
 </body>
 </html>

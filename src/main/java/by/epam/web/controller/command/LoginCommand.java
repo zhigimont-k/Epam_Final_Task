@@ -26,8 +26,7 @@ public class LoginCommand implements Command {
             User user = service.userLogin(login, password);
             service.userLogin(login, password);
             session.setAttribute(JspAttribute.USER, user);
-//            response.sendRedirect(JspAddress.HOME_PAGE);
-            request.getRequestDispatcher(JspAddress.HOME_PAGE).forward(request, response);
+            response.sendRedirect(JspAddress.HOME_PAGE);
         } catch (ServiceException e) {
             throw new ServletException(e);
         }

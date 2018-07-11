@@ -21,7 +21,7 @@
     <title>${pageTitle} | Cat Beauty Bar</title>
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/header.jsp"/>
+<jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
 <c:choose>
     <c:when test = "${not empty sessionScope.user}">
         <jsp:forward page="/home" />

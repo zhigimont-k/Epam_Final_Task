@@ -16,6 +16,6 @@
     <jsp:forward page="${pageContext.request.contextPath}/login"/>
 </c:if>
 
-<jsp:include page="/WEB-INF/jsp/header.jsp"/>
+<jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
 </body>
 </html>

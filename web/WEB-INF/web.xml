@@ -12,6 +12,11 @@
     </welcome-file-list>
 
     <jsp-config>
+        <taglib>
+            <taglib-uri>cbbtaglib</taglib-uri>
+            <taglib-location>/WEB-INF/tld/custom.tld</taglib-location>
+        </taglib>
+
         <jsp-property-group>
             <url-pattern>*.jsp</url-pattern>
             <page-encoding>UTF-8</page-encoding>

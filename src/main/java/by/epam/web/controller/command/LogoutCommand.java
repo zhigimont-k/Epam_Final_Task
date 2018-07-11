@@ -12,9 +12,9 @@ import java.io.IOException;
 public class LogoutCommand implements Command {
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         HttpSession session = request.getSession();
         session.removeAttribute(JspAttribute.USER);
-        response.sendRedirect(JspAddress.HOME_PAGE);
+            response.sendRedirect(JspAddress.HOME_PAGE);
     }
 }

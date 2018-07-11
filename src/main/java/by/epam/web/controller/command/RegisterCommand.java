@@ -26,10 +26,17 @@ public class RegisterCommand implements Command {
 
         try {
             UserService service = new UserService();
-            User user = service.registerUser(login, password, email, phoneNumber, userName);
-            session.setAttribute(JspAttribute.USER, user);
-//            response.sendRedirect(JspAddress.HOME_PAGE);
-            request.getRequestDispatcher(JspAddress.HOME_PAGE).forward(request, response);
+            if (service.loginExists(login)){
+
+            } else if (service.emailExists(email)){
+
+            } else if (service.phoneNumberExists(phoneNumber)){
+
+            } else {
+                User user = service.registerUser(login, password, email, phoneNumber, userName);
+                session.setAttribute(JspAttribute.USER, user);
+                response.sendRedirect(JspAddress.HOME_PAGE);
+            }
         } catch (ServiceException e) {
             throw new ServletException(e);
         }

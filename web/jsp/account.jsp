@@ -21,16 +21,16 @@
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
 <c:choose>
-    <c:when test = "${not empty sessionScope.user}">
+    <c:when test = "${empty sessionScope.user}">
         <jsp:forward page="/home" />
     </c:when>
 </c:choose>
 <form name="loginForm" method="POST" action="app">
     <input type="hidden" name="command" value="login"/>
     <label>${login}
-    <input type="text" name="login" maxlength="20" minlength="4"/></label>
+        <input type="text" name="login" maxlength="20" minlength="4"/></label>
     <label>${password}
-    <input type="password" name="password" maxlength="32" minlength="10"/></label>
+        <input type="password" name="password" maxlength="32" minlength="10"/></label>
     <br/>
     <input type="submit" value="${button}"/>
 </form>
