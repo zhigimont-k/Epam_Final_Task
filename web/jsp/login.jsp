@@ -8,12 +8,14 @@
     <fmt:setBundle basename="locale.locale" var="locale"/>
 
     <fmt:message bundle="${locale}" key="locale.page.title.auth" var="pageTitle"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.login" var="login"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.password" var="password"/>
+    <fmt:message bundle="${locale}" key="locale.user.label.login" var="loginLabel"/>
+    <fmt:message bundle="${locale}" key="locale.user.label.password" var="passwordLabel"/>
     <fmt:message bundle="${locale}" key="locale.user.button.signin" var="button"/>
 
     <fmt:message bundle="${locale}" key="locale.user.text.noAccountYet" var="toRegister"/>
     <fmt:message bundle="${locale}" key="locale.user.button.signup" var="signUp"/>
+
+    <fmt:message bundle="${locale}" key="locale.user.warning.auth.fail" var="authFailMessage"/>
 
     <title>${pageTitle} | Cat Beauty Bar</title>
 </head>
@@ -27,12 +29,17 @@
 </c:choose>
 <form name="loginForm" method="POST" action="app">
     <input type="hidden" name="command" value="login"/>
-    <label>${login}
+    <label>${loginLabel}
     <input type="text" name="login" maxlength="20" minlength="4"/></label>
-    <label>${password}
+    <label>${passwordLabel}
     <input type="password" name="password" maxlength="32" minlength="10"/></label>
     <br/>
     <input type="submit" value="${button}"/>
+    <br/>
+    <c:if test="${authFail == false}">
+        ${authFailMessage}
+    </c:if>
+
 </form>
 
 ${toRegister} <a href="${pageContext.request.contextPath}/register">${signUp}</a>

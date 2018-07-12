@@ -16,20 +16,29 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class UserDaoImpl implements UserDao {
+    private static final Logger logger = LogManager.getLogger();
     public enum UniqueUserInfo {
         LOGIN, EMAIL, PHONE_NUMBER
     }
-    private static final ConnectionPool pool = ConnectionPool.getInstance();
-    private static final Logger logger = LogManager.getLogger();
+
+    private static ConnectionPool pool = ConnectionPool.getInstance();
+
+    private static final String DB_USER_ID_FIELD = "user_id";
+    private static final String DB_LOGIN_FIELD = "login";
+    private static final String DB_PASSWORD_FIELD = "password";
+    private static final String DB_USER_NAME_FIELD = "user_name";
+    private static final String DB_USER_EMAIL_FIELD = "user_email";
+    private static final String DB_PHONE_NUMBER_FIELD = "phone_number";
+    private static final String DB_USER_STATUS_FIELD = "user_status";
 
     private static final String REGISTER_USER_QUERY = "INSERT INTO user " +
             "(login, password, user_email, phone_number, user_name) " +
             "VALUES (?, SHA1(?), ?, ?, ?)";
-    private static final String CHECK_LOGIN_EXISTS_QUERY = "SELECT user.user_id FROM user WHERE user.login = ?";
-    private static final String CHECK_EMAIL_EXISTS_QUERY = "SELECT user.user_id FROM user WHERE user.user_email = ?";
-    private static final String CHECK_PHONE_NUMBER_EXISTS_QUERY = "SELECT user.user_id FROM user WHERE user.phone_number = ?";
-    private static final String FIND_USER_BY_ID_QUERY = "SELECT user.user_id FROM user WHERE user.user_id = ?";
-    private static final String FIND_USER_BY_LOGIN_AND_PASSWORD_QUERY = "SELECT user.user_id FROM user WHERE user.login = ?" +
+    private static final String FIND_USER_BY_LOGIN_QUERY = "SELECT user.user_id, user.login, user.password, user.user_email, user.phone_number, user.user_name FROM user WHERE user.login = ?";
+    private static final String FIND_USER_BY_EMAIL_QUERY = "SELECT user.user_id, user.login, user.password, user.user_email, user.phone_number, user.user_name FROM user WHERE user.user_email = ?";
+    private static final String FIND_USER_BY_PHONE_NUMBER = "SELECT user.user_id, user.login, user.password, user.user_email, user.phone_number, user.user_name FROM user WHERE user.phone_number = ?";
+    private static final String FIND_USER_BY_ID_QUERY = "SELECT user.user_id, user.login, user.password, user.user_email, user.phone_number, user.user_name FROM user WHERE user.user_id = ?";
+    private static final String FIND_USER_BY_LOGIN_AND_PASSWORD_QUERY = "SELECT user.user_id, user.login, user.password, user.user_email, user.phone_number, user.user_name FROM user WHERE user.login = ?" +
             "AND user.password = SHA1(?)";
 
     public boolean register(User user) throws DaoException {
@@ -57,7 +66,7 @@ public class UserDaoImpl implements UserDao {
             resultSet = preparedStatement.getGeneratedKeys();
 
             if (resultSet.next()) {
-                int userID = resultSet.getInt(1);
+                int userID = resultSet.getInt(DB_USER_ID_FIELD);
                 user.setId(userID);
             } else {
 //                connection.rollback(); //ПРОВЕРИТЬ!!!
@@ -79,27 +88,6 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    public User login(User user) throws DaoException {
-        ProxyConnection connection = null;
-
-        try {
-            connection = pool.getConnection();
-            String login = user.getLogin();
-            String password = user.getPassword();
-
-            logger.log(Level.INFO, user + " logged in");
-            return user;
-        } catch (SQLException e) {
-            throw new DaoException("Failed to login user", e);
-        } finally {
-            try {
-                pool.releaseConnection(connection);
-            } catch (ConnectionPoolException e) {
-                throw new DaoException(e);
-            }
-        }
-    }
-
     public boolean propertyExists(UniqueUserInfo property, String value) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
@@ -107,15 +95,15 @@ public class UserDaoImpl implements UserDao {
 
         try {
             connection = pool.getConnection();
-            switch(property){
+            switch (property) {
                 case LOGIN:
-                    preparedStatement = connection.prepareStatement(CHECK_LOGIN_EXISTS_QUERY);
+                    preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN_QUERY);
                     break;
                 case EMAIL:
-                    preparedStatement = connection.prepareStatement(CHECK_EMAIL_EXISTS_QUERY);
+                    preparedStatement = connection.prepareStatement(FIND_USER_BY_EMAIL_QUERY);
                     break;
                 case PHONE_NUMBER:
-                    preparedStatement = connection.prepareStatement(CHECK_PHONE_NUMBER_EXISTS_QUERY);
+                    preparedStatement = connection.prepareStatement(FIND_USER_BY_PHONE_NUMBER);
                     break;
             }
 
@@ -134,29 +122,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    public boolean passwordMatches(ProxyConnection connection, String login, String password) throws DaoException {
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet;
-        try {
-            preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN_AND_PASSWORD_QUERY);
-            preparedStatement.setString(1, login);
-            preparedStatement.setString(2, password);
-
-            resultSet = preparedStatement.executeQuery();
-
-            return resultSet.next();
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        } finally {
-            try {
-                pool.releaseConnection(connection, preparedStatement);
-            } catch (ConnectionPoolException e) {
-                throw new DaoException(e);
-            }
-        }
-    }
-
-    public User findUserById(String id) throws DaoException{
+    public User findUserById(String id) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -166,16 +132,15 @@ public class UserDaoImpl implements UserDao {
 
             preparedStatement = connection.prepareStatement(FIND_USER_BY_ID_QUERY);
             preparedStatement.setString(1, id);
-            preparedStatement.executeUpdate();
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
                 user = new User();
-                String login = resultSet.getString(2);
-                String password = resultSet.getString(3);
-                String email = resultSet.getString(4);
-                String phoneNumber = resultSet.getString(5);
-                String userName = resultSet.getString(6);
+                String login = resultSet.getString(DB_LOGIN_FIELD);
+                String password = resultSet.getString(DB_PASSWORD_FIELD);
+                String email = resultSet.getString(DB_USER_EMAIL_FIELD);
+                String phoneNumber = resultSet.getString(DB_PHONE_NUMBER_FIELD);
+                String userName = resultSet.getString(DB_USER_NAME_FIELD);
                 user.setLogin(login);
                 user.setPassword(password);
                 user.setEmail(email);
@@ -196,7 +161,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    public User findUserByLoginAndPassword(String login, String password) throws DaoException{
+    public User findUserByLoginAndPassword(String login, String password) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -207,14 +172,15 @@ public class UserDaoImpl implements UserDao {
             preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN_AND_PASSWORD_QUERY);
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, password);
-            preparedStatement.executeUpdate();
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
                 user = new User();
-                String email = resultSet.getString(4);
-                String phoneNumber = resultSet.getString(5);
-                String userName = resultSet.getString(6);
+                String email = resultSet.getString(DB_USER_EMAIL_FIELD);
+                String phoneNumber = resultSet.getString(DB_PHONE_NUMBER_FIELD);
+                String userName = resultSet.getString(DB_USER_NAME_FIELD);
+                user.setLogin(login);
+                user.setPassword(password);
                 user.setEmail(email);
                 user.setPhoneNumber(phoneNumber);
                 user.setUserName(userName);
@@ -224,7 +190,6 @@ public class UserDaoImpl implements UserDao {
         } catch (SQLException e) {
             throw new DaoException("Failed to find user by ID", e);
         } finally {
-
             try {
                 pool.releaseConnection(connection, preparedStatement);
             } catch (ConnectionPoolException e) {

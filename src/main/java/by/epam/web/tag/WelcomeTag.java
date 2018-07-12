@@ -27,6 +27,7 @@ public class WelcomeTag extends TagSupport{
             result.append(bundle.getString(LocaleConstants.WELCOME_MESSAGE));
             result.append(", ");
             result.append(name);
+            result.append("!");
             pageContext.getOut().write(result.toString());
         } catch (IOException e){
             throw new JspException(e.getMessage());

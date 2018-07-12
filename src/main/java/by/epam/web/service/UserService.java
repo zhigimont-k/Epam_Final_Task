@@ -65,4 +65,13 @@ public class UserService {
             throw new ServiceException(e);
         }
     }
+
+    public boolean passwordMatches(String login, String password) throws ServiceException {
+        try {
+            User found = userDao.findUserByLoginAndPassword(login, password);
+            return found != null;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

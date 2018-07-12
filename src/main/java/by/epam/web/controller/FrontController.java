@@ -2,7 +2,6 @@ package by.epam.web.controller;
 
 import by.epam.web.controller.command.Command;
 import by.epam.web.controller.command.CommandFactory;
-import by.epam.web.controller.constant.JspAddress;
 import by.epam.web.controller.constant.JspParameter;
 
 import javax.servlet.ServletException;

@@ -146,9 +146,9 @@ public class ConnectionPool {
         }
     }
 
-    public void releaseConnection(ProxyConnection connection, Statement st) throws ConnectionPoolException {
+    public void releaseConnection(ProxyConnection connection, Statement statement) throws ConnectionPoolException {
         try {
-            st.close();
+            statement.close();
             releaseConnection(connection);
         } catch (SQLException e){
             throw new ConnectionPoolException("Couldn't close statement", e);

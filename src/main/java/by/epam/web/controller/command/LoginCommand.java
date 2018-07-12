@@ -1,20 +1,24 @@
 package by.epam.web.controller.command;
 
+import by.epam.web.util.ErrorMessageName;
 import by.epam.web.controller.constant.JspAddress;
 import by.epam.web.controller.constant.JspAttribute;
 import by.epam.web.controller.constant.JspParameter;
 import by.epam.web.entity.User;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.UserService;
+import by.epam.web.util.LocaleHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 public class LoginCommand implements Command {
     @Override
+    //return page address, redirect/forward в сервлете
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession();
 
@@ -23,12 +27,19 @@ public class LoginCommand implements Command {
 
         try {
             UserService service = new UserService();
-            User user = service.userLogin(login, password);
-            service.userLogin(login, password);
-            session.setAttribute(JspAttribute.USER, user);
-            response.sendRedirect(JspAddress.HOME_PAGE);
+            if (service.passwordMatches(login, password)) {
+                User user = service.userLogin(login, password);
+                session.setAttribute(JspAttribute.USER, user);
+                response.sendRedirect(JspAddress.HOME_PAGE);
+            } else {
+                //локаль и сообщение определять уже в jsp, в реквесте возвращать true/false
+                String message = LocaleHandler.getErrorMessage(ErrorMessageName.AUTH_FAIL);
+                request.setAttribute(JspAttribute.AUTH_FAIL, true);
+                request.getRequestDispatcher(JspAddress.LOGIN_PAGE).forward(request, response);
+            }
+
         } catch (ServiceException e) {
-            throw new ServletException(e);
+            throw new ServletException(e); //errorpage
         }
     }
 }
