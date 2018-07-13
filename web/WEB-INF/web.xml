@@ -50,6 +50,33 @@
         <url-pattern>/home</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Services</servlet-name>
+        <jsp-file>/jsp/services.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Services</servlet-name>
+        <url-pattern>/services</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Account</servlet-name>
+        <jsp-file>/jsp/account.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Account</servlet-name>
+        <url-pattern>/account</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Orders</servlet-name>
+        <jsp-file>/jsp/orders.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Orders</servlet-name>
+        <url-pattern>/orders</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>encodingFilter</filter-name>
         <filter-class>by.epam.web.filter.EncodingFilter</filter-class>

@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayDeque;
@@ -26,7 +27,6 @@ public class ConnectionPool {
     private static AtomicBoolean isCreated = new AtomicBoolean(false);
     private static ReentrantLock lock = new ReentrantLock();
 
-    private static String driver;
     private static String url;
     private static String user;
     private static String password;
@@ -66,7 +66,7 @@ public class ConnectionPool {
             }
         }
 
-        if (availableConnections.size() == 0) {
+        if (availableConnections.isEmpty()) {
             logger.fatal("Couldn't create any connections");
             throw new RuntimeException("Couldn't create any connections");
         } else if (availableConnections.size() < INITIAL_POOL_SIZE) {
@@ -87,7 +87,6 @@ public class ConnectionPool {
 
     private void register() {
         ResourceBundle bundle = ResourceBundle.getBundle(ConnectionData.BASE_NAME);
-        driver = bundle.getString(ConnectionData.DATABASE_DRIVER);
         url = bundle.getString(ConnectionData.DATABASE_URL);
         user = bundle.getString(ConnectionData.DATABASE_USER);
         password = bundle.getString(ConnectionData.DATABASE_PASSWORD);
@@ -95,11 +94,8 @@ public class ConnectionPool {
         Pattern pattern = Pattern.compile(NUMERICAL_PATTERN);
         Matcher matcher = pattern.matcher(poolSizeString);
 
-        if (matcher.matches() && Integer.parseInt(poolSizeString) <= MAX_POOL_SIZE) {
-            poolSize = Integer.parseInt(poolSizeString);
-        } else {
-            poolSize = INITIAL_POOL_SIZE;
-        }
+        poolSize = (matcher.matches() && Integer.parseInt(poolSizeString) <= MAX_POOL_SIZE)
+                ? Integer.parseInt(poolSizeString) : INITIAL_POOL_SIZE;
 
         try {
             DriverManager.registerDriver(new com.mysql.jdbc.Driver());
@@ -119,6 +115,7 @@ public class ConnectionPool {
             unavailableConnections.add(connection);
         } catch (InterruptedException e) {
             logger.log(Level.ERROR, e);
+            Thread.currentThread().interrupt();
         }
         return connection;
     }
@@ -141,6 +138,7 @@ public class ConnectionPool {
             availableConnections.put(connection);
         } catch (InterruptedException e) {
             logger.log(Level.ERROR, e);
+            Thread.currentThread().interrupt();
         } catch (SQLException e) {
             throw new ConnectionPoolException("Couldn't release connection", e);
         }
@@ -150,6 +148,15 @@ public class ConnectionPool {
         try {
             statement.close();
             releaseConnection(connection);
+        } catch (SQLException e){
+            throw new ConnectionPoolException("Couldn't close statement", e);
+        }
+    }
+
+    public void releaseConnection(ProxyConnection connection, Statement statement, ResultSet resultSet) throws ConnectionPoolException {
+        try {
+            resultSet.close();
+            releaseConnection(connection, statement);
         } catch (SQLException e){
             throw new ConnectionPoolException("Couldn't close statement", e);
         }
@@ -167,6 +174,7 @@ public class ConnectionPool {
                 connection.closeConnection();
             } catch (InterruptedException e) {
                 logger.log(Level.ERROR, e);
+                Thread.currentThread().interrupt();
             } catch (SQLException e) {
                 throw new ConnectionPoolException("Couldn't close connection", e);
             }

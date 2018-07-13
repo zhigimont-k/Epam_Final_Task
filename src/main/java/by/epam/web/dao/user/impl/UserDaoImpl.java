@@ -38,12 +38,12 @@ public class UserDaoImpl implements UserDao {
     private static final String FIND_USER_BY_EMAIL_QUERY = "SELECT user.user_id, user.login, user.password, user.user_email, user.phone_number, user.user_name FROM user WHERE user.user_email = ?";
     private static final String FIND_USER_BY_PHONE_NUMBER = "SELECT user.user_id, user.login, user.password, user.user_email, user.phone_number, user.user_name FROM user WHERE user.phone_number = ?";
     private static final String FIND_USER_BY_ID_QUERY = "SELECT user.user_id, user.login, user.password, user.user_email, user.phone_number, user.user_name FROM user WHERE user.user_id = ?";
-    private static final String FIND_USER_BY_LOGIN_AND_PASSWORD_QUERY = "SELECT user.user_id, user.login, user.password, user.user_email, user.phone_number, user.user_name FROM user WHERE user.login = ?" +
-            "AND user.password = SHA1(?)";
+    private static final String FIND_USER_BY_LOGIN_AND_PASSWORD_QUERY = FIND_USER_BY_LOGIN_QUERY +
+            " AND user.password = SHA1(?)";
 
-    public boolean register(User user) throws DaoException {
+    public User register(User user) throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet;
+        ResultSet resultSet = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.getConnection();
@@ -75,13 +75,13 @@ public class UserDaoImpl implements UserDao {
 
             logger.log(Level.INFO, "Registered user: " + user);
 
-            return true;
+            return user;
         } catch (SQLException e) {
             throw new DaoException("Failed to register user", e);
         } finally {
 
             try {
-                pool.releaseConnection(connection, preparedStatement);
+                pool.releaseConnection(connection, preparedStatement, resultSet);
             } catch (ConnectionPoolException e) {
                 throw new DaoException(e);
             }
@@ -91,7 +91,7 @@ public class UserDaoImpl implements UserDao {
     public boolean propertyExists(UniqueUserInfo property, String value) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
-        ResultSet resultSet;
+        ResultSet resultSet = null;
 
         try {
             connection = pool.getConnection();
@@ -115,7 +115,7 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException(e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement);
+                pool.releaseConnection(connection, preparedStatement, resultSet);
             } catch (ConnectionPoolException e) {
                 throw new DaoException(e);
             }
@@ -124,7 +124,7 @@ public class UserDaoImpl implements UserDao {
 
     public User findUserById(String id) throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet;
+        ResultSet resultSet = null;
         PreparedStatement preparedStatement = null;
         User user = null;
         try {
@@ -147,14 +147,13 @@ public class UserDaoImpl implements UserDao {
                 user.setPhoneNumber(phoneNumber);
                 user.setUserName(userName);
             }
-
             return user;
         } catch (SQLException e) {
             throw new DaoException("Failed to find user by ID", e);
         } finally {
 
             try {
-                pool.releaseConnection(connection, preparedStatement);
+                pool.releaseConnection(connection, preparedStatement, resultSet);
             } catch (ConnectionPoolException e) {
                 throw new DaoException(e);
             }
@@ -163,7 +162,7 @@ public class UserDaoImpl implements UserDao {
 
     public User findUserByLoginAndPassword(String login, String password) throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet;
+        ResultSet resultSet = null;
         PreparedStatement preparedStatement = null;
         User user = null;
         try {
@@ -191,7 +190,7 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException("Failed to find user by ID", e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement);
+                pool.releaseConnection(connection, preparedStatement, resultSet);
             } catch (ConnectionPoolException e) {
                 throw new DaoException(e);
             }

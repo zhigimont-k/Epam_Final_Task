@@ -5,7 +5,7 @@
 <head>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
-    <fmt:message bundle="${locale}" key="locale.page.title.main" var="pageTitle"/>
+    <fmt:message bundle="${locale}" key="locale.page.title.home" var="pageTitle"/>
     <fmt:message bundle="${locale}" key="locale.info.text.welcome" var="welcome"/>
 
 

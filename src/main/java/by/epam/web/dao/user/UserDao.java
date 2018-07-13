@@ -7,5 +7,5 @@ import by.epam.web.entity.User;
 
 public interface UserDao extends AbstractDao<User> {
     boolean propertyExists(UserDaoImpl.UniqueUserInfo property, String value) throws DaoException;
-    boolean register(User user) throws DaoException;
+    User register(User user) throws DaoException;
 }

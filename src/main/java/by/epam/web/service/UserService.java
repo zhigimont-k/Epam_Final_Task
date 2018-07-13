@@ -16,21 +16,15 @@ public class UserService {
             newUser.setEmail(email);
             newUser.setUserName(userName);
             newUser.setPhoneNumber(phoneNumber);
-            userDao.register(newUser);
-            return newUser;
+            return userDao.register(newUser);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
     public User userLogin(String login, String password) throws ServiceException {
-        User user;
         try {
-            user = new User();
-            user.setLogin(login);
-            user.setPassword(password);
-            userDao.login(user);
-            return user;
+            return userDao.findUserByLoginAndPassword(login, password);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
