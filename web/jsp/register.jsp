@@ -26,11 +26,9 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-<c:choose>
-    <c:when test = "${not empty sessionScope.user}">
-        <jsp:forward page="/home" />
-    </c:when>
-</c:choose>
+<c:if test = "${not empty sessionScope.user}">
+    <jsp:forward page="/home" />
+</c:if>
 <form name="registerForm" method="POST" action="app">
     <input type="hidden" name="command" value="register"/>
     <label>${loginLabel}

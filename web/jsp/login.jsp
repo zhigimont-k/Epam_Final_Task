@@ -30,13 +30,13 @@
 <form name="loginForm" method="POST" action="app">
     <input type="hidden" name="command" value="login"/>
     <label>${loginLabel}
-    <input type="text" name="login" maxlength="20" minlength="4"/></label>
+    <input type="text" name="login" maxlength="20"/></label>
     <label>${passwordLabel}
-    <input type="password" name="password" maxlength="32" minlength="10"/></label>
+    <input type="password" name="password" maxlength="32"/></label>
     <br/>
     <input type="submit" value="${button}"/>
     <br/>
-    <c:if test="${authFail == false}">
+    <c:if test="${authFail == true}">
         ${authFailMessage}
     </c:if>
 

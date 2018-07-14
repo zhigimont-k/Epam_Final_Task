@@ -24,6 +24,15 @@
     </jsp-config>
 
     <servlet>
+        <servlet-name>Error</servlet-name>
+        <jsp-file>/jsp/error.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Error</servlet-name>
+        <url-pattern>/error</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>SignIn</servlet-name>
         <jsp-file>/jsp/login.jsp</jsp-file>
     </servlet>

@@ -1,11 +1,15 @@
-package by.epam.web.controller.command;
+package by.epam.web.command;
 
+import by.epam.web.controller.PageRouter;
 import by.epam.web.controller.constant.JspAddress;
 import by.epam.web.controller.constant.JspAttribute;
 import by.epam.web.controller.constant.JspParameter;
 import by.epam.web.entity.User;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.UserService;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,27 +18,37 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class LoginCommand implements Command {
+    private static final Logger logger = LogManager.getLogger();
     @Override
-    //return page address, redirect/forward в сервлете
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public PageRouter execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession();
+        PageRouter router = new PageRouter();
 
         String login = request.getParameter(JspParameter.LOGIN);
         String password = request.getParameter(JspParameter.PASSWORD);
 
         try {
             UserService service = new UserService();
-            if (service.passwordMatches(login, password)) {
+            if (service.findUserByLoginAndPassword(login, password)) {
                 User user = service.userLogin(login, password);
                 session.setAttribute(JspAttribute.USER, user);
-                response.sendRedirect(JspAddress.HOME_PAGE);
+
+                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setPage(JspAddress.HOME_PAGE);
+                return router;
             } else {
                 request.setAttribute(JspAttribute.AUTH_FAIL, true);
-                request.getRequestDispatcher(JspAddress.LOGIN_PAGE).forward(request, response);
+
+                router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                router.setPage(JspAddress.LOGIN_PAGE);
             }
 
         } catch (ServiceException e) {
-            throw new ServletException(e); //errorpage
+            logger.log(Level.ERROR, e);
+
+            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setPage(JspAddress.ERROR_PAGE);
         }
+        return router;
     }
 }

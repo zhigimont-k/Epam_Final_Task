@@ -1,5 +1,6 @@
-package by.epam.web.controller.command;
+package by.epam.web.command;
 
+import by.epam.web.controller.PageRouter;
 import by.epam.web.controller.constant.JspAddress;
 import by.epam.web.controller.constant.JspAttribute;
 
@@ -12,9 +13,13 @@ import java.io.IOException;
 public class LogoutCommand implements Command {
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+    public PageRouter execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         HttpSession session = request.getSession();
+        PageRouter router = new PageRouter();
         session.removeAttribute(JspAttribute.USER);
-            response.sendRedirect(JspAddress.HOME_PAGE);
+
+        router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+        router.setPage(JspAddress.HOME_PAGE);
+        return router;
     }
 }

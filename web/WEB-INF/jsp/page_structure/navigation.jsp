@@ -13,6 +13,7 @@
     <fmt:message bundle="${locale}" key="locale.page.title.services" var="servicesPage"/>
     <fmt:message bundle="${locale}" key="locale.page.title.account" var="ordersPage"/>
     <fmt:message bundle="${locale}" key="locale.page.title.orders" var="accountPage"/>
+    <fmt:message bundle="${locale}" key="locale.page.title.users" var="usersPage"/>
 </head>
 <body>
 <a href="${pageContext.request.contextPath}/home">${homePage}</a>
