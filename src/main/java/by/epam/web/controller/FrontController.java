@@ -5,6 +5,7 @@ import by.epam.web.command.CommandFactory;
 import by.epam.web.controller.constant.JspAddress;
 import by.epam.web.controller.constant.JspAttribute;
 import by.epam.web.controller.constant.JspParameter;
+import by.epam.web.util.SessionRequestContent;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -35,7 +36,9 @@ public class FrontController extends HttpServlet {
 
         if (foundCommand.isPresent()) {
             Command command = foundCommand.get();
+            SessionRequestContent requestContent = new SessionRequestContent(request);
             PageRouter router = command.execute(request, response);
+            requestContent.insertValues(request);
             if (router != null) {
                 if(PageRouter.TransitionType.FORWARD.equals(router.getTransitionType())) {
                     RequestDispatcher dispatcher = request.getRequestDispatcher(router.getPage());
