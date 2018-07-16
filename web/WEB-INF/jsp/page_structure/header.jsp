@@ -9,6 +9,7 @@
 
     <fmt:message bundle="${locale}" key="locale.user.button.signup" var="signUp"/>
     <fmt:message bundle="${locale}" key="locale.user.button.signin" var="loginLabel"/>
+    <fmt:message bundle="${locale}" key="locale.user.button.logout" var="logout"/>
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/page_structure/chooseLang.jsp"/>
@@ -18,7 +19,8 @@
 </c:if>
 <jsp:include page="/WEB-INF/jsp/page_structure/navigation.jsp"/>
 <c:if test="${sessionScope.user ne null}">
-    <jsp:include page="/WEB-INF/jsp/page_structure/logout.jsp"/>
+    <a href="app?command=logout">${logout}</a>
+    <%--<jsp:include page="/WEB-INF/jsp/page_structure/logout.jsp"/>--%>
 </c:if>
 </body>
 </html>

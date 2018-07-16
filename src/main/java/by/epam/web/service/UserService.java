@@ -4,6 +4,8 @@ import by.epam.web.dao.DaoException;
 import by.epam.web.dao.user.impl.UserDaoImpl;
 import by.epam.web.entity.User;
 
+import java.util.List;
+
 public class UserService {
     private static final UserDaoImpl userDao = new UserDaoImpl();
 
@@ -64,6 +66,22 @@ public class UserService {
         try {
             User found = userDao.findUserByLoginAndPassword(login, password);
             return found != null;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public List<User> findAllUsers() throws ServiceException {
+        try {
+            return userDao.findAllUsers();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public User changeUserStatus(String login, String status) throws ServiceException{
+        try {
+            return userDao.changeUserStatus(login, status);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

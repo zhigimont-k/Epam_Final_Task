@@ -30,9 +30,9 @@
 <form name="loginForm" method="POST" action="app">
     <input type="hidden" name="command" value="login"/>
     <label>${loginLabel}
-    <input type="text" name="login" maxlength="20"/></label>
+    <input type="text" name="login" maxlength="20" required/></label>
     <label>${passwordLabel}
-    <input type="password" name="password" maxlength="32"/></label>
+    <input type="password" name="password" maxlength="32" required/></label>
     <br/>
     <input type="submit" value="${button}"/>
     <br/>

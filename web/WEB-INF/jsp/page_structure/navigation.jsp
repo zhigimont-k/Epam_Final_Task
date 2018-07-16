@@ -11,8 +11,8 @@
     <fmt:message bundle="${locale}" key="locale.user.button.signin" var="signIn"/>
     <fmt:message bundle="${locale}" key="locale.page.title.home" var="homePage"/>
     <fmt:message bundle="${locale}" key="locale.page.title.services" var="servicesPage"/>
-    <fmt:message bundle="${locale}" key="locale.page.title.account" var="ordersPage"/>
-    <fmt:message bundle="${locale}" key="locale.page.title.orders" var="accountPage"/>
+    <fmt:message bundle="${locale}" key="locale.page.title.account" var="accountPage"/>
+    <fmt:message bundle="${locale}" key="locale.page.title.orders" var="ordersPage"/>
     <fmt:message bundle="${locale}" key="locale.page.title.users" var="usersPage"/>
 </head>
 <body>
@@ -27,7 +27,7 @@
     <a href="${pageContext.request.contextPath}/account">${accountPage}</a>
 </c:if>
 <c:if test="${sessionScope.user.status == 'admin'}">
-    <a href="${pageContext.request.contextPath}/users">${usersPage}</a>
+    <a href="app?command=viewUsers">${usersPage}</a>
 </c:if>
 </body>
 </html>

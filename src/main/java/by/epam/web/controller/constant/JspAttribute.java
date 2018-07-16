@@ -8,6 +8,7 @@ public final class JspAttribute {
     public static final String PHONE_NUMBER_EXISTS = "phoneNumberExists";
     public static final String AUTH_FAIL = "authFail";
     public static final String ERROR_MESSAGE = "errorMessage";
+    public static final String USER_LIST = "userList";
 
     private JspAttribute(){}
 }

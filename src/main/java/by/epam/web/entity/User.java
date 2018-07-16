@@ -1,8 +1,15 @@
 package by.epam.web.entity;
 
 public class User extends Entity {
-    public enum Status{
-        USER, ADMIN, BANNED
+    public enum Status {
+        USER("user"), ADMIN("admin"), BANNED("banned");
+        private String statusName;
+        Status(String statusName){
+            this.statusName = statusName;
+        }
+        public String getName(){
+            return statusName;
+        }
     }
 
     private long id;
@@ -64,17 +71,17 @@ public class User extends Entity {
         this.phoneNumber = phoneNumber;
     }
 
-    public Status getStatus() {
-        return status;
+    public String getStatus() {
+        return status.getName();
     }
 
     public void setStatus(Status status) {
         this.status = status;
     }
 
-    public void setStatus(String status){
-        for (Status st : Status.values()){
-            if (st.name().equalsIgnoreCase(status)){
+    public void setStatus(String status) {
+        for (Status st : Status.values()) {
+            if (st.name().equalsIgnoreCase(status)) {
                 this.status = st;
             }
         }

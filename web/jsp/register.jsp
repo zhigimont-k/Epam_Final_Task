@@ -32,16 +32,16 @@
 <form name="registerForm" method="POST" action="app">
     <input type="hidden" name="command" value="register"/>
     <label>${loginLabel}
-    <input type="text" name="login" maxlength="20" minlength="4"/></label>
+    <input type="text" name="login" maxlength="20" minlength="4" required/></label>
     <c:if test="${loginExists == true}">
         ${loginWarning}
     </c:if>
     <br/>
     <label>${passwordLabel}
-    <input type="password" name="password" maxlength="32" minlength="10"/></label>
+    <input type="password" name="password" maxlength="32" minlength="10" required/></label>
     <br/>
     <label>${emailLabel}
-    <input type="email" name="email" maxlength="40" minlength="10"/></label>
+    <input type="email" name="email" maxlength="40" minlength="10" required/></label>
     <c:if test="${emailExists == true}">
         ${emailWarning}
     </c:if>

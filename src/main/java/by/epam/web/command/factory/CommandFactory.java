@@ -1,4 +1,7 @@
-package by.epam.web.command;
+package by.epam.web.command.factory;
+
+import by.epam.web.command.Command;
+import by.epam.web.command.CommandType;
 
 import java.util.Arrays;
 import java.util.Optional;

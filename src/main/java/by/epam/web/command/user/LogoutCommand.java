@@ -1,5 +1,6 @@
-package by.epam.web.command;
+package by.epam.web.command.user;
 
+import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
 import by.epam.web.controller.constant.JspAddress;
 import by.epam.web.controller.constant.JspAttribute;
