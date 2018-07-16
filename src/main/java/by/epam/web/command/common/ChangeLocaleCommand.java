@@ -2,6 +2,7 @@ package by.epam.web.command.common;
 
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
+import by.epam.web.controller.constant.JspAddress;
 import by.epam.web.controller.constant.JspAttribute;
 import by.epam.web.controller.constant.JspParameter;
 import by.epam.web.util.NoSuchRequestParameterException;
@@ -25,8 +26,10 @@ public class ChangeLocaleCommand implements Command {
             String lang = requestContent.getParameter(JspParameter.LANGUAGE);
 
             String page = requestContent.getParameter(JspParameter.PAGE);
+            String query = requestContent.getParameter(JspParameter.QUERY);
+            String address = (query.isEmpty()) ? page : JspAddress.SERVLET_NAME + "?" + query;
             router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-            router.setPage(page);
+            router.setPage(address);
             requestContent.setSessionAttribute(JspAttribute.LOCAL, lang);
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);

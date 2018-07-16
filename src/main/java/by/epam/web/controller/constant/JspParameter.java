@@ -10,5 +10,6 @@ public final class JspParameter {
     public static final String PHONE_NUMBER = "phoneNumber";
     public static final String LANGUAGE = "lang";
     public static final String PAGE = "page";
+    public static final String QUERY = "query";
     private JspParameter(){}
 }

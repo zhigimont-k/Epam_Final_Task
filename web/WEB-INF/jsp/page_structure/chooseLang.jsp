@@ -16,7 +16,7 @@
 <form name="changeLangForm" method="POST" action="app">
     <input type="hidden" name="command" value="locale"/>
     <input type="hidden" name="page" value="${pageContext.request.requestURL}"/>
-    <input type="hidden" name="param" value="${pageContext.request.queryString}"/>
+    <input type="hidden" name="query" value="${pageContext.request.queryString}"/>
     ${chooseLang}: <button type="submit" name="lang" value="ru">${rus}</button> <button type="submit" name="lang" value="en">${eng}</button>
 </form>
 </body>
