@@ -30,6 +30,7 @@ public class FrontController extends HttpServlet {
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
+        request.setCharacterEncoding("UTF-8");
         String commandName = request.getParameter(JspParameter.COMMAND);
 
         Optional<Command> foundCommand = CommandFactory.getInstance().defineCommand(commandName);
@@ -37,7 +38,7 @@ public class FrontController extends HttpServlet {
         if (foundCommand.isPresent()) {
             Command command = foundCommand.get();
             SessionRequestContent requestContent = new SessionRequestContent(request);
-            PageRouter router = command.execute(request, response);
+            PageRouter router = command.execute(requestContent);
             requestContent.insertValues(request);
             if (router != null) {
                 if(PageRouter.TransitionType.FORWARD.equals(router.getTransitionType())) {

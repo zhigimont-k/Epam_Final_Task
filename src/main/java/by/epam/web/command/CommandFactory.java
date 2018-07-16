@@ -18,7 +18,7 @@ public final class CommandFactory {
 
     public Optional<Command> defineCommand(String commandName) {
         return Arrays.stream(CommandType.values())
-                .filter(command -> command.name().equalsIgnoreCase(commandName))
+                .filter(command -> command.getName().equalsIgnoreCase(commandName))
                 .findFirst()
                 .map(CommandType::getCurrentCommand);
     }

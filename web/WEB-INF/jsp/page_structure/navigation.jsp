@@ -26,5 +26,8 @@
     <a href="${pageContext.request.contextPath}/orders">${ordersPage}</a>
     <a href="${pageContext.request.contextPath}/account">${accountPage}</a>
 </c:if>
+<c:if test="${sessionScope.user.status == 'admin'}">
+    <a href="${pageContext.request.contextPath}/users">${usersPage}</a>
+</c:if>
 </body>
 </html>

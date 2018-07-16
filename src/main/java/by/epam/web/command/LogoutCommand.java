@@ -3,6 +3,7 @@ package by.epam.web.command;
 import by.epam.web.controller.PageRouter;
 import by.epam.web.controller.constant.JspAddress;
 import by.epam.web.controller.constant.JspAttribute;
+import by.epam.web.util.SessionRequestContent;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,11 +14,9 @@ import java.io.IOException;
 public class LogoutCommand implements Command {
 
     @Override
-    public PageRouter execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        HttpSession session = request.getSession();
+    public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
-        session.removeAttribute(JspAttribute.USER);
-
+        requestContent.removeSessionAttribute(JspAttribute.USER);
         router.setTransitionType(PageRouter.TransitionType.REDIRECT);
         router.setPage(JspAddress.HOME_PAGE);
         return router;

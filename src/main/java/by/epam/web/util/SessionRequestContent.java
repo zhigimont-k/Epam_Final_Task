@@ -55,6 +55,14 @@ public class SessionRequestContent {
         request.getSession().removeAttribute(attribute);
     }
 
+    public String getRequestURL(){
+        return request.getRequestURL().toString();
+    }
+
+    public String getQueryString(){
+        return request.getQueryString();
+    }
+
     private void extractValues(HttpServletRequest request) {
         requestParameters = request.getParameterMap();
         extractRequestAttributes(request);
