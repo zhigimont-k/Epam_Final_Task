@@ -154,6 +154,7 @@ public class UserDaoImpl implements UserDao {
 
             if (resultSet.next()) {
                 user = new User();
+                user.setId(resultSet.getInt(DB_USER_ID_FIELD));
                 user.setLogin(login);
                 user.setPassword(password);
                 user.setEmail(resultSet.getString(DB_USER_EMAIL_FIELD));
@@ -188,6 +189,8 @@ public class UserDaoImpl implements UserDao {
 
             if (resultSet.next()) {
                 user = new User();
+
+                user.setId(resultSet.getInt(DB_USER_ID_FIELD));
                 user.setLogin(login);
                 user.setPassword(resultSet.getString(DB_PASSWORD_FIELD));
                 user.setEmail(resultSet.getString(DB_USER_EMAIL_FIELD));
@@ -221,6 +224,8 @@ public class UserDaoImpl implements UserDao {
 
             while (resultSet.next()) {
                 User user = new User();
+
+                user.setId(resultSet.getInt(DB_USER_ID_FIELD));
                 user.setLogin(resultSet.getString(DB_LOGIN_FIELD));
                 user.setPassword(resultSet.getString(DB_PASSWORD_FIELD));
                 user.setEmail(resultSet.getString(DB_USER_EMAIL_FIELD));
@@ -232,7 +237,7 @@ public class UserDaoImpl implements UserDao {
             }
             return userList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user by ID", e);
+            throw new DaoException("Failed to find users", e);
         } finally {
             try {
                 pool.releaseConnection(connection, preparedStatement, resultSet);
@@ -244,7 +249,6 @@ public class UserDaoImpl implements UserDao {
 
     public User changeUserStatus(String login, String status) throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet = null;
         PreparedStatement preparedStatement = null;
         User user;
         try {
@@ -256,8 +260,10 @@ public class UserDaoImpl implements UserDao {
                 preparedStatement = connection.prepareStatement(UPDATE_USER_STATUS);
                 preparedStatement.setString(1, status);
                 preparedStatement.setString(2, login);
-                resultSet = preparedStatement.executeQuery();
-                preparedStatement.executeUpdate();
+                logger.log(Level.INFO, preparedStatement);
+                logger.log(Level.INFO, "Setting user's " + login + " status to " + status);
+                Integer rowsAffected = preparedStatement.executeUpdate();
+                logger.log(Level.INFO, "Rows affected: "+rowsAffected);
             } else {
                 throw new DaoException("Couldn't find user by login: " + login);
             }
@@ -267,7 +273,7 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException("Failed to change user status", e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
+                pool.releaseConnection(connection, preparedStatement);
             } catch (ConnectionPoolException e) {
                 throw new DaoException(e);
             }

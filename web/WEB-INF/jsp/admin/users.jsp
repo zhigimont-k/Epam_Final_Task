@@ -20,6 +20,8 @@
     <jsp:forward page="${pageContext.request.contextPath}/home"/>
 </c:if>
 
+<input type="hidden" name="page" value="${pageContext.request.requestURL}"/>
+<input type="hidden" name="query" value="${pageContext.request.queryString}"/>
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
 <div>
     <table>
@@ -29,14 +31,26 @@
             <th>${status}</th>
             <th>${email}</th>
             <th>${phoneNumber}</th>
+            <th>Change status</th>
         </tr>
         <c:forEach var="user" items="${userList}">
             <tr>
-                <td>${user.login}</td>
-                <td>${user.userName}</td>
-                <td>${user.status}</td>
-                <td>${user.email}</td>
-                <td>${user.phoneNumber}</td>
+                <form name="loginForm" method="POST" action="app">
+                    <input type="hidden" name="command" value="changeUserStatus"/>
+                    <input type="hidden" name="login" value="${user.login}"/>
+                    <td>${user.login}</td>
+                    <td>${user.userName}</td>
+                    <td>${user.status}</td>
+                    <td>${user.email}</td>
+                    <td>${user.phoneNumber}</td>
+                    <td>
+                        <select name="userStatus">
+                        <option value="user">user</option>
+                        <option value="admin">admin</option>
+                        <option value="banned">banned</option>
+                    </select>
+                        <input type="submit" value="Submit"></td>
+                </form>
             </tr>
         </c:forEach>
     </table>

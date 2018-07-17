@@ -11,5 +11,6 @@ public final class JspParameter {
     public static final String LANGUAGE = "lang";
     public static final String PAGE = "page";
     public static final String QUERY = "query";
+    public static final String USER_STATUS = "userStatus";
     private JspParameter(){}
 }

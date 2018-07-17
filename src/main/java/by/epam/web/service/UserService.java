@@ -32,12 +32,6 @@ public class UserService {
         }
     }
 
-    public boolean banUser() {
-        return false;
-    }
-
-    //public boolean changeUserStatus(){}
-
     public boolean loginExists(String login) throws ServiceException {
         try {
             return userDao.propertyExists(UserDaoImpl.UniqueUserInfo.LOGIN, login);

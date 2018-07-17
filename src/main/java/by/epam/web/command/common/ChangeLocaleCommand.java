@@ -25,11 +25,8 @@ public class ChangeLocaleCommand implements Command {
         try {
             String lang = requestContent.getParameter(JspParameter.LANGUAGE);
 
-            String page = requestContent.getParameter(JspParameter.PAGE);
-            String query = requestContent.getParameter(JspParameter.QUERY);
-            String address = (query.isEmpty()) ? page : JspAddress.SERVLET_NAME + "?" + query;
             router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-            router.setPage(address);
+            router.setPage(constructRedirectAddress(requestContent));
             requestContent.setSessionAttribute(JspAttribute.LOCAL, lang);
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);

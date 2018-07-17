@@ -158,7 +158,7 @@ public class ConnectionPool {
             resultSet.close();
             releaseConnection(connection, statement);
         } catch (SQLException e){
-            throw new ConnectionPoolException("Couldn't close statement", e);
+            throw new ConnectionPoolException("Couldn't close set", e);
         }
     }
 
