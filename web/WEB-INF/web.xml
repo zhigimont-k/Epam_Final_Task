@@ -97,7 +97,7 @@
 
     <filter>
         <filter-name>encodingFilter</filter-name>
-        <filter-class>by.epam.web.filter.EncodingFilter</filter-class>
+        <filter-class>by.epam.web.controller.filter.EncodingFilter</filter-class>
         <init-param>
             <param-name>encoding</param-name>
             <param-value>UTF-8</param-value>

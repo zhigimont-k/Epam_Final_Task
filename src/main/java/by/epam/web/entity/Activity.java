@@ -3,21 +3,11 @@ package by.epam.web.entity;
 import java.math.BigDecimal;
 
 public class Activity extends Entity {
-    public enum Status {
-        AVAILABLE("available"), UNAVAILABLE("unavailable");
-        private String statusName;
-        Status(String statusName){
-            this.statusName = statusName;
-        }
-        public String getName(){
-            return statusName;
-        }
-    }
-    private long id;
+    private int id;
     private BigDecimal price;
     private String name;
     private String description;
-    private Status status;
+    private String status;
 
     public Activity(){}
 
@@ -25,7 +15,7 @@ public class Activity extends Entity {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -54,17 +44,13 @@ public class Activity extends Entity {
     }
 
     public String getStatus(){
-        return status.name();
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
+        return status;
     }
 
     public void setStatus(String status) {
-        for (Status st : Status.values()) {
+        for (ActivityStatus st : ActivityStatus.values()) {
             if (st.name().equalsIgnoreCase(status)) {
-                this.status = st;
+                this.status = st.getName();
             }
         }
     }

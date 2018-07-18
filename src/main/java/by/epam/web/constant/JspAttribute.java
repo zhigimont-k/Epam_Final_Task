@@ -1,4 +1,4 @@
-package by.epam.web.controller.constant;
+package by.epam.web.constant;
 
 public final class JspAttribute {
     public static final String USER = "user";

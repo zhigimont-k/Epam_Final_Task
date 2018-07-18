@@ -32,10 +32,18 @@ public class ActivityService {
         }
     }
 
-    public Activity changeActivityStatus(String name, String status) throws ServiceException{
+    public Activity changeActivityStatus(String name, String status) throws ServiceException {
         try {
             Activity found = activityDao.findActivityByName(name);
             return activityDao.changeActivityStatus(found.getId(), status);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public boolean nameExists(String name) throws ServiceException {
+        try {
+            return activityDao.nameExists(name);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

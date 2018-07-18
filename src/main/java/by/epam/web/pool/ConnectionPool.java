@@ -21,8 +21,8 @@ import java.util.regex.Pattern;
 public class ConnectionPool {
     private static Logger logger = LogManager.getLogger();
     private static final String NUMERICAL_PATTERN = "^[1-9]\\d?$";
-    private static final int INITIAL_POOL_SIZE = 8;
-    private static final int MAX_POOL_SIZE = 32;
+    private static final int INITIAL_POOL_SIZE = 8; //перенести в пропертис
+    private static final int MAX_POOL_SIZE = 32; //перенести в пропертис
     private static ConnectionPool instance;
     private static AtomicBoolean isCreated = new AtomicBoolean(false);
     private static ReentrantLock lock = new ReentrantLock();
@@ -100,12 +100,12 @@ public class ConnectionPool {
         try {
             DriverManager.registerDriver(new com.mysql.jdbc.Driver());
         } catch (SQLException e) {
-            logger.fatal("Couldn't register driver", e);
-            throw new RuntimeException("Couldn't register driver", e);
+            logger.fatal("Couldn't addUser driver", e);
+            throw new RuntimeException("Couldn't addUser driver", e);
         }
     }
 
-    public ProxyConnection getConnection() throws ConnectionPoolException {
+    public ProxyConnection getConnection() throws PoolException {
         ProxyConnection connection = null;
         if (availableConnections.size() >= INITIAL_POOL_SIZE && availableConnections.size() < MAX_POOL_SIZE) {
             createConnection();
@@ -120,16 +120,16 @@ public class ConnectionPool {
         return connection;
     }
 
-    private void createConnection() throws ConnectionPoolException {
+    private void createConnection() throws PoolException {
         try {
             ProxyConnection connection = new ProxyConnection(DriverManager.getConnection(url, user, password));
             availableConnections.add(connection);
         } catch (SQLException e) {
-            throw new ConnectionPoolException("Couldn't create connection", e);
+            throw new PoolException("Couldn't create connection", e);
         }
     }
 
-    public void releaseConnection(ProxyConnection connection) throws ConnectionPoolException {
+    public void releaseConnection(ProxyConnection connection) throws PoolException {
         try {
             if (!connection.getAutoCommit()) {
                 connection.setAutoCommit(true);
@@ -140,29 +140,11 @@ public class ConnectionPool {
             logger.log(Level.ERROR, e);
             Thread.currentThread().interrupt();
         } catch (SQLException e) {
-            throw new ConnectionPoolException("Couldn't release connection", e);
+            throw new PoolException("Couldn't release connection", e);
         }
     }
 
-    public void releaseConnection(ProxyConnection connection, Statement statement) throws ConnectionPoolException {
-        try {
-            statement.close();
-            releaseConnection(connection);
-        } catch (SQLException e){
-            throw new ConnectionPoolException("Couldn't close statement", e);
-        }
-    }
-
-    public void releaseConnection(ProxyConnection connection, Statement statement, ResultSet resultSet) throws ConnectionPoolException {
-        try {
-            resultSet.close();
-            releaseConnection(connection, statement);
-        } catch (SQLException e){
-            throw new ConnectionPoolException("Couldn't close set", e);
-        }
-    }
-
-    public void closeConnectionPool() throws ConnectionPoolException {
+    public void closeConnectionPool() throws PoolException {
         ProxyConnection connection;
         int currentPoolSize = availableConnections.size() + unavailableConnections.size();
         for (int i = 0; i < currentPoolSize; i++) {
@@ -176,7 +158,7 @@ public class ConnectionPool {
                 logger.log(Level.ERROR, e);
                 Thread.currentThread().interrupt();
             } catch (SQLException e) {
-                throw new ConnectionPoolException("Couldn't close connection", e);
+                throw new PoolException("Couldn't close connection", e);
             }
         }
         deregisterDrivers();

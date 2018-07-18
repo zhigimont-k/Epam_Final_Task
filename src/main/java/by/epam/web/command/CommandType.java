@@ -1,19 +1,24 @@
 package by.epam.web.command;
 
+import by.epam.web.command.Command;
+import by.epam.web.command.admin.AddActivityCommand;
 import by.epam.web.command.admin.ChangeUserStatusCommand;
 import by.epam.web.command.admin.ViewUsersCommand;
 import by.epam.web.command.common.ChangeLocaleCommand;
+import by.epam.web.command.common.ViewActivitiesCommand;
 import by.epam.web.command.user.LoginCommand;
 import by.epam.web.command.user.LogoutCommand;
 import by.epam.web.command.user.RegisterCommand;
 
 public enum CommandType {
-    REGISTER("register", new RegisterCommand()),
+    REGISTER("addUser", new RegisterCommand()),
     LOGIN("login", new LoginCommand()),
     LOGOUT("logout", new LogoutCommand()),
     CHANGE_LOCALE("locale", new ChangeLocaleCommand()),
     VIEW_USERS("viewUsers", new ViewUsersCommand()),
     CHANGE_USER_STATUS("changeUserStatus", new ChangeUserStatusCommand()),
+    ADD_ACTIVITY("addActivity", new AddActivityCommand()),
+    VIEW_ACTIVITIES("viewActivities", new ViewActivitiesCommand()),
     /*ADD_SERVICE, EDIT_SERVICE, REMOVE_SERVICE,
     ADD_ORDER, CHANGE_ORDER_STATUS, DEACTIVATE_ORDER,
     ADD_SERVICE_TO_ORDER, REMOVE_SERVICE_FROM_ORDER,
@@ -27,7 +32,7 @@ public enum CommandType {
         this.commandName = commandName;
     }
 
-    public Command getCurrentCommand() {
+    public Command getCommand() {
         return command;
     }
     public String getName(){

@@ -8,8 +8,9 @@ import java.util.List;
 
 public interface ActivityDao extends AbstractDao<Activity> {
     Activity insertActivity(Activity activity) throws DaoException;
-    Activity findActivityById(long id) throws DaoException;
+    Activity findActivityById(int id) throws DaoException;
     Activity findActivityByName(String name) throws DaoException;
     List<Activity> findAllActivities() throws DaoException;
-    Activity changeActivityStatus(long id, String status) throws DaoException;
+    Activity changeActivityStatus(int id, String status) throws DaoException;
+    boolean nameExists(String name) throws DaoException;
 }

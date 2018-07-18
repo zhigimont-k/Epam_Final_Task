@@ -4,7 +4,7 @@ import by.epam.web.dao.DaoException;
 import by.epam.web.dao.activity.ActivityDao;
 import by.epam.web.entity.Activity;
 import by.epam.web.pool.ConnectionPool;
-import by.epam.web.pool.ConnectionPoolException;
+import by.epam.web.pool.PoolException;
 import by.epam.web.pool.ProxyConnection;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -84,13 +84,13 @@ public class ActivityDaoImpl implements ActivityDao {
 
             try {
                 pool.releaseConnection(connection, preparedStatement, resultSet);
-            } catch (ConnectionPoolException e) {
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }
     }
 
-    public Activity findActivityById(long id) throws DaoException{
+    public Activity findActivityById(int id) throws DaoException{
         ProxyConnection connection = null;
         ResultSet resultSet = null;
         PreparedStatement preparedStatement = null;
@@ -118,7 +118,7 @@ public class ActivityDaoImpl implements ActivityDao {
         } finally {
             try {
                 pool.releaseConnection(connection, preparedStatement, resultSet);
-            } catch (ConnectionPoolException e) {
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }
@@ -153,7 +153,7 @@ public class ActivityDaoImpl implements ActivityDao {
         } finally {
             try {
                 pool.releaseConnection(connection, preparedStatement, resultSet);
-            } catch (ConnectionPoolException e) {
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }
@@ -187,13 +187,13 @@ public class ActivityDaoImpl implements ActivityDao {
         } finally {
             try {
                 pool.releaseConnection(connection, preparedStatement, resultSet);
-            } catch (ConnectionPoolException e) {
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }
     }
 
-    public Activity changeActivityStatus(long id, String status) throws DaoException {
+    public Activity changeActivityStatus(int id, String status) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         Activity activity;
@@ -219,7 +219,31 @@ public class ActivityDaoImpl implements ActivityDao {
         } finally {
             try {
                 pool.releaseConnection(connection, preparedStatement);
-            } catch (ConnectionPoolException e) {
+            } catch (PoolException e) {
+                throw new DaoException(e);
+            }
+        }
+    }
+
+    public boolean nameExists(String name) throws DaoException {
+        ProxyConnection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = pool.getConnection();
+            preparedStatement = connection.prepareStatement(FIND_ACTIVITY_BY_NAME_QUERY);
+
+            preparedStatement.setString(1, name);
+            resultSet = preparedStatement.executeQuery();
+
+            return resultSet.next();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            try {
+                pool.releaseConnection(connection, preparedStatement, resultSet);
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }

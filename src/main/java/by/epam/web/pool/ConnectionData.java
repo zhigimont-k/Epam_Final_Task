@@ -1,6 +1,6 @@
 package by.epam.web.pool;
 
-public final class ConnectionData {
+final class ConnectionData {
     public static final String BASE_NAME = "database";
     public static final String DATABASE_USER = BASE_NAME + ".user";
     public static final String DATABASE_PASSWORD = BASE_NAME + ".password";

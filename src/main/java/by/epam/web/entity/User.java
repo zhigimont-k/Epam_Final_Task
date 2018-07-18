@@ -1,24 +1,13 @@
 package by.epam.web.entity;
 
 public class User extends Entity {
-    public enum Status {
-        USER("user"), ADMIN("admin"), BANNED("banned");
-        private String statusName;
-        Status(String statusName){
-            this.statusName = statusName;
-        }
-        public String getName(){
-            return statusName;
-        }
-    }
-
-    private long id;
+    private int id;
     private String login;
     private String password;
     private String userName;
     private String email;
     private String phoneNumber;
-    private Status status;
+    private UserStatus userStatus;
 
     public User() {
     }
@@ -27,7 +16,7 @@ public class User extends Entity {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -72,17 +61,17 @@ public class User extends Entity {
     }
 
     public String getStatus() {
-        return status.getName();
+        return userStatus.getName();
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
     }
 
     public void setStatus(String status) {
-        for (Status st : Status.values()) {
+        for (UserStatus st : UserStatus.values()) {
             if (st.name().equalsIgnoreCase(status)) {
-                this.status = st;
+                this.userStatus = st;
             }
         }
     }
@@ -92,6 +81,7 @@ public class User extends Entity {
         return "User{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
+                ", userStatus='" + userStatus + '\'' +
                 ", password='" + password + '\'' +
                 ", userName='" + userName + '\'' +
                 ", email='" + email + '\'' +

@@ -18,7 +18,7 @@ public class UserService {
             newUser.setEmail(email);
             newUser.setUserName(userName);
             newUser.setPhoneNumber(phoneNumber);
-            return userDao.register(newUser);
+            return userDao.addUser(newUser);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

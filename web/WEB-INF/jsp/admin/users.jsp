@@ -9,14 +9,14 @@
 
     <fmt:message bundle="${locale}" key="locale.user.label.login" var="login"/>
     <fmt:message bundle="${locale}" key="locale.user.label.username" var="userName"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.status" var="status"/>
+    <fmt:message bundle="${locale}" key="locale.user.label.userStatus" var="userStatus"/>
     <fmt:message bundle="${locale}" key="locale.user.label.email" var="email"/>
     <fmt:message bundle="${locale}" key="locale.user.label.phonenumber" var="phoneNumber"/>
 
     <title>${pageTitle} | Cat Beauty Bar</title>
 </head>
 <body>
-<c:if test="${sessionScope.user.status ne 'admin'}">
+<c:if test="${sessionScope.user.userStatus ne 'admin'}">
     <jsp:forward page="${pageContext.request.contextPath}/home"/>
 </c:if>
 
@@ -28,10 +28,10 @@
         <tr>
             <th>${login}</th>
             <th>${userName}</th>
-            <th>${status}</th>
+            <th>${userStatus}</th>
             <th>${email}</th>
             <th>${phoneNumber}</th>
-            <th>Change status</th>
+            <th>Change userStatus</th>
         </tr>
         <c:forEach var="user" items="${userList}">
             <tr>
@@ -40,7 +40,7 @@
                     <input type="hidden" name="login" value="${user.login}"/>
                     <td>${user.login}</td>
                     <td>${user.userName}</td>
-                    <td>${user.status}</td>
+                    <td>${user.userStatus}</td>
                     <td>${user.email}</td>
                     <td>${user.phoneNumber}</td>
                     <td>

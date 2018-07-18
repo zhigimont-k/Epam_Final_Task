@@ -1,16 +1,19 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: karina
-  Date: 7/11/2018
-  Time: 1:16 PM
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<%@ page isELIgnored="false" contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<html lang="${lang}">
 <head>
-    <title>Title</title>
+    <fmt:setLocale value="${sessionScope.local}"/>
+    <fmt:setBundle basename="locale.locale" var="locale"/>
+    <fmt:message bundle="${locale}" key="locale.page.title.services" var="pageTitle"/>
+
+    <title>${pageTitle} | Cat Beauty Bar</title>
 </head>
 <body>
+<jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
+<c:if test = "${sessionScope.user.userStatus == 'admin'}">
+    <jsp:include page="/WEB-INF/jsp/admin/addService.jsp" />
+</c:if>
 
 </body>
 </html>

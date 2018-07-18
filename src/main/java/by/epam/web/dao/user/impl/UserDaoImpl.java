@@ -1,7 +1,7 @@
 package by.epam.web.dao.user.impl;
 
 import by.epam.web.pool.ConnectionPool;
-import by.epam.web.pool.ConnectionPoolException;
+import by.epam.web.pool.PoolException;
 import by.epam.web.pool.ProxyConnection;
 import by.epam.web.dao.DaoException;
 import by.epam.web.dao.user.UserDao;
@@ -57,7 +57,7 @@ public class UserDaoImpl implements UserDao {
     private static final String UPDATE_USER_STATUS = "UPDATE user " +
             "SET user_status = ? WHERE login = ?";
 
-    public User register(User user) throws DaoException {
+    public User addUser(User user) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet = null;
         PreparedStatement preparedStatement = null;
@@ -94,12 +94,12 @@ public class UserDaoImpl implements UserDao {
 
             return user;
         } catch (SQLException e) {
-            throw new DaoException("Failed to register user", e);
+            throw new DaoException("Failed to addUser user", e);
         } finally {
 
             try {
                 pool.releaseConnection(connection, preparedStatement, resultSet);
-            } catch (ConnectionPoolException e) {
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }
@@ -133,7 +133,7 @@ public class UserDaoImpl implements UserDao {
         } finally {
             try {
                 pool.releaseConnection(connection, preparedStatement, resultSet);
-            } catch (ConnectionPoolException e) {
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }
@@ -169,7 +169,7 @@ public class UserDaoImpl implements UserDao {
         } finally {
             try {
                 pool.releaseConnection(connection, preparedStatement, resultSet);
-            } catch (ConnectionPoolException e) {
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }
@@ -205,7 +205,7 @@ public class UserDaoImpl implements UserDao {
         } finally {
             try {
                 pool.releaseConnection(connection, preparedStatement, resultSet);
-            } catch (ConnectionPoolException e) {
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }
@@ -241,7 +241,7 @@ public class UserDaoImpl implements UserDao {
         } finally {
             try {
                 pool.releaseConnection(connection, preparedStatement, resultSet);
-            } catch (ConnectionPoolException e) {
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }
@@ -262,8 +262,7 @@ public class UserDaoImpl implements UserDao {
                 preparedStatement.setString(2, login);
                 logger.log(Level.INFO, preparedStatement);
                 logger.log(Level.INFO, "Setting user's " + login + " status to " + status);
-                Integer rowsAffected = preparedStatement.executeUpdate();
-                logger.log(Level.INFO, "Rows affected: "+rowsAffected);
+                preparedStatement.executeUpdate();
             } else {
                 throw new DaoException("Couldn't find user by login: " + login);
             }
@@ -274,7 +273,7 @@ public class UserDaoImpl implements UserDao {
         } finally {
             try {
                 pool.releaseConnection(connection, preparedStatement);
-            } catch (ConnectionPoolException e) {
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }
