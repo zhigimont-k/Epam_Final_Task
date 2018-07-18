@@ -1,7 +1,7 @@
 package by.epam.web.dao.user.impl;
 
 import by.epam.web.pool.ConnectionPool;
-import by.epam.web.pool.ConnectionPoolException;
+import by.epam.web.pool.PoolException;
 import by.epam.web.pool.ProxyConnection;
 import by.epam.web.dao.DaoException;
 import by.epam.web.dao.user.UserDao;
@@ -59,7 +59,7 @@ public class UserDaoImpl implements UserDao {
 
     public User register(User user) throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.getConnection();
@@ -98,8 +98,9 @@ public class UserDaoImpl implements UserDao {
         } finally {
 
             try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
-            } catch (ConnectionPoolException e) {
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }
@@ -108,7 +109,7 @@ public class UserDaoImpl implements UserDao {
     public boolean propertyExists(UniqueUserInfo property, String value) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
 
         try {
             connection = pool.getConnection();
@@ -132,8 +133,9 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException(e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
-            } catch (ConnectionPoolException e) {
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }
@@ -168,8 +170,9 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException("Failed to find user by login and password", e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
-            } catch (ConnectionPoolException e) {
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }
@@ -177,7 +180,7 @@ public class UserDaoImpl implements UserDao {
 
     public User findUserByLogin(String login) throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         User user = null;
         try {
@@ -204,8 +207,9 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException("Failed to find user by login and password", e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
-            } catch (ConnectionPoolException e) {
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }
@@ -213,7 +217,7 @@ public class UserDaoImpl implements UserDao {
 
     public List<User> findAllUsers() throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         List<User> userList = new LinkedList<>();
         try {
@@ -240,8 +244,9 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException("Failed to find users", e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
-            } catch (ConnectionPoolException e) {
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }
@@ -273,8 +278,9 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException("Failed to change user status", e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement);
-            } catch (ConnectionPoolException e) {
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }

@@ -14,9 +14,7 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/page_structure/chooseLang.jsp"/>
 <br/>
-<c:if test="${sessionScope.user ne null}">
-    <jsp:include page="/WEB-INF/jsp/page_structure/welcomePanel.jsp"/>
-</c:if>
+<jsp:include page="/WEB-INF/jsp/page_structure/welcomePanel.jsp"/>
 <jsp:include page="/WEB-INF/jsp/page_structure/navigation.jsp"/>
 <c:if test="${sessionScope.user ne null}">
     <a href="app?command=logout">${logout}</a>

@@ -12,7 +12,7 @@ public class User extends Entity {
         }
     }
 
-    private long id;
+    private int id;
     private String login;
     private String password;
     private String userName;
@@ -23,11 +23,11 @@ public class User extends Entity {
     public User() {
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

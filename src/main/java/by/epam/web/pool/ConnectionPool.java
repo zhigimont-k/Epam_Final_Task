@@ -105,7 +105,7 @@ public class ConnectionPool {
         }
     }
 
-    public ProxyConnection getConnection() throws ConnectionPoolException {
+    public ProxyConnection getConnection() throws PoolException {
         ProxyConnection connection = null;
         if (availableConnections.size() >= INITIAL_POOL_SIZE && availableConnections.size() < MAX_POOL_SIZE) {
             createConnection();
@@ -120,16 +120,16 @@ public class ConnectionPool {
         return connection;
     }
 
-    private void createConnection() throws ConnectionPoolException {
+    private void createConnection() throws PoolException {
         try {
             ProxyConnection connection = new ProxyConnection(DriverManager.getConnection(url, user, password));
             availableConnections.add(connection);
         } catch (SQLException e) {
-            throw new ConnectionPoolException("Couldn't create connection", e);
+            throw new PoolException("Couldn't create connection", e);
         }
     }
 
-    public void releaseConnection(ProxyConnection connection) throws ConnectionPoolException {
+    public void releaseConnection(ProxyConnection connection) throws PoolException {
         try {
             if (!connection.getAutoCommit()) {
                 connection.setAutoCommit(true);
@@ -140,29 +140,29 @@ public class ConnectionPool {
             logger.log(Level.ERROR, e);
             Thread.currentThread().interrupt();
         } catch (SQLException e) {
-            throw new ConnectionPoolException("Couldn't release connection", e);
+            throw new PoolException("Couldn't release connection", e);
         }
     }
 
-    public void releaseConnection(ProxyConnection connection, Statement statement) throws ConnectionPoolException {
+    public void releaseConnection(ProxyConnection connection, Statement statement) throws PoolException {
         try {
             statement.close();
             releaseConnection(connection);
         } catch (SQLException e){
-            throw new ConnectionPoolException("Couldn't close statement", e);
+            throw new PoolException("Couldn't close statement", e);
         }
     }
 
-    public void releaseConnection(ProxyConnection connection, Statement statement, ResultSet resultSet) throws ConnectionPoolException {
+    public void releaseConnection(ProxyConnection connection, Statement statement, ResultSet resultSet) throws PoolException {
         try {
             resultSet.close();
             releaseConnection(connection, statement);
         } catch (SQLException e){
-            throw new ConnectionPoolException("Couldn't close set", e);
+            throw new PoolException("Couldn't close set", e);
         }
     }
 
-    public void closeConnectionPool() throws ConnectionPoolException {
+    public void closeConnectionPool() throws PoolException {
         ProxyConnection connection;
         int currentPoolSize = availableConnections.size() + unavailableConnections.size();
         for (int i = 0; i < currentPoolSize; i++) {
@@ -176,7 +176,7 @@ public class ConnectionPool {
                 logger.log(Level.ERROR, e);
                 Thread.currentThread().interrupt();
             } catch (SQLException e) {
-                throw new ConnectionPoolException("Couldn't close connection", e);
+                throw new PoolException("Couldn't close connection", e);
             }
         }
         deregisterDrivers();

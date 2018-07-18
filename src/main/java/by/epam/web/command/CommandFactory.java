@@ -1,12 +1,9 @@
-package by.epam.web.command.factory;
-
-import by.epam.web.command.Command;
-import by.epam.web.command.CommandType;
+package by.epam.web.command;
 
 import java.util.Arrays;
 import java.util.Optional;
 
-public final class CommandFactory {
+public class CommandFactory {
     private static CommandFactory instance;
 
     private CommandFactory() {
@@ -23,6 +20,6 @@ public final class CommandFactory {
         return Arrays.stream(CommandType.values())
                 .filter(command -> command.getName().equalsIgnoreCase(commandName))
                 .findFirst()
-                .map(CommandType::getCurrentCommand);
+                .map(CommandType::getCommand);
     }
 }

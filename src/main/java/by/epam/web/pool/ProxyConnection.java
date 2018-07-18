@@ -12,11 +12,11 @@ public class ProxyConnection implements Connection{
         this.connection = connection;
     }
 
-    void closeConnection() throws ConnectionPoolException {
+    void closeConnection() throws PoolException {
         try {
             connection.close();
         } catch (SQLException e) {
-            throw new ConnectionPoolException("Couldn't close connection", e);
+            throw new PoolException("Couldn't close connection", e);
         }
     }
 

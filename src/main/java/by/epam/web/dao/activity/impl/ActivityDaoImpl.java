@@ -4,7 +4,7 @@ import by.epam.web.dao.DaoException;
 import by.epam.web.dao.activity.ActivityDao;
 import by.epam.web.entity.Activity;
 import by.epam.web.pool.ConnectionPool;
-import by.epam.web.pool.ConnectionPoolException;
+import by.epam.web.pool.PoolException;
 import by.epam.web.pool.ProxyConnection;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -48,7 +48,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     public Activity insertActivity(Activity activity) throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.getConnection();
@@ -81,18 +81,18 @@ public class ActivityDaoImpl implements ActivityDao {
         } catch (SQLException e) {
             throw new DaoException("Failed to add activity", e);
         } finally {
-
             try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
-            } catch (ConnectionPoolException e) {
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }
     }
 
-    public Activity findActivityById(long id) throws DaoException{
+    public Activity findActivityById(int id) throws DaoException{
         ProxyConnection connection = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         Activity activity = null;
         try {
@@ -117,8 +117,9 @@ public class ActivityDaoImpl implements ActivityDao {
             throw new DaoException("Failed to find activity by id", e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
-            } catch (ConnectionPoolException e) {
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }
@@ -127,7 +128,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     public Activity findActivityByName(String name) throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         Activity activity = null;
         try {
@@ -152,8 +153,9 @@ public class ActivityDaoImpl implements ActivityDao {
             throw new DaoException("Failed to find activity by name", e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
-            } catch (ConnectionPoolException e) {
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }
@@ -161,7 +163,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     public List<Activity> findAllActivities() throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         List<Activity> activityList = new LinkedList<>();
         try {
@@ -186,14 +188,15 @@ public class ActivityDaoImpl implements ActivityDao {
             throw new DaoException("Failed to find activities", e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
-            } catch (ConnectionPoolException e) {
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }
     }
 
-    public Activity changeActivityStatus(long id, String status) throws DaoException {
+    public Activity changeActivityStatus(int id, String status) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         Activity activity;
@@ -205,7 +208,7 @@ public class ActivityDaoImpl implements ActivityDao {
             if (activity != null) {
                 preparedStatement = connection.prepareStatement(UPDATE_ACTIVITY_STATUS);
                 preparedStatement.setString(1, status);
-                preparedStatement.setInt(2, (int) id);
+                preparedStatement.setInt(2, id);
                 logger.log(Level.INFO, preparedStatement);
                 logger.log(Level.INFO, "Setting activity's " + id + " status to " + status);
                 preparedStatement.executeUpdate();
@@ -218,8 +221,9 @@ public class ActivityDaoImpl implements ActivityDao {
             throw new DaoException("Failed to change activity status", e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement);
-            } catch (ConnectionPoolException e) {
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
+            } catch (PoolException e) {
                 throw new DaoException(e);
             }
         }

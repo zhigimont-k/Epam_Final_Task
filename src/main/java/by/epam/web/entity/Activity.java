@@ -13,7 +13,7 @@ public class Activity extends Entity {
             return statusName;
         }
     }
-    private long id;
+    private int id;
     private BigDecimal price;
     private String name;
     private String description;
@@ -21,11 +21,11 @@ public class Activity extends Entity {
 
     public Activity(){}
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -67,5 +67,16 @@ public class Activity extends Entity {
                 this.status = st;
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Activity{" +
+                "id=" + id +
+                ", price=" + price +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                '}';
     }
 }

@@ -27,7 +27,7 @@ public enum CommandType {
         this.commandName = commandName;
     }
 
-    public Command getCurrentCommand() {
+    public Command getCommand() {
         return command;
     }
     public String getName(){

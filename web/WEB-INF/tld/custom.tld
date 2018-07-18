@@ -17,7 +17,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>lang</name>
+            <name>message</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
