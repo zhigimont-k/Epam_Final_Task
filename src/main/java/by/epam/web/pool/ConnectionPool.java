@@ -144,6 +144,23 @@ public class ConnectionPool {
         }
     }
 
+    public void releaseConnection(ProxyConnection connection, Statement statement) throws PoolException {
+        try {
+            statement.close();
+            releaseConnection(connection);
+        } catch (SQLException e){
+            throw new PoolException("Couldn't close statement", e);
+        }
+    }
+
+    public void releaseConnection(ProxyConnection connection, Statement statement, ResultSet resultSet) throws PoolException {
+        try {
+            resultSet.close();
+            releaseConnection(connection, statement);
+        } catch (SQLException e){
+            throw new PoolException("Couldn't close set", e);
+        }
+    }
     public void closeConnectionPool() throws PoolException {
         ProxyConnection connection;
         int currentPoolSize = availableConnections.size() + unavailableConnections.size();

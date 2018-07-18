@@ -48,7 +48,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     public Activity insertActivity(Activity activity) throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.getConnection();
@@ -81,9 +81,9 @@ public class ActivityDaoImpl implements ActivityDao {
         } catch (SQLException e) {
             throw new DaoException("Failed to add activity", e);
         } finally {
-
             try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
             } catch (PoolException e) {
                 throw new DaoException(e);
             }
@@ -92,7 +92,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     public Activity findActivityById(int id) throws DaoException{
         ProxyConnection connection = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         Activity activity = null;
         try {
@@ -117,7 +117,8 @@ public class ActivityDaoImpl implements ActivityDao {
             throw new DaoException("Failed to find activity by id", e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
             } catch (PoolException e) {
                 throw new DaoException(e);
             }
@@ -127,7 +128,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     public Activity findActivityByName(String name) throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         Activity activity = null;
         try {
@@ -152,7 +153,8 @@ public class ActivityDaoImpl implements ActivityDao {
             throw new DaoException("Failed to find activity by name", e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
             } catch (PoolException e) {
                 throw new DaoException(e);
             }
@@ -161,7 +163,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     public List<Activity> findAllActivities() throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         List<Activity> activityList = new LinkedList<>();
         try {
@@ -186,7 +188,8 @@ public class ActivityDaoImpl implements ActivityDao {
             throw new DaoException("Failed to find activities", e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
             } catch (PoolException e) {
                 throw new DaoException(e);
             }
@@ -205,7 +208,7 @@ public class ActivityDaoImpl implements ActivityDao {
             if (activity != null) {
                 preparedStatement = connection.prepareStatement(UPDATE_ACTIVITY_STATUS);
                 preparedStatement.setString(1, status);
-                preparedStatement.setInt(2, (int) id);
+                preparedStatement.setInt(2, id);
                 logger.log(Level.INFO, preparedStatement);
                 logger.log(Level.INFO, "Setting activity's " + id + " status to " + status);
                 preparedStatement.executeUpdate();
@@ -218,31 +221,8 @@ public class ActivityDaoImpl implements ActivityDao {
             throw new DaoException("Failed to change activity status", e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement);
-            } catch (PoolException e) {
-                throw new DaoException(e);
-            }
-        }
-    }
-
-    public boolean nameExists(String name) throws DaoException {
-        ProxyConnection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-
-        try {
-            connection = pool.getConnection();
-            preparedStatement = connection.prepareStatement(FIND_ACTIVITY_BY_NAME_QUERY);
-
-            preparedStatement.setString(1, name);
-            resultSet = preparedStatement.executeQuery();
-
-            return resultSet.next();
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        } finally {
-            try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
             } catch (PoolException e) {
                 throw new DaoException(e);
             }

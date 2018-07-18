@@ -8,23 +8,14 @@ import java.util.ResourceBundle;
 @SuppressWarnings("serial")
 public class WelcomeTag extends TagSupport{
     private String name;
-    private String lang;
+    private String message;
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setLang(String lang) {
-        this.lang = lang;
-    }
 
     @Override
     public int doStartTag() throws JspException {
         try {
             StringBuilder result = new StringBuilder();
-            ResourceBundle bundle = ResourceBundle.getBundle(
-                    LocaleConstants.LOCALE_BASENAME, new Locale(lang));
-            result.append(bundle.getString(LocaleConstants.WELCOME_MESSAGE));
+            result.append(message);
             result.append(", ");
             result.append(name);
             result.append("!");
@@ -35,5 +26,11 @@ public class WelcomeTag extends TagSupport{
         return SKIP_BODY;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

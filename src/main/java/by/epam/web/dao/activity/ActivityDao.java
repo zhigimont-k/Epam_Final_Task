@@ -12,5 +12,4 @@ public interface ActivityDao extends AbstractDao<Activity> {
     Activity findActivityByName(String name) throws DaoException;
     List<Activity> findAllActivities() throws DaoException;
     Activity changeActivityStatus(int id, String status) throws DaoException;
-    boolean nameExists(String name) throws DaoException;
 }

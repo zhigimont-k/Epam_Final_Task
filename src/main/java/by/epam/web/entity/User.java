@@ -1,6 +1,16 @@
 package by.epam.web.entity;
 
 public class User extends Entity {
+    public enum Status {
+        USER("user"), ADMIN("admin"), BANNED("banned");
+        private String statusName;
+        Status(String statusName){
+            this.statusName = statusName;
+        }
+        public String getName(){
+            return statusName;
+        }
+    }
     private int id;
     private String login;
     private String password;
@@ -12,7 +22,7 @@ public class User extends Entity {
     public User() {
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 

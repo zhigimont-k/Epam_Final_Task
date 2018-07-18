@@ -1,16 +1,5 @@
 package by.epam.web.controller;
 
-import by.epam.web.command.Command;
-import by.epam.web.command.CommandException;
-import by.epam.web.command.CommandFactory;
-import by.epam.web.constant.JspAddress;
-import by.epam.web.constant.JspAttribute;
-import by.epam.web.constant.JspParameter;
-import by.epam.web.util.SessionRequestContent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -18,7 +7,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
 
 @WebServlet(name = "UploadFile", urlPatterns = {"/upload"})
 @MultipartConfig(location = "/upload", maxFileSize = 10485760L)

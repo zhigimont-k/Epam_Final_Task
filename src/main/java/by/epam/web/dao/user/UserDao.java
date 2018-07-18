@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface UserDao extends AbstractDao<User> {
     boolean propertyExists(UserDaoImpl.UniqueUserInfo property, String value) throws DaoException;
-    User addUser(User user) throws DaoException;
+    User register(User user) throws DaoException;
     User findUserByLoginAndPassword(String login, String password) throws DaoException;
     User findUserByLogin(String login) throws DaoException;
     List<User> findAllUsers() throws DaoException;

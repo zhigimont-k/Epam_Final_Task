@@ -59,7 +59,7 @@ public class UserDaoImpl implements UserDao {
 
     public User addUser(User user) throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.getConnection();
@@ -98,7 +98,8 @@ public class UserDaoImpl implements UserDao {
         } finally {
 
             try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
             } catch (PoolException e) {
                 throw new DaoException(e);
             }
@@ -108,7 +109,7 @@ public class UserDaoImpl implements UserDao {
     public boolean propertyExists(UniqueUserInfo property, String value) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
 
         try {
             connection = pool.getConnection();
@@ -132,7 +133,8 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException(e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
             } catch (PoolException e) {
                 throw new DaoException(e);
             }
@@ -168,7 +170,8 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException("Failed to find user by login and password", e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
             } catch (PoolException e) {
                 throw new DaoException(e);
             }
@@ -177,7 +180,7 @@ public class UserDaoImpl implements UserDao {
 
     public User findUserByLogin(String login) throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         User user = null;
         try {
@@ -204,7 +207,8 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException("Failed to find user by login and password", e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
             } catch (PoolException e) {
                 throw new DaoException(e);
             }
@@ -213,7 +217,7 @@ public class UserDaoImpl implements UserDao {
 
     public List<User> findAllUsers() throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         List<User> userList = new LinkedList<>();
         try {
@@ -240,7 +244,8 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException("Failed to find users", e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement, resultSet);
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
             } catch (PoolException e) {
                 throw new DaoException(e);
             }
@@ -272,7 +277,8 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException("Failed to change user status", e);
         } finally {
             try {
-                pool.releaseConnection(connection, preparedStatement);
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
             } catch (PoolException e) {
                 throw new DaoException(e);
             }

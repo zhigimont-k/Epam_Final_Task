@@ -1,11 +1,8 @@
 package by.epam.web.controller;
 
 import by.epam.web.command.Command;
-import by.epam.web.command.CommandException;
 import by.epam.web.command.CommandFactory;
-import by.epam.web.constant.JspAddress;
-import by.epam.web.constant.JspAttribute;
-import by.epam.web.constant.JspParameter;
+import by.epam.web.controller.constant.JspParameter;
 import by.epam.web.util.SessionRequestContent;
 
 import javax.servlet.RequestDispatcher;

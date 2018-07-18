@@ -3,7 +3,7 @@ package by.epam.web.command;
 import java.util.Arrays;
 import java.util.Optional;
 
-public final class CommandFactory {
+public class CommandFactory {
     private static CommandFactory instance;
 
     private CommandFactory() {

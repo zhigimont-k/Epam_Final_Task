@@ -20,11 +20,9 @@
 <body>
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-<c:choose>
-    <c:when test = "${empty sessionScope.user}">
-        <jsp:forward page="/home" />
-    </c:when>
-</c:choose>
+<c:if test="${empty sessionScope.user}">
+    <jsp:forward page="${pageContext.request.contextPath}/login"/>
+</c:if>
 <form name="loginForm" method="POST" action="app">
     <input type="hidden" name="command" value="login"/>
     <label>${loginLabel}
