@@ -20,22 +20,17 @@ import java.util.regex.Pattern;
 
 public class ConnectionPool {
     private static Logger logger = LogManager.getLogger();
-    private static final String NUMERICAL_PATTERN = "^[1-9]\\d?$";
-    private static final int INITIAL_POOL_SIZE = 8;
-    private static final int MAX_POOL_SIZE = 32;
     private static ConnectionPool instance;
     private static AtomicBoolean isCreated = new AtomicBoolean(false);
     private static ReentrantLock lock = new ReentrantLock();
 
-    private static String url;
-    private static String user;
-    private static String password;
-    private static int poolSize;
     private BlockingQueue<ProxyConnection> availableConnections;
     private Deque<ProxyConnection> unavailableConnections;
 
+    private static int poolSize;
+
     private ConnectionPool() {
-        register();
+        ConnectionManager.buildPool();
         initPool();
     }
 
@@ -54,6 +49,10 @@ public class ConnectionPool {
         return instance;
     }
 
+    static void setPoolSize(int newPoolSize){
+        poolSize = newPoolSize;
+    }
+
     private void initPool() {
         availableConnections = new LinkedBlockingQueue<>();
         unavailableConnections = new ArrayDeque<>();
@@ -69,7 +68,7 @@ public class ConnectionPool {
         if (availableConnections.isEmpty()) {
             logger.fatal("Couldn't create any connections");
             throw new RuntimeException("Couldn't create any connections");
-        } else if (availableConnections.size() < INITIAL_POOL_SIZE) {
+        } else if (availableConnections.size() < ConnectionManager.INITIAL_POOL_SIZE) {
             for (int i = availableConnections.size() - 1; i < poolSize; i++) {
                 try {
                     createConnection();
@@ -79,35 +78,16 @@ public class ConnectionPool {
             }
         }
 
-        if (availableConnections.size() == INITIAL_POOL_SIZE) {
+        if (availableConnections.size() == ConnectionManager.INITIAL_POOL_SIZE) {
             logger.log(Level.INFO, "Successfully initialized connection pool");
         }
 
     }
 
-    private void register() {
-        ResourceBundle bundle = ResourceBundle.getBundle(ConnectionData.BASE_NAME);
-        url = bundle.getString(ConnectionData.DATABASE_URL);
-        user = bundle.getString(ConnectionData.DATABASE_USER);
-        password = bundle.getString(ConnectionData.DATABASE_PASSWORD);
-        String poolSizeString = bundle.getString(ConnectionData.DATABASE_POOL_SIZE);
-        Pattern pattern = Pattern.compile(NUMERICAL_PATTERN);
-        Matcher matcher = pattern.matcher(poolSizeString);
-
-        poolSize = (matcher.matches() && Integer.parseInt(poolSizeString) <= MAX_POOL_SIZE)
-                ? Integer.parseInt(poolSizeString) : INITIAL_POOL_SIZE;
-
-        try {
-            DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-        } catch (SQLException e) {
-            logger.fatal("Couldn't register driver", e);
-            throw new RuntimeException("Couldn't register driver", e);
-        }
-    }
-
     public ProxyConnection getConnection() throws PoolException {
         ProxyConnection connection = null;
-        if (availableConnections.size() >= INITIAL_POOL_SIZE && availableConnections.size() < MAX_POOL_SIZE) {
+        if (availableConnections.size() >= ConnectionManager.INITIAL_POOL_SIZE &&
+                availableConnections.size() < ConnectionManager.MAX_POOL_SIZE) {
             createConnection();
         }
         try {
@@ -122,8 +102,7 @@ public class ConnectionPool {
 
     private void createConnection() throws PoolException {
         try {
-            ProxyConnection connection = new ProxyConnection(DriverManager.getConnection(url, user, password));
-            availableConnections.add(connection);
+            availableConnections.add(ConnectionManager.createConnection());
         } catch (SQLException e) {
             throw new PoolException("Couldn't create connection", e);
         }
@@ -141,24 +120,6 @@ public class ConnectionPool {
             Thread.currentThread().interrupt();
         } catch (SQLException e) {
             throw new PoolException("Couldn't release connection", e);
-        }
-    }
-
-    public void releaseConnection(ProxyConnection connection, Statement statement) throws PoolException {
-        try {
-            statement.close();
-            releaseConnection(connection);
-        } catch (SQLException e){
-            throw new PoolException("Couldn't close statement", e);
-        }
-    }
-
-    public void releaseConnection(ProxyConnection connection, Statement statement, ResultSet resultSet) throws PoolException {
-        try {
-            resultSet.close();
-            releaseConnection(connection, statement);
-        } catch (SQLException e){
-            throw new PoolException("Couldn't close set", e);
         }
     }
 
