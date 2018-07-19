@@ -61,7 +61,6 @@ public class ConnectionPool {
                 createConnection();
             } catch (SQLException e) {
                 logger.log(Level.ERROR, e);
-                throw new RuntimeException(e);
             }
         }
 

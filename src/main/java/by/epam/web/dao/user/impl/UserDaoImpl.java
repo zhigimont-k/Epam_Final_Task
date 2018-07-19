@@ -37,6 +37,10 @@ public class UserDaoImpl implements UserDao {
     private static final String INSERT_USER = "INSERT INTO user " +
             "(login, password, user_email, phone_number, user_name) " +
             "VALUES (?, SHA1(?), ?, ?, ?)";
+    private static final String FIND_USER_BY_ID_QUERY = "SELECT user.user_id, " +
+            "user.login, user.password, user.user_email, user.phone_number, user.user_name, user.user_status " +
+            "FROM user " +
+            "WHERE user.user_id = ?";
     private static final String FIND_USER_BY_LOGIN_QUERY = "SELECT user.user_id, " +
             "user.login, user.password, user.user_email, user.phone_number, user.user_name, user.user_status " +
             "FROM user " +
@@ -56,6 +60,9 @@ public class UserDaoImpl implements UserDao {
             "FROM user ";
     private static final String UPDATE_USER_STATUS = "UPDATE user " +
             "SET user_status = ? WHERE login = ?";
+    private static final String UPDATE_USER = "UPDATE user " +
+            "SET login = ?, password = SHA1(?), user_name = ?, user_email = ?, phone_number = ?" +
+            "WHERE user_id = ?";
 
     public User register(User user) throws DaoException {
         ProxyConnection connection = null;
@@ -215,6 +222,43 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    public User findUserById(int id) throws DaoException {
+        ProxyConnection connection = null;
+        ResultSet resultSet;
+        PreparedStatement preparedStatement = null;
+        User user = null;
+        try {
+            connection = pool.getConnection();
+
+            preparedStatement = connection.prepareStatement(FIND_USER_BY_ID_QUERY);
+            preparedStatement.setInt(1, id);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                user = new User();
+
+                user.setId(id);
+                user.setLogin(resultSet.getString(DB_LOGIN_FIELD));
+                user.setPassword(resultSet.getString(DB_PASSWORD_FIELD));
+                user.setEmail(resultSet.getString(DB_USER_EMAIL_FIELD));
+                user.setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD));
+                user.setUserName(resultSet.getString(DB_USER_NAME_FIELD));
+                user.setStatus(resultSet.getString(DB_USER_STATUS_FIELD));
+            }
+
+            return user;
+        } catch (SQLException e) {
+            throw new DaoException("Failed to find user by login and password", e);
+        } finally {
+            try {
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
+            } catch (PoolException e) {
+                throw new DaoException(e);
+            }
+        }
+    }
+
     public List<User> findAllUsers() throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
@@ -269,6 +313,42 @@ public class UserDaoImpl implements UserDao {
                 logger.log(Level.INFO, "Setting user's " + login + " status to " + status);
                 Integer rowsAffected = preparedStatement.executeUpdate();
                 logger.log(Level.INFO, "Rows affected: "+rowsAffected);
+            } else {
+                throw new DaoException("Couldn't find user by login: " + login);
+            }
+
+            return user;
+        } catch (SQLException e) {
+            throw new DaoException("Failed to change user status", e);
+        } finally {
+            try {
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
+            } catch (PoolException e) {
+                throw new DaoException(e);
+            }
+        }
+    }
+
+    public User updateUser(int id, String login, String password, String userName,
+                                 String email, String phoneNumber) throws DaoException {
+        ProxyConnection connection = null;
+        PreparedStatement preparedStatement = null;
+        User user;
+        try {
+            connection = pool.getConnection();
+
+            user = findUserById(id);
+
+            if (user != null) {
+                preparedStatement = connection.prepareStatement(UPDATE_USER);
+                preparedStatement.setString(1, login);
+                preparedStatement.setString(2, password);
+                preparedStatement.setString(3, userName);
+                preparedStatement.setString(4, email);
+                preparedStatement.setString(5, phoneNumber);
+                preparedStatement.setInt(6, id);
+                preparedStatement.executeUpdate();
             } else {
                 throw new DaoException("Couldn't find user by login: " + login);
             }

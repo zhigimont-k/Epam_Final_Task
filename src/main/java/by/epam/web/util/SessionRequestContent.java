@@ -21,7 +21,7 @@ public class SessionRequestContent {
         if (requestParameters.get(parameterName) != null) {
             return requestParameters.get(parameterName)[0];
         } else {
-            throw new NoSuchRequestParameterException("Couldn't find parameter: "+parameterName);
+            throw new NoSuchRequestParameterException("Couldn't find parameter: " + parameterName);
         }
     }
 
@@ -29,7 +29,7 @@ public class SessionRequestContent {
         if (requestParameters.get(parameterName) != null) {
             return requestParameters.get(parameterName);
         } else {
-            throw new NoSuchRequestParameterException("Couldn't find parameter: "+parameterName);
+            throw new NoSuchRequestParameterException("Couldn't find parameter: " + parameterName);
         }
     }
 
@@ -39,6 +39,14 @@ public class SessionRequestContent {
 
     public void setSessionAttribute(String attributeName, Object attributeValue) {
         sessionAttributes.put(attributeName, attributeValue);
+    }
+
+    public Object getSessionAttribute(String attributeName) throws NoSuchRequestParameterException {
+        if (sessionAttributes.get(attributeName) != null) {
+            return sessionAttributes.get(attributeName);
+        } else {
+            throw new NoSuchRequestParameterException("Couldn't find attribute: " + attributeName);
+        }
     }
 
     public void insertValues(HttpServletRequest request) {

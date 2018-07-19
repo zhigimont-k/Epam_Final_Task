@@ -7,13 +7,19 @@
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
 
-    <fmt:message bundle="${locale}" key="locale.page.title.auth" var="pageTitle"/>
+    <fmt:message bundle="${locale}" key="locale.page.title.account" var="pageTitle"/>
     <fmt:message bundle="${locale}" key="locale.user.label.login" var="loginLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.password" var="passwordLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.button.signin" var="button"/>
+    <fmt:message bundle="${locale}" key="locale.user.label.password.old" var="oldPasswordLabel"/>
+    <fmt:message bundle="${locale}" key="locale.user.label.password.new" var="newPasswordLabel"/>
+    <fmt:message bundle="${locale}" key="locale.user.label.username" var="userNameLabel"/>
+    <fmt:message bundle="${locale}" key="locale.user.label.email" var="emailLabel"/>
+    <fmt:message bundle="${locale}" key="locale.user.label.phonenumber" var="phoneNumberLabel"/>
+    <fmt:message bundle="${locale}" key="locale.user.label.status" var="statusLabel"/>
+    <fmt:message bundle="${locale}" key="locale.user.role.admin" var="admin"/>
+    <fmt:message bundle="${locale}" key="locale.user.role.user" var="user"/>
+    <fmt:message bundle="${locale}" key="locale.user.role.banned" var="banned"/>
 
-    <fmt:message bundle="${locale}" key="locale.user.text.noAccountYet" var="toRegister"/>
-    <fmt:message bundle="${locale}" key="locale.user.button.signup" var="signUp"/>
+    <fmt:message bundle="${locale}" key="locale.user.button.signin" var="button"/>
 
     <title>${pageTitle} | Cat Beauty Bar</title>
 </head>
@@ -23,16 +29,14 @@
 <c:if test="${empty sessionScope.user}">
     <jsp:forward page="${pageContext.request.contextPath}/login"/>
 </c:if>
-<form name="loginForm" method="POST" action="app">
-    <input type="hidden" name="command" value="login"/>
+<form name="updateUserForm" method="POST" action="app">
+    <input type="hidden" name="command" value="updateUser"/>
     <label>${loginLabel}
-        <input type="text" name="login" maxlength="20" minlength="4"/></label>
-    <label>${passwordLabel}
+        <input type="text" name="login" value="${sessionScope.user.login}" maxlength="20" minlength="4"/></label>
+    <label>${oldPasswordLabel}
         <input type="password" name="password" maxlength="32" minlength="10"/></label>
     <br/>
     <input type="submit" value="${button}"/>
 </form>
-
-${toRegister} <a href="${pageContext.request.contextPath}/register">${signUp}</a>
 </body>
 </html>

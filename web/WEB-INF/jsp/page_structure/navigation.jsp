@@ -4,6 +4,9 @@
 
 <html>
 <head>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <script src="${pageContext.request.contextPath}/js/navigationbar.js"></script>
+    <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
 
@@ -16,18 +19,38 @@
     <fmt:message bundle="${locale}" key="locale.page.title.users" var="usersPage"/>
 </head>
 <body>
-<a href="${pageContext.request.contextPath}/home">${homePage}</a>
-<a href="${pageContext.request.contextPath}/services">${servicesPage}</a>
-<c:if test="${empty sessionScope.user}">
-    <a href="${pageContext.request.contextPath}/register">${signUp}</a>
-    <a href="${pageContext.request.contextPath}/login">${signIn}</a>
-</c:if>
-<c:if test="${sessionScope.user ne null}">
-    <a href="${pageContext.request.contextPath}/orders">${ordersPage}</a>
-    <a href="${pageContext.request.contextPath}/account">${accountPage}</a>
-</c:if>
-<c:if test="${sessionScope.user.status == 'admin'}">
-    <a href="app?command=viewUsers">${usersPage}</a>
-</c:if>
+
+<nav class="navbar">
+    <ul class="nav">
+        <li>
+            <a href="${pageContext.request.contextPath}/home">${homePage}</a>
+            <%--<ul class="dropdown">--%>
+                <%--<li>Menu 1</li>--%>
+                <%--<li>Menu 2</li>--%>
+                <%--<li>Menu 3</li>--%>
+                <%--<li>Menu 4</li>--%>
+                <%--<li>Menu 5</li>--%>
+            <%--</ul>--%>
+        </li>
+        <li>
+            <a href="${pageContext.request.contextPath}/services">${servicesPage}</a>
+        </li>
+
+        <c:if test="${empty sessionScope.user}">
+            <li><a href="${pageContext.request.contextPath}/register">${signUp}</a></li>
+            <li><a href="${pageContext.request.contextPath}/login">${signIn}</a></li>
+        </c:if>
+        <c:if test="${sessionScope.user ne null}">
+            <li><a href="${pageContext.request.contextPath}/orders">${ordersPage}</a></li>
+            <li><a href="${pageContext.request.contextPath}/account">${accountPage}</a></li>
+        </c:if>
+        <c:if test="${sessionScope.user.status == 'admin'}">
+            <li><a href="app?command=viewUsers">${usersPage}</a></li>
+        </c:if>
+        <c:if test="${sessionScope.user ne null}">
+            <li><a href="app?command=logout">${logout}</a></li>
+        </c:if>
+    </ul>
+</nav>
 </body>
 </html>

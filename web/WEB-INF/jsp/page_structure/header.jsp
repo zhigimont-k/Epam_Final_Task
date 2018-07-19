@@ -12,13 +12,9 @@
     <fmt:message bundle="${locale}" key="locale.user.button.logout" var="logout"/>
 </head>
 <body>
+<jsp:include page="/WEB-INF/jsp/page_structure/navigation.jsp"/>
 <jsp:include page="/WEB-INF/jsp/page_structure/chooseLang.jsp"/>
 <br/>
 <jsp:include page="/WEB-INF/jsp/page_structure/welcomePanel.jsp"/>
-<jsp:include page="/WEB-INF/jsp/page_structure/navigation.jsp"/>
-<c:if test="${sessionScope.user ne null}">
-    <a href="app?command=logout">${logout}</a>
-    <%--<jsp:include page="/WEB-INF/jsp/page_structure/logout.jsp"/>--%>
-</c:if>
 </body>
 </html>

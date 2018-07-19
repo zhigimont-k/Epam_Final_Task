@@ -73,9 +73,18 @@ public class UserService {
         }
     }
 
-    public User changeUserStatus(String login, String status) throws ServiceException{
+    public User changeUserStatus(String login, String status) throws ServiceException {
         try {
             return userDao.changeUserStatus(login, status);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public User updateUser(User user) throws ServiceException {
+        try {
+            return userDao.updateUser(user.getId(), user.getLogin(), user.getPassword(),
+                    user.getUserName(), user.getEmail(), user.getPhoneNumber());
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

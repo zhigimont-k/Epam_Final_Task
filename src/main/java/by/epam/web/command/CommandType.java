@@ -5,7 +5,7 @@ import by.epam.web.command.admin.ViewUsersCommand;
 import by.epam.web.command.common.ChangeLocaleCommand;
 import by.epam.web.command.user.LoginCommand;
 import by.epam.web.command.user.LogoutCommand;
-import by.epam.web.command.user.RegisterCommand;
+import by.epam.web.command.common.RegisterCommand;
 
 public enum CommandType {
     REGISTER("register", new RegisterCommand()),

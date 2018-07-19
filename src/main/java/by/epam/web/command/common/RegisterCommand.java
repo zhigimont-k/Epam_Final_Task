@@ -1,4 +1,4 @@
-package by.epam.web.command.user;
+package by.epam.web.command.common;
 
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
