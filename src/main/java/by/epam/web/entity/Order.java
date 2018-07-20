@@ -1,24 +1,29 @@
 package by.epam.web.entity;
 
-import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 public class Order extends Entity {
-    public enum Status{
-        PENDING_APPROVAL("pendingApproval"), CONFIRMED("confirmed"), CANCELLED("cancelled"), FINISHED("finished");
+    public enum Status {
+        PENDING_APPROVAL("pending_approval"), CONFIRMED("confirmed"), CANCELLED("cancelled"), FINISHED("finished");
         private String name;
-        Status(String name){
+
+        Status(String name) {
             this.name = name;
         }
-        public String getName(){
+
+        public String getName() {
             return name;
         }
     }
 
     private int id;
-    private BigDecimal price;
     private int userId;
-    private int activityId;
+    private List<Integer> activityIdList = new ArrayList<>();
     private Status status;
+    private Timestamp dateTime;
 
     public int getId() {
         return id;
@@ -26,14 +31,6 @@ public class Order extends Entity {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
     }
 
     public int getUserId() {
@@ -44,12 +41,40 @@ public class Order extends Entity {
         this.userId = userId;
     }
 
-    public int getActivityId() {
-        return activityId;
+    public int size() {
+        return activityIdList.size();
     }
 
-    public void setActivityId(int activityId) {
-        this.activityId = activityId;
+    public boolean isEmpty() {
+        return activityIdList.isEmpty();
+    }
+
+    public boolean add(Integer integer) {
+        return activityIdList.add(integer);
+    }
+
+    public boolean remove(Object o) {
+        return activityIdList.remove(o);
+    }
+
+    public Integer get(int index) {
+        return activityIdList.get(index);
+    }
+
+    public Integer set(int index, Integer element) {
+        return activityIdList.set(index, element);
+    }
+
+    public void add(int index, Integer element) {
+        activityIdList.add(index, element);
+    }
+
+    public Integer remove(int index) {
+        return activityIdList.remove(index);
+    }
+
+    public void forEach(Consumer<? super Integer> action) {
+        activityIdList.forEach(action);
     }
 
     public String getStatus() {
@@ -68,14 +93,22 @@ public class Order extends Entity {
         }
     }
 
+    public Timestamp getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(Timestamp dateTime) {
+        this.dateTime = dateTime;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
                 "id=" + id +
-                ", price=" + price +
                 ", userId=" + userId +
-                ", activityId=" + activityId +
+                ", activityIdList=" + activityIdList +
                 ", status=" + status +
+                ", dateTime=" + dateTime +
                 '}';
     }
 }

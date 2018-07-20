@@ -37,15 +37,15 @@ public class UserDaoImpl implements UserDao {
     private static final String INSERT_USER = "INSERT INTO user " +
             "(login, password, user_email, phone_number, user_name) " +
             "VALUES (?, SHA1(?), ?, ?, ?)";
-    private static final String FIND_USER_BY_ID_QUERY = "SELECT user.user_id, " +
+    private static final String FIND_USER_BY_ID = "SELECT user.user_id, " +
             "user.login, user.password, user.user_email, user.phone_number, user.user_name, user.user_status " +
             "FROM user " +
             "WHERE user.user_id = ?";
-    private static final String FIND_USER_BY_LOGIN_QUERY = "SELECT user.user_id, " +
+    private static final String FIND_USER_BY_LOGIN = "SELECT user.user_id, " +
             "user.login, user.password, user.user_email, user.phone_number, user.user_name, user.user_status " +
             "FROM user " +
             "WHERE user.login = ?";
-    private static final String FIND_USER_BY_EMAIL_QUERY = "SELECT user.user_id, " +
+    private static final String FIND_USER_BY_EMAIL = "SELECT user.user_id, " +
             "user.login, user.password, user.user_email, user.phone_number, user.user_name, user.user_status " +
             "FROM user " +
             "WHERE user.user_email = ?";
@@ -53,7 +53,7 @@ public class UserDaoImpl implements UserDao {
             "user.login, user.password, user.user_email, user.phone_number, user.user_name, user.user_status " +
             "FROM user " +
             "WHERE user.phone_number = ?";
-    private static final String FIND_USER_BY_LOGIN_AND_PASSWORD_QUERY = FIND_USER_BY_LOGIN_QUERY +
+    private static final String FIND_USER_BY_LOGIN_AND_PASSWORD = FIND_USER_BY_LOGIN +
             " AND user.password = SHA1(?)";
     private static final String FIND_ALL_USERS = "SELECT user.user_id, " +
             "user.login, user.password, user.user_email, user.phone_number, user.user_name, user.user_status " +
@@ -64,6 +64,7 @@ public class UserDaoImpl implements UserDao {
             "SET login = ?, password = SHA1(?), user_name = ?, user_email = ?, phone_number = ?" +
             "WHERE user_id = ?";
 
+    @Override
     public User register(User user) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
@@ -113,6 +114,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    @Override
     public boolean propertyExists(UniqueUserInfo property, String value) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
@@ -122,10 +124,10 @@ public class UserDaoImpl implements UserDao {
             connection = pool.getConnection();
             switch (property) {
                 case LOGIN:
-                    preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN_QUERY);
+                    preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN);
                     break;
                 case EMAIL:
-                    preparedStatement = connection.prepareStatement(FIND_USER_BY_EMAIL_QUERY);
+                    preparedStatement = connection.prepareStatement(FIND_USER_BY_EMAIL);
                     break;
                 case PHONE_NUMBER:
                     preparedStatement = connection.prepareStatement(FIND_USER_BY_PHONE_NUMBER);
@@ -148,6 +150,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    @Override
     public User findUserByLoginAndPassword(String login, String password) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet = null;
@@ -156,7 +159,7 @@ public class UserDaoImpl implements UserDao {
         try {
             connection = pool.getConnection();
 
-            preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN_AND_PASSWORD_QUERY);
+            preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN_AND_PASSWORD);
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, password);
             resultSet = preparedStatement.executeQuery();
@@ -185,6 +188,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    @Override
     public User findUserByLogin(String login) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
@@ -193,7 +197,7 @@ public class UserDaoImpl implements UserDao {
         try {
             connection = pool.getConnection();
 
-            preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN_QUERY);
+            preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN);
             preparedStatement.setString(1, login);
             resultSet = preparedStatement.executeQuery();
 
@@ -222,6 +226,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    @Override
     public User findUserById(int id) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
@@ -230,7 +235,7 @@ public class UserDaoImpl implements UserDao {
         try {
             connection = pool.getConnection();
 
-            preparedStatement = connection.prepareStatement(FIND_USER_BY_ID_QUERY);
+            preparedStatement = connection.prepareStatement(FIND_USER_BY_ID);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
 
@@ -259,6 +264,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    @Override
     public List<User> findAllUsers() throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
@@ -296,6 +302,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    @Override
     public User changeUserStatus(String login, String status) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
@@ -329,6 +336,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    @Override
     public User updateUser(int id, String login, String password, String userName,
                                  String email, String phoneNumber) throws DaoException {
         ProxyConnection connection = null;

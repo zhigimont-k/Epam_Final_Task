@@ -19,7 +19,7 @@ public class ActivityService {
             activity.setName(name);
             activity.setDescription(description);
             activity.setPrice(price);
-            return activityDao.insertActivity(activity);
+            return activityDao.addActivity(activity);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

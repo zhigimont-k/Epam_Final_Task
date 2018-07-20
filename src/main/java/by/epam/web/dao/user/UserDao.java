@@ -12,7 +12,9 @@ public interface UserDao extends AbstractDao<User> {
     User register(User user) throws DaoException;
     User findUserByLoginAndPassword(String login, String password) throws DaoException;
     User findUserByLogin(String login) throws DaoException;
+    User findUserById(int id) throws DaoException;
     List<User> findAllUsers() throws DaoException;
     User changeUserStatus(String login, String status) throws DaoException;
-
+    User updateUser(int id, String login, String password, String userName,
+                    String email, String phoneNumber) throws DaoException;
 }
