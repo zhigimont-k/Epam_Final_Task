@@ -9,7 +9,8 @@
     <fmt:message bundle="${locale}" key="locale.info.text.welcome" var="welcome"/>
 
 
-    <title>${pageTitle} | Cat Beauty Bar</title>
+    <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
+    <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
 <c:if test="${empty sessionScope.user}">

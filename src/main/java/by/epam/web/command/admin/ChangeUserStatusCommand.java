@@ -7,6 +7,7 @@ import by.epam.web.controller.constant.JspAttribute;
 import by.epam.web.controller.constant.JspParameter;
 import by.epam.web.entity.User;
 import by.epam.web.service.ServiceException;
+import by.epam.web.service.ServiceFactory;
 import by.epam.web.service.UserService;
 import by.epam.web.util.NoSuchRequestParameterException;
 import by.epam.web.util.SessionRequestContent;
@@ -25,7 +26,8 @@ public class ChangeUserStatusCommand implements Command {
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
-            UserService service = new UserService();
+
+            UserService service = ServiceFactory.getInstance().getUserService();
             String login = requestContent.getParameter(JspParameter.LOGIN);
             String status = requestContent.getParameter(JspParameter.USER_STATUS);
             service.changeUserStatus(login, status);

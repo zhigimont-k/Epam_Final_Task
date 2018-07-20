@@ -6,6 +6,7 @@ import by.epam.web.controller.constant.JspAddress;
 import by.epam.web.controller.constant.JspAttribute;
 import by.epam.web.entity.User;
 import by.epam.web.service.ServiceException;
+import by.epam.web.service.ServiceFactory;
 import by.epam.web.service.UserService;
 import by.epam.web.util.SessionRequestContent;
 import org.apache.logging.log4j.Level;
@@ -21,7 +22,8 @@ public class ViewUsersCommand implements Command {
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
-            UserService service = new UserService();
+
+            UserService service = ServiceFactory.getInstance().getUserService();
             List<User> userList = service.findAllUsers();
 
             requestContent.setAttribute(JspAttribute.USER_LIST, userList);

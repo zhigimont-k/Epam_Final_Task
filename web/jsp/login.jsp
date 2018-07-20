@@ -17,7 +17,8 @@
 
     <fmt:message bundle="${locale}" key="locale.user.warning.auth.fail" var="authFailMessage"/>
 
-    <title>${pageTitle} | Cat Beauty Bar</title>
+    <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
+    <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
 

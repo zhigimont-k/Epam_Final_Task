@@ -17,6 +17,7 @@
     <fmt:message bundle="${locale}" key="locale.page.title.account" var="accountPage"/>
     <fmt:message bundle="${locale}" key="locale.page.title.orders" var="ordersPage"/>
     <fmt:message bundle="${locale}" key="locale.page.title.users" var="usersPage"/>
+    <fmt:message bundle="${locale}" key="locale.user.button.logout" var="logout"/>
 </head>
 <body>
 

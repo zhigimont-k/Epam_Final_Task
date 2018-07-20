@@ -21,7 +21,8 @@
 
     <fmt:message bundle="${locale}" key="locale.user.button.signin" var="button"/>
 
-    <title>${pageTitle} | Cat Beauty Bar</title>
+    <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
+    <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
 

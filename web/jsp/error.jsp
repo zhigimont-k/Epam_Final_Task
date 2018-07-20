@@ -9,7 +9,8 @@
     <fmt:message bundle="${locale}" key="locale.error.text" var="errorText"/>
     <fmt:message bundle="${locale}" key="locale.page.title.error" var="pageTitle"/>
 
-    <title>${pageTitle}</title>
+    <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
+    <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
 <div>

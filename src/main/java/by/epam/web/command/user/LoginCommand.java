@@ -7,6 +7,7 @@ import by.epam.web.controller.constant.JspAttribute;
 import by.epam.web.controller.constant.JspParameter;
 import by.epam.web.entity.User;
 import by.epam.web.service.ServiceException;
+import by.epam.web.service.ServiceFactory;
 import by.epam.web.service.UserService;
 import by.epam.web.util.NoSuchRequestParameterException;
 import by.epam.web.util.SessionRequestContent;
@@ -29,7 +30,7 @@ public class LoginCommand implements Command {
         try {
             String login = requestContent.getParameter(JspParameter.LOGIN);
             String password = requestContent.getParameter(JspParameter.PASSWORD);
-            UserService service = new UserService();
+            UserService service = ServiceFactory.getInstance().getUserService();
             if (service.findUserByLoginAndPassword(login, password)) {
                 User user = service.userLogin(login, password);
                 requestContent.setSessionAttribute(JspAttribute.USER, user);

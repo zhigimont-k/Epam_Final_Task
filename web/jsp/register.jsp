@@ -22,7 +22,8 @@
     <fmt:message bundle="${locale}" key="locale.user.warning.email" var="emailWarning"/>
     <fmt:message bundle="${locale}" key="locale.user.warning.phonenumber" var="phoneNumberWarning"/>
 
-    <title>${pageTitle} | Cat Beauty Bar</title>
+    <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
+    <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>

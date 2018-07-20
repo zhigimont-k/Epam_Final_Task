@@ -7,6 +7,7 @@ import by.epam.web.controller.constant.JspAttribute;
 import by.epam.web.controller.constant.JspParameter;
 import by.epam.web.entity.User;
 import by.epam.web.service.ServiceException;
+import by.epam.web.service.ServiceFactory;
 import by.epam.web.service.UserService;
 import by.epam.web.util.NoSuchRequestParameterException;
 import by.epam.web.util.SessionRequestContent;
@@ -31,7 +32,8 @@ public class RegisterCommand implements Command {
             String email = requestContent.getParameter(JspParameter.EMAIL);
             String userName = requestContent.getParameter(JspParameter.USER_NAME);
             String phoneNumber = requestContent.getParameter(JspParameter.PHONE_NUMBER);
-            UserService service = new UserService();
+
+            UserService service = ServiceFactory.getInstance().getUserService();
 
             boolean loginExists = service.loginExists(login);
             boolean emailExists = service.emailExists(email);

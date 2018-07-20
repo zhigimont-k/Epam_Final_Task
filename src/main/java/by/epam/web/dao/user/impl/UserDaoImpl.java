@@ -211,7 +211,7 @@ public class UserDaoImpl implements UserDao {
 
             return user;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user by login and password", e);
+            throw new DaoException("Failed to find user by login", e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -248,7 +248,7 @@ public class UserDaoImpl implements UserDao {
 
             return user;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user by login and password", e);
+            throw new DaoException("Failed to find user by id", e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -311,8 +311,7 @@ public class UserDaoImpl implements UserDao {
                 preparedStatement.setString(2, login);
                 logger.log(Level.INFO, preparedStatement);
                 logger.log(Level.INFO, "Setting user's " + login + " status to " + status);
-                Integer rowsAffected = preparedStatement.executeUpdate();
-                logger.log(Level.INFO, "Rows affected: "+rowsAffected);
+                preparedStatement.executeUpdate();
             } else {
                 throw new DaoException("Couldn't find user by login: " + login);
             }
@@ -350,7 +349,7 @@ public class UserDaoImpl implements UserDao {
                 preparedStatement.setInt(6, id);
                 preparedStatement.executeUpdate();
             } else {
-                throw new DaoException("Couldn't find user by login: " + login);
+                throw new DaoException("Couldn't find user by id: " + login);
             }
 
             return user;

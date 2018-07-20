@@ -10,6 +10,7 @@ import java.util.List;
 
 public class ActivityService {
     private static final ActivityDao activityDao = new ActivityDaoImpl();
+    ActivityService(){}
 
     public Activity addActivity(String name, String description, BigDecimal price) throws ServiceException {
         Activity activity;

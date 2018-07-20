@@ -8,6 +8,7 @@ import java.util.List;
 
 public class UserService {
     private static final UserDaoImpl userDao = new UserDaoImpl();
+    UserService(){}
 
     public User registerUser(String login, String password, String email, String phoneNumber, String userName) throws ServiceException {
         User newUser;
