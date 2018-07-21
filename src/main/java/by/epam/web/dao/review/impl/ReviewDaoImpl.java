@@ -11,6 +11,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class ReviewDaoImpl implements ReviewDao {
@@ -148,6 +150,7 @@ public class ReviewDaoImpl implements ReviewDao {
                 review.setCreationDate(resultSet.getTimestamp(DB_REVIEW_CREATION_DATE_FIELD));
                 review.setMark(resultSet.getInt(DB_REVIEW_MARK_FIELD));
                 review.setMessage(resultSet.getString(DB_REVIEW_MESSAGE_FIELD));
+                logger.log(Level.INFO, "Found review: " + review);
                 result = Optional.of(review);
             }
 
@@ -165,11 +168,12 @@ public class ReviewDaoImpl implements ReviewDao {
     }
 
     @Override
-    public Optional<Review> findReviewByActivityId(int activityId) throws DaoException {
+    public List<Review> findReviewsByActivityId(int activityId) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
-        Optional<Review> result = Optional.empty();
+
+        List<Review> reviewList = new ArrayList<>();
         try {
             connection = pool.getConnection();
 
@@ -177,7 +181,7 @@ public class ReviewDaoImpl implements ReviewDao {
             preparedStatement.setInt(1, activityId);
             resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 Review review = new Review();
 
                 review.setId(resultSet.getInt(DB_REVIEW_ID_FIELD));
@@ -186,10 +190,11 @@ public class ReviewDaoImpl implements ReviewDao {
                 review.setCreationDate(resultSet.getTimestamp(DB_REVIEW_CREATION_DATE_FIELD));
                 review.setMark(resultSet.getInt(DB_REVIEW_MARK_FIELD));
                 review.setMessage(resultSet.getString(DB_REVIEW_MESSAGE_FIELD));
-                result = Optional.of(review);
+                logger.log(Level.INFO, "Found review: " + review);
+                reviewList.add(review);
             }
 
-            return result;
+            return reviewList;
         } catch (SQLException e) {
             throw new DaoException("Failed to find review by activity id", e);
         } finally {
@@ -203,11 +208,11 @@ public class ReviewDaoImpl implements ReviewDao {
     }
 
     @Override
-    public Optional<Review> findReviewByUserId(int userId) throws DaoException {
+    public List<Review> findReviewsByUserId(int userId) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
-        Optional<Review> result = Optional.empty();
+        List<Review> reviewList = new ArrayList<>();
         try {
             connection = pool.getConnection();
 
@@ -215,7 +220,7 @@ public class ReviewDaoImpl implements ReviewDao {
             preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 Review review = new Review();
 
                 review.setId(resultSet.getInt(DB_REVIEW_ID_FIELD));
@@ -224,10 +229,11 @@ public class ReviewDaoImpl implements ReviewDao {
                 review.setCreationDate(resultSet.getTimestamp(DB_REVIEW_CREATION_DATE_FIELD));
                 review.setMark(resultSet.getInt(DB_REVIEW_MARK_FIELD));
                 review.setMessage(resultSet.getString(DB_REVIEW_MESSAGE_FIELD));
-                result = Optional.of(review);
+                logger.log(Level.INFO, "Found review: " + review);
+                reviewList.add(review);
             }
 
-            return result;
+            return reviewList;
         } catch (SQLException e) {
             throw new DaoException("Failed to find review by user id", e);
         } finally {

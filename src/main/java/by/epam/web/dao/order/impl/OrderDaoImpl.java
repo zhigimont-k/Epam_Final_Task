@@ -359,7 +359,7 @@ public class OrderDaoImpl implements OrderDao {
         List<Activity> activityList = findActivitiesByOrderId(orderId);
         BigDecimal totalPrice = BigDecimal.ZERO;
         for (Activity activity : activityList) {
-            totalPrice.add(activity.getPrice());
+            totalPrice = totalPrice.add(activity.getPrice());
         }
         return totalPrice;
     }

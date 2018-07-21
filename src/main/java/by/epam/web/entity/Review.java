@@ -1,14 +1,13 @@
 package by.epam.web.entity;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 public class Review extends Entity{
     private int id;
     private int userId;
     private int activityId;
     private Timestamp creationDate;
-    private String message;
+    private String message = "";
     private int mark;
 
     public int getId() {
