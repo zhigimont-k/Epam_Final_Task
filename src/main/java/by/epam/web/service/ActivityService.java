@@ -7,6 +7,7 @@ import by.epam.web.entity.Activity;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public class ActivityService {
     private static final ActivityDao activityDao = new ActivityDaoImpl();
@@ -33,10 +34,9 @@ public class ActivityService {
         }
     }
 
-    public Activity changeActivityStatus(String name, String status) throws ServiceException{
+    public Optional<Activity> changeActivityStatus(int id, String status) throws ServiceException{
         try {
-            Activity found = activityDao.findActivityByName(name);
-            return activityDao.changeActivityStatus(found.getId(), status);
+            return activityDao.changeActivityStatus(id, status);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

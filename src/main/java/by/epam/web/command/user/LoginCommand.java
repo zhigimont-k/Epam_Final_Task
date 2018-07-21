@@ -32,7 +32,7 @@ public class LoginCommand implements Command {
             String password = requestContent.getParameter(JspParameter.PASSWORD);
             UserService service = ServiceFactory.getInstance().getUserService();
             if (service.findUserByLoginAndPassword(login, password)) {
-                User user = service.userLogin(login, password);
+                User user = service.userLogin(login, password).get();
                 requestContent.setSessionAttribute(JspAttribute.USER, user);
                 router.setTransitionType(PageRouter.TransitionType.REDIRECT);
                 router.setPage(JspAddress.HOME_PAGE);

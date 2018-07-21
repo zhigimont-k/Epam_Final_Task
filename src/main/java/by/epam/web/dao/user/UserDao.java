@@ -6,15 +6,16 @@ import by.epam.web.dao.user.impl.UserDaoImpl;
 import by.epam.web.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserDao extends AbstractDao<User> {
     boolean propertyExists(UserDaoImpl.UniqueUserInfo property, String value) throws DaoException;
     User register(User user) throws DaoException;
-    User findUserByLoginAndPassword(String login, String password) throws DaoException;
-    User findUserByLogin(String login) throws DaoException;
-    User findUserById(int id) throws DaoException;
+    Optional<User> findUserByLoginAndPassword(String login, String password) throws DaoException;
+    Optional<User> findUserByLogin(String login) throws DaoException;
+    Optional<User> findUserById(int id) throws DaoException;
     List<User> findAllUsers() throws DaoException;
-    User changeUserStatus(String login, String status) throws DaoException;
-    User updateUser(int id, String login, String password, String userName,
+    Optional<User> changeUserStatus(String login, String status) throws DaoException;
+    Optional<User> updateUser(int id, String login, String password, String userName,
                     String email, String phoneNumber) throws DaoException;
 }

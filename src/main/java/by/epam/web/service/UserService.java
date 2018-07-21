@@ -5,6 +5,7 @@ import by.epam.web.dao.user.impl.UserDaoImpl;
 import by.epam.web.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public class UserService {
     private static final UserDaoImpl userDao = new UserDaoImpl();
@@ -25,7 +26,7 @@ public class UserService {
         }
     }
 
-    public User userLogin(String login, String password) throws ServiceException {
+    public Optional<User> userLogin(String login, String password) throws ServiceException {
         try {
             return userDao.findUserByLoginAndPassword(login, password);
         } catch (DaoException e) {
@@ -59,8 +60,8 @@ public class UserService {
 
     public boolean findUserByLoginAndPassword(String login, String password) throws ServiceException {
         try {
-            User found = userDao.findUserByLoginAndPassword(login, password);
-            return found != null;
+            Optional<User> found = userDao.findUserByLoginAndPassword(login, password);
+            return found.isPresent();
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -74,7 +75,7 @@ public class UserService {
         }
     }
 
-    public User changeUserStatus(String login, String status) throws ServiceException {
+    public Optional<User> changeUserStatus(String login, String status) throws ServiceException {
         try {
             return userDao.changeUserStatus(login, status);
         } catch (DaoException e) {
@@ -82,7 +83,7 @@ public class UserService {
         }
     }
 
-    public User updateUser(User user) throws ServiceException {
+    public Optional<User> updateUser(User user) throws ServiceException {
         try {
             return userDao.updateUser(user.getId(), user.getLogin(), user.getPassword(),
                     user.getUserName(), user.getEmail(), user.getPhoneNumber());

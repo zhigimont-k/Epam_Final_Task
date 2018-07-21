@@ -14,8 +14,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public class UserDaoImpl implements UserDao {
     private static final Logger logger = LogManager.getLogger();
@@ -151,11 +153,11 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User findUserByLoginAndPassword(String login, String password) throws DaoException {
+    public Optional<User> findUserByLoginAndPassword(String login, String password) throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         PreparedStatement preparedStatement = null;
-        User user = null;
+        Optional<User> result = Optional.empty();
         try {
             connection = pool.getConnection();
 
@@ -165,7 +167,7 @@ public class UserDaoImpl implements UserDao {
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                user = new User();
+                User user = new User();
                 user.setId(resultSet.getInt(DB_USER_ID_FIELD));
                 user.setLogin(login);
                 user.setPassword(password);
@@ -173,9 +175,10 @@ public class UserDaoImpl implements UserDao {
                 user.setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD));
                 user.setUserName(resultSet.getString(DB_USER_NAME_FIELD));
                 user.setStatus(resultSet.getString(DB_USER_STATUS_FIELD));
+                result = Optional.of(user);
             }
 
-            return user;
+            return result;
         } catch (SQLException e) {
             throw new DaoException("Failed to find user by login and password", e);
         } finally {
@@ -189,11 +192,11 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User findUserByLogin(String login) throws DaoException {
+    public Optional<User> findUserByLogin(String login) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
-        User user = null;
+        Optional<User> result = Optional.empty();
         try {
             connection = pool.getConnection();
 
@@ -202,7 +205,7 @@ public class UserDaoImpl implements UserDao {
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                user = new User();
+                User user = new User();
 
                 user.setId(resultSet.getInt(DB_USER_ID_FIELD));
                 user.setLogin(login);
@@ -211,9 +214,10 @@ public class UserDaoImpl implements UserDao {
                 user.setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD));
                 user.setUserName(resultSet.getString(DB_USER_NAME_FIELD));
                 user.setStatus(resultSet.getString(DB_USER_STATUS_FIELD));
+                result = Optional.of(user);
             }
 
-            return user;
+            return result;
         } catch (SQLException e) {
             throw new DaoException("Failed to find user by login", e);
         } finally {
@@ -227,11 +231,11 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User findUserById(int id) throws DaoException {
+    public Optional<User> findUserById(int id) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
-        User user = null;
+        Optional<User> result = Optional.empty();
         try {
             connection = pool.getConnection();
 
@@ -240,7 +244,7 @@ public class UserDaoImpl implements UserDao {
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                user = new User();
+                User user = new User();
 
                 user.setId(id);
                 user.setLogin(resultSet.getString(DB_LOGIN_FIELD));
@@ -249,9 +253,10 @@ public class UserDaoImpl implements UserDao {
                 user.setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD));
                 user.setUserName(resultSet.getString(DB_USER_NAME_FIELD));
                 user.setStatus(resultSet.getString(DB_USER_STATUS_FIELD));
+                result = Optional.of(user);
             }
 
-            return user;
+            return result;
         } catch (SQLException e) {
             throw new DaoException("Failed to find user by id", e);
         } finally {
@@ -269,7 +274,7 @@ public class UserDaoImpl implements UserDao {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
-        List<User> userList = new LinkedList<>();
+        List<User> userList = new ArrayList<>();
         try {
             connection = pool.getConnection();
 
@@ -303,16 +308,16 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User changeUserStatus(String login, String status) throws DaoException {
+    public Optional<User> changeUserStatus(String login, String status) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
-        User user;
+        Optional<User> user;
         try {
             connection = pool.getConnection();
 
             user = findUserByLogin(login);
 
-            if (user != null) {
+            if (user.isPresent()) {
                 preparedStatement = connection.prepareStatement(UPDATE_USER_STATUS);
                 preparedStatement.setString(1, status);
                 preparedStatement.setString(2, login);
@@ -337,17 +342,17 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User updateUser(int id, String login, String password, String userName,
+    public Optional<User> updateUser(int id, String login, String password, String userName,
                                  String email, String phoneNumber) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
-        User user;
+        Optional<User> user;
         try {
             connection = pool.getConnection();
 
             user = findUserById(id);
 
-            if (user != null) {
+            if (user.isPresent()) {
                 preparedStatement = connection.prepareStatement(UPDATE_USER);
                 preparedStatement.setString(1, login);
                 preparedStatement.setString(2, password);

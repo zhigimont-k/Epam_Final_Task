@@ -2,6 +2,7 @@ package by.epam.web.entity;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -21,7 +22,7 @@ public class Order extends Entity {
 
     private int id;
     private int userId;
-    private List<Integer> activityIdList = new ArrayList<>();
+    private List<Activity> activityList = new ArrayList<>();
     private Status status;
     private Timestamp dateTime;
 
@@ -41,40 +42,48 @@ public class Order extends Entity {
         this.userId = userId;
     }
 
-    public int size() {
-        return activityIdList.size();
+    public int activityListSize() {
+        return activityList.size();
     }
 
-    public boolean isEmpty() {
-        return activityIdList.isEmpty();
+    public boolean activityListIsEmpty() {
+        return activityList.isEmpty();
     }
 
-    public boolean add(Integer integer) {
-        return activityIdList.add(integer);
+    public boolean addActivity(Activity activity) {
+        return activityList.add(activity);
     }
 
-    public boolean remove(Object o) {
-        return activityIdList.remove(o);
+    public boolean removeActivity(Object o) {
+        return activityList.remove(o);
     }
 
-    public Integer get(int index) {
-        return activityIdList.get(index);
+    public void sortActivityList(Comparator<? super Activity> c) {
+        activityList.sort(c);
     }
 
-    public Integer set(int index, Integer element) {
-        return activityIdList.set(index, element);
+    public Activity getActivity(int index) {
+        return activityList.get(index);
     }
 
-    public void add(int index, Integer element) {
-        activityIdList.add(index, element);
+    public Activity setActivity(int index, Activity element) {
+        return activityList.set(index, element);
     }
 
-    public Integer remove(int index) {
-        return activityIdList.remove(index);
+    public void addActivity(int index, Activity element) {
+        activityList.add(index, element);
     }
 
-    public void forEach(Consumer<? super Integer> action) {
-        activityIdList.forEach(action);
+    public Activity removeActivity(int index) {
+        return activityList.remove(index);
+    }
+
+    public int indexOfActivity(Object o) {
+        return activityList.indexOf(o);
+    }
+
+    public void forEach(Consumer<? super Activity> action) {
+        activityList.forEach(action);
     }
 
     public String getStatus() {
@@ -106,7 +115,7 @@ public class Order extends Entity {
         return "Order{" +
                 "id=" + id +
                 ", userId=" + userId +
-                ", activityIdList=" + activityIdList +
+                ", activityList=" + activityList +
                 ", status=" + status +
                 ", dateTime=" + dateTime +
                 '}';

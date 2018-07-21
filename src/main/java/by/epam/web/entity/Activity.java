@@ -69,6 +69,10 @@ public class Activity extends Entity {
         }
     }
 
+    public boolean isAvailable(){
+        return Status.AVAILABLE.equals(status);
+    }
+
     @Override
     public String toString() {
         return "Activity{" +

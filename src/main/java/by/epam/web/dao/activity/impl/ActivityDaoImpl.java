@@ -15,8 +15,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public class ActivityDaoImpl implements ActivityDao {
     private static final Logger logger = LogManager.getLogger();
@@ -99,11 +101,11 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public Activity findActivityById(int id) throws DaoException{
+    public Optional<Activity> findActivityById(int id) throws DaoException{
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
-        Activity activity = null;
+        Optional<Activity> result = Optional.empty();
         try {
             connection = pool.getConnection();
 
@@ -112,16 +114,17 @@ public class ActivityDaoImpl implements ActivityDao {
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                activity = new Activity();
+                Activity activity = new Activity();
 
                 activity.setId(id);
                 activity.setName(resultSet.getString(DB_ACTIVITY_NAME_FIELD));
                 activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD));
                 activity.setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD));
                 activity.setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD));
+                result = Optional.of(activity);
             }
 
-            return activity;
+            return result;
         } catch (SQLException e) {
             throw new DaoException("Failed to find activity by id", e);
         } finally {
@@ -135,11 +138,11 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public Activity findActivityByName(String name) throws DaoException {
+    public Optional<Activity> findActivityByName(String name) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
-        Activity activity = null;
+        Optional<Activity> result = Optional.empty();
         try {
             connection = pool.getConnection();
 
@@ -148,16 +151,17 @@ public class ActivityDaoImpl implements ActivityDao {
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                activity = new Activity();
+                Activity activity = new Activity();
 
                 activity.setId(resultSet.getInt(DB_ACTIVITY_ID_FIELD));
                 activity.setName(name);
                 activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD));
                 activity.setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD));
                 activity.setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD));
+                result = Optional.of(activity);
             }
 
-            return activity;
+            return result;
         } catch (SQLException e) {
             throw new DaoException("Failed to find activity by name", e);
         } finally {
@@ -175,7 +179,7 @@ public class ActivityDaoImpl implements ActivityDao {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
-        List<Activity> activityList = new LinkedList<>();
+        List<Activity> activityList = new ArrayList<>();
         try {
             connection = pool.getConnection();
 
@@ -207,16 +211,16 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public Activity changeActivityStatus(int id, String status) throws DaoException {
+    public Optional<Activity> changeActivityStatus(int id, String status) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
-        Activity activity;
+        Optional<Activity> activity = Optional.empty();
         try {
             connection = pool.getConnection();
 
             activity = findActivityById(id);
 
-            if (activity != null) {
+            if (activity.isPresent()) {
                 preparedStatement = connection.prepareStatement(UPDATE_ACTIVITY_STATUS);
                 preparedStatement.setString(1, status);
                 preparedStatement.setInt(2, id);
@@ -277,17 +281,17 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public Activity updateActivity(int id, String name, String description,
-                                         BigDecimal price) throws DaoException {
+    public Optional<Activity> updateActivity(int id, String name, String description,
+                                             BigDecimal price) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
-        Activity activity;
+        Optional<Activity> activity = Optional.empty();
         try {
             connection = pool.getConnection();
 
             activity = findActivityById(id);
 
-            if (activity != null) {
+            if (activity.isPresent()) {
                 preparedStatement = connection.prepareStatement(UPDATE_ACTIVITY);
                 preparedStatement.setString(1, name);
                 preparedStatement.setString(2, description);
