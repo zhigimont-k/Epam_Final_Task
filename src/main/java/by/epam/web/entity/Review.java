@@ -1,12 +1,13 @@
 package by.epam.web.entity;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Review extends Entity{
     private int id;
     private int userId;
     private int activityId;
-    private Date creationDate;
+    private Timestamp creationDate;
     private String message;
     private int mark;
 
@@ -34,11 +35,11 @@ public class Review extends Entity{
         this.activityId = activityId;
     }
 
-    public Date getCreationDate() {
+    public Timestamp getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
     }
 

@@ -110,7 +110,7 @@ public class ActivityDaoImpl implements ActivityDao {
             connection = pool.getConnection();
 
             preparedStatement = connection.prepareStatement(FIND_ACTIVITY_BY_ID);
-            preparedStatement.setInt(1, (int) id);
+            preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
@@ -214,7 +214,7 @@ public class ActivityDaoImpl implements ActivityDao {
     public Optional<Activity> changeActivityStatus(int id, String status) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
-        Optional<Activity> activity = Optional.empty();
+        Optional<Activity> activity;
         try {
             connection = pool.getConnection();
 
@@ -285,7 +285,7 @@ public class ActivityDaoImpl implements ActivityDao {
                                              BigDecimal price) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
-        Optional<Activity> activity = Optional.empty();
+        Optional<Activity> activity;
         try {
             connection = pool.getConnection();
 
