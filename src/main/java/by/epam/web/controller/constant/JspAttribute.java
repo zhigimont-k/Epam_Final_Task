@@ -9,6 +9,7 @@ public final class JspAttribute {
     public static final String AUTH_FAIL = "authFail";
     public static final String ERROR_MESSAGE = "errorMessage";
     public static final String USER_LIST = "userList";
+    public static final String ACTIVITY_EXISTS = "activityExists";
 
     private JspAttribute(){}
 }

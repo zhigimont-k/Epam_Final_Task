@@ -12,6 +12,9 @@
     <fmt:message bundle="${locale}" key="locale.user.label.status" var="status"/>
     <fmt:message bundle="${locale}" key="locale.user.label.email" var="email"/>
     <fmt:message bundle="${locale}" key="locale.user.label.phonenumber" var="phoneNumber"/>
+    <fmt:message bundle="${locale}" key="locale.user.role.admin" var="adminRole"/>
+    <fmt:message bundle="${locale}" key="locale.user.role.user" var="userRole"/>
+    <fmt:message bundle="${locale}" key="locale.user.role.banned" var="bannedRole"/>
 
     <title>${pageTitle} | Cat Beauty Bar</title>
 </head>
@@ -33,7 +36,7 @@
             <th>${phoneNumber}</th>
             <th>Change status</th>
         </tr>
-        <c:forEach var="user" items="${userList}">
+        <c:forEach var="user" items="${sessionScope.userList}">
             <tr>
                 <form name="loginForm" method="POST" action="app">
                     <input type="hidden" name="command" value="changeUserStatus"/>
@@ -45,9 +48,9 @@
                     <td>${user.phoneNumber}</td>
                     <td>
                         <select name="userStatus">
-                        <option value="user">user</option>
-                        <option value="admin">admin</option>
-                        <option value="banned">banned</option>
+                        <option value="user">${userRole}</option>
+                        <option value="admin">${adminRole}</option>
+                        <option value="banned">${bannedRole}</option>
                     </select>
                         <input type="submit" value="Submit"></td>
                 </form>

@@ -46,7 +46,12 @@
             <li><a href="${pageContext.request.contextPath}/account">${accountPage}</a></li>
         </c:if>
         <c:if test="${sessionScope.user.status == 'admin'}">
-            <li><a href="app?command=viewUsers">${usersPage}</a></li>
+            <li class="">
+                <form action="${pageContext.request.contextPath}/app" method="get">
+                    <input type="hidden" name="command" value="viewUsers"/>
+                    <input type="submit" value="${usersPage}"/>
+                </form>
+            </li>
         </c:if>
         <c:if test="${sessionScope.user ne null}">
             <li><a href="app?command=logout">${logout}</a></li>

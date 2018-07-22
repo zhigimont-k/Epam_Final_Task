@@ -1,10 +1,9 @@
 package by.epam.web.command;
 
-import by.epam.web.command.admin.ChangeUserStatusCommand;
-import by.epam.web.command.admin.ViewUsersCommand;
+import by.epam.web.command.admin.*;
 import by.epam.web.command.common.ChangeLocaleCommand;
-import by.epam.web.command.user.LoginCommand;
-import by.epam.web.command.user.LogoutCommand;
+import by.epam.web.command.common.ViewActivitiesCommand;
+import by.epam.web.command.user.*;
 import by.epam.web.command.common.RegisterCommand;
 
 public enum CommandType {
@@ -14,10 +13,16 @@ public enum CommandType {
     CHANGE_LOCALE("locale", new ChangeLocaleCommand()),
     VIEW_USERS("viewUsers", new ViewUsersCommand()),
     CHANGE_USER_STATUS("changeUserStatus", new ChangeUserStatusCommand()),
-    /*ADD_SERVICE, EDIT_SERVICE, REMOVE_SERVICE,
-    ADD_ORDER, CHANGE_ORDER_STATUS, DEACTIVATE_ORDER,
-    ADD_SERVICE_TO_ORDER, REMOVE_SERVICE_FROM_ORDER,
-    ADD_REVIEW, EDIT_REVIEW, REMOVE_REVIEW*/;
+    ADD_ACTIVITY("addActivity", new AddActivityCommand()),
+    UPDATE_ACTIVITY("updateActivity", new UpdateActivityCommand()),
+    CHANGE_ACTIVITY_STATUS("changeActivityStatus", new ChangeActivityStatusCommand()),
+    VIEW_ACTIVITIES("viewActivities", new ViewActivitiesCommand()),
+    ADD_ORDER("addOrder", new AddOrderCommand()),
+    CHANGE_ORDER_STATUS("changeOrderStatus", new ChangeOrderStatusCommand()),
+    CANCEL_ORDER("cancelOrder", new CancelOrderCommand()),
+    ADD_REVIEW("addReview", new AddReviewCommand()),
+    UPDATE_REVIEW("updateReview", new UpdateReviewCommand()),
+    DELETE_REVIEW("deleteReview", new DeleteReviewCommand());
 
     private Command command;
     private String commandName;

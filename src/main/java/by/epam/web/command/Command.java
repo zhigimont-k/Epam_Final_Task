@@ -17,4 +17,9 @@ public interface Command {
         String address = (query.isEmpty()) ? page : JspAddress.SERVLET_NAME + "?" + query;
         return address;
     }
+    default String constructRedirectAddress(SessionRequestContent requestContent, String page) throws NoSuchRequestParameterException{
+        String query = requestContent.getParameter(JspParameter.QUERY);
+        String address = (query.isEmpty()) ? page : JspAddress.SERVLET_NAME + "?" + query;
+        return address;
+    }
 }

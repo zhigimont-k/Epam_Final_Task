@@ -34,7 +34,7 @@ public class ChangeUserStatusCommand implements Command {
 
             List<User> userList = service.findAllUsers();
 
-            requestContent.setAttribute(JspAttribute.USER_LIST, userList);
+            requestContent.setSessionAttribute(JspAttribute.USER_LIST, userList);
 
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(JspAddress.USERS_PAGE);

@@ -26,6 +26,15 @@ public class ActivityService {
         }
     }
 
+    public boolean nameExists(String name) throws ServiceException{
+        try {
+            Optional<Activity> found = activityDao.findActivityByName(name);
+            return found.isPresent();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
     public List<Activity> findAllActivities() throws ServiceException {
         try {
             return activityDao.findAllActivities();

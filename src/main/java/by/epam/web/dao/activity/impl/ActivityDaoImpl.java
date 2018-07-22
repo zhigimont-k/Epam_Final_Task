@@ -32,8 +32,8 @@ public class ActivityDaoImpl implements ActivityDao {
     private static final String DB_ACTIVITY_STATUS_FIELD = "service_status";
 
     private static final String INSERT_ACTIVITY = "INSERT INTO service " +
-            "(service_name, service_description, service_price, service_status) " +
-            "VALUES (?, ?, ?, ?)";
+            "(service_name, service_description, service_price) " +
+            "VALUES (?, ?, ?)";
     private static final String FIND_ACTIVITY_BY_NAME = "SELECT service.service_id, " +
             "service.service_name, service.service_description, service.service_price, service.service_status " +
             "FROM service " +
@@ -58,7 +58,6 @@ public class ActivityDaoImpl implements ActivityDao {
     @Override
     public Activity addActivity(Activity activity) throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.getConnection();
@@ -66,7 +65,7 @@ public class ActivityDaoImpl implements ActivityDao {
             String description = activity.getDescription();
             BigDecimal price = activity.getPrice();
 
-            preparedStatement = connection.prepareStatement(INSERT_ACTIVITY, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement = connection.prepareStatement(INSERT_ACTIVITY);
 
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, description);
@@ -74,22 +73,17 @@ public class ActivityDaoImpl implements ActivityDao {
 
             preparedStatement.executeUpdate();
 
-            resultSet = preparedStatement.getGeneratedKeys();
-
-            if (resultSet.next()) {
-                int activityId = resultSet.getInt(DB_ACTIVITY_ID_FIELD);
-                activity.setId(activityId);
-                String activityStatus = resultSet.getString(DB_ACTIVITY_STATUS_FIELD);
-                activity.setStatus(activityStatus);
-            } else {
-                throw new DaoException("Couldn't retrieve activity's ID and status");
+            Optional<Activity> added = findActivityByName(name);
+            if (added.isPresent()){
+                activity.setId(added.get().getId());
+                activity.setStatus(added.get().getStatus());
             }
 
             logger.log(Level.INFO, "Added activity: " + activity);
 
             return activity;
         } catch (SQLException e) {
-            throw new DaoException("Failed to add activity", e);
+            throw new DaoException("Failed to add activity: "+e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);

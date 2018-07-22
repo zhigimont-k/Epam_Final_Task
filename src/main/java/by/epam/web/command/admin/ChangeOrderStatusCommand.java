@@ -1,4 +1,16 @@
 package by.epam.web.command.admin;
 
-public class ChangeOrderStatusCommand {
+import by.epam.web.command.Command;
+import by.epam.web.controller.PageRouter;
+import by.epam.web.util.SessionRequestContent;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
+
+public class ChangeOrderStatusCommand implements Command {
+
+    @Override
+    public PageRouter execute(SessionRequestContent requestContent) {
+        return null;
+    }
 }

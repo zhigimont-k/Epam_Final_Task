@@ -18,28 +18,23 @@
 
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-<c:if test = "${sessionScope.user.status ne 'admin'}">
-    <jsp:forward page="${pageContext.request.contextPath}/home" />
-</c:if>
 <form name="addServiceForm" method="POST" action="app">
-    <input type="hidden" name="command" value="addService"/>
+    <input type="hidden" name="command" value="addActivity"/>
     <label>${serviceNameLabel}
-        <input type="text" name="serviceName" maxlength="20" minlength="4" required/></label>
+        <input type="text" name="activityName" maxlength="20" minlength="4" required/></label>
 
     <br/>
     <label>${serviceDescriptionLabel}
-    <textarea name="serviceDescription" cols="30" rows="10" required></textarea></label>
+    <textarea name="activityDescription" cols="30" rows="10" required></textarea></label>
     <br/>
     <label>${servicePriceLabel}
-        <input type="text" name="email" maxlength="5" minlength="1" required/></label>
-
-    <br/>
-    <label>Image
-    <input type="file" name="image"/></label>
+        <input type="text" name="activityPrice" maxlength="5" minlength="1" required/></label>
 
     <br/>
     <input type="submit" value="${button}"/>
+    <c:if test="${activityExists == true}">
+        Activity with this name already exists.
+    </c:if>
 </form>
 </body>
 </html>
