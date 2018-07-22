@@ -18,5 +18,24 @@
 <c:if test="${sessionScope.user.status eq 'admin'}">
     <jsp:include page="/WEB-INF/jsp/admin/addService.jsp"/>
 </c:if>
+
+<div>
+    <table>
+        <c:forEach var="activity" items="${activityList}">
+            <tr>
+                <form name="activityListForm" method="POST" action="app">
+                    <input type="hidden" name="command" value="addActivityToOrder"/>
+                    <input type="hidden" name="activityName" value="${activity.name}"/>
+                    <td>${activity.name}</td>
+                    <td>${activity.description}</td>
+                    <td>${activity.price}</td>
+                    <td>
+                        <input type="submit" value="Add to order"></td>
+
+                </form>
+            </tr>
+        </c:forEach>
+    </table>
+</div>
 </body>
 </html>

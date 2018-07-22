@@ -34,7 +34,10 @@
             <%--</ul>--%>
         </li>
         <li>
-            <a href="${pageContext.request.contextPath}/services">${servicesPage}</a>
+            <form action="${pageContext.request.contextPath}/app" method="get">
+                <input type="hidden" name="command" value="viewActivities"/>
+                <input type="submit" value="${servicesPage}"/>
+            </form>
         </li>
 
         <c:if test="${empty sessionScope.user}">

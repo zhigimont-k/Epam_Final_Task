@@ -50,4 +50,17 @@ public class ActivityService {
             throw new ServiceException(e);
         }
     }
+
+    public Optional<Activity> changeActivityStatus(String name, String status) throws ServiceException{
+        try {
+            Optional <Activity> found = activityDao.findActivityByName(name);
+            if (found.isPresent()){
+                int id = found.get().getId();
+                return activityDao.changeActivityStatus(id, status);
+            }
+            return found;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

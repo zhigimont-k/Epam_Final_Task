@@ -23,8 +23,6 @@
     <jsp:forward page="${pageContext.request.contextPath}/home"/>
 </c:if>
 
-<input type="hidden" name="page" value="${pageContext.request.requestURL}"/>
-<input type="hidden" name="query" value="${pageContext.request.queryString}"/>
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
 <div>
     <table>
