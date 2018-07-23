@@ -29,14 +29,15 @@ public class UpdateUserCommand implements Command {
 
             UserService service = ServiceFactory.getInstance().getUserService();
             User user = (User) requestContent.getSessionAttribute(JspAttribute.USER);
+            String newName = requestContent.getParameter("newUserName");
+            user.setUserName(newName);
             service.updateUser(user);
 
-            List<User> userList = service.findAllUsers();
-
-            requestContent.setAttribute(JspAttribute.USER_LIST, userList);
+            requestContent.setSessionAttribute(JspAttribute.USER, user);
+            requestContent.setAttribute(JspAttribute.OPERATION_RESULT, true);
 
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.USERS_PAGE);
+            router.setPage(JspAddress.OPERATION_RESULT);
             return router;
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);

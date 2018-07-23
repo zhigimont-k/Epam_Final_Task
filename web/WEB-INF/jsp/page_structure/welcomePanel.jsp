@@ -14,7 +14,6 @@
 </head>
 <body>
 <div>
-
     <c:choose>
         <c:when test="${not empty sessionScope.user.userName}">
             <cbb:welcome name="${sessionScope.user.userName}" message="${welcomeBackMessage}"/>
@@ -26,7 +25,8 @@
             <cbb:welcome name="${guest}" message="${welcomeMessage}"/>
         </c:otherwise>
     </c:choose>
-
+    <br/>
+    <br/>
 </div>
 </body>
 </html>

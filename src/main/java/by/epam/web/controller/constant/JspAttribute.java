@@ -11,6 +11,7 @@ public final class JspAttribute {
     public static final String USER_LIST = "userList";
     public static final String ACTIVITY_EXISTS = "activityExists";
     public static final String ACTIVITY_LIST = "activityList";
+    public static final String OPERATION_RESULT = "operationResult";
 
     private JspAttribute(){}
 }

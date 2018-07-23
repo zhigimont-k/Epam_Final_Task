@@ -16,6 +16,8 @@ import java.util.Optional;
 
 @WebServlet(name = "FrontController", urlPatterns = {"/app"})
 public class FrontController extends HttpServlet {
+    private static final String UTF_8_ENCODING = "UTF-8";
+    private static final String HTML_CONTENT_TYPE = "text/html";
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
@@ -27,8 +29,8 @@ public class FrontController extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html");
-        request.setCharacterEncoding("UTF-8");
+        response.setContentType(HTML_CONTENT_TYPE);
+        request.setCharacterEncoding(UTF_8_ENCODING);
         String commandName = request.getParameter(JspParameter.COMMAND);
 
         Optional<Command> foundCommand = CommandFactory.getInstance().defineCommand(commandName);

@@ -1,6 +1,7 @@
 package by.epam.web.service;
 
 import by.epam.web.dao.DaoException;
+import by.epam.web.dao.user.UserDao;
 import by.epam.web.dao.user.impl.UserDaoImpl;
 import by.epam.web.entity.User;
 
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class UserService {
-    private static final UserDaoImpl userDao = new UserDaoImpl();
+    private static final UserDao userDao = new UserDaoImpl();
     UserService(){}
 
     public User registerUser(String login, String password, String email, String phoneNumber, String userName) throws ServiceException {

@@ -32,12 +32,10 @@ public class ChangeUserStatusCommand implements Command {
             String status = requestContent.getParameter(JspParameter.USER_STATUS);
             service.changeUserStatus(login, status);
 
-            List<User> userList = service.findAllUsers();
-
-            requestContent.setSessionAttribute(JspAttribute.USER_LIST, userList);
+            requestContent.setAttribute(JspAttribute.OPERATION_RESULT, true);
 
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.USERS_PAGE);
+            router.setPage(JspAddress.OPERATION_RESULT);
             return router;
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);

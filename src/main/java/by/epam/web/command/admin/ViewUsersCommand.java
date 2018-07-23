@@ -26,7 +26,7 @@ public class ViewUsersCommand implements Command {
             UserService service = ServiceFactory.getInstance().getUserService();
             List<User> userList = service.findAllUsers();
 
-            requestContent.setSessionAttribute(JspAttribute.USER_LIST, userList);
+            requestContent.setAttribute(JspAttribute.USER_LIST, userList);
 
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(JspAddress.USERS_PAGE);

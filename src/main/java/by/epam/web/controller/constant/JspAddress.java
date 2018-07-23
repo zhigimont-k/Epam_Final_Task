@@ -8,5 +8,7 @@ public final class JspAddress {
     public static final String ERROR_PAGE = "/error";
     public static final String USERS_PAGE = "/users";
     public static final String ACTIVITIES_PAGE = "/services";
+    public static final String ACCOUNT_PAGE = "/account";
+    public static final String OPERATION_RESULT = "WEB-INF/jsp/common/operationResult.jsp";
     private JspAddress(){}
 }

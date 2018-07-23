@@ -19,7 +19,7 @@
     <fmt:message bundle="${locale}" key="locale.user.role.user" var="user"/>
     <fmt:message bundle="${locale}" key="locale.user.role.banned" var="banned"/>
 
-    <fmt:message bundle="${locale}" key="locale.user.button.signin" var="button"/>
+    <fmt:message bundle="${locale}" key="locale.common.button.update" var="button"/>
 
     <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
     <title>${pageTitle} | ${projectName}</title>
@@ -32,10 +32,24 @@
 </c:if>
 <form name="updateUserForm" method="POST" action="app">
     <input type="hidden" name="command" value="updateUser"/>
-    <label>${loginLabel}
-        <input type="text" name="login" value="${sessionScope.user.login}" maxlength="20" minlength="4"/></label>
-    <label>${oldPasswordLabel}
+    ${loginLabel}: ${sessionScope.user.login}
+        <br/>
+    <label>${oldPasswordLabel}:
         <input type="password" name="password" maxlength="32" minlength="10"/></label>
+    <br/>
+    ${newPasswordLabel}:
+        <input type="password" name="password" maxlength="32" minlength="10"/></label>
+    <br/>
+    <c:if test="${passwordChangeFail == true}">
+        ${passwordChangeFail}
+        <br/>
+    </c:if>
+    ${emailLabel}: ${sessionScope.user.email}
+    <br/>
+    ${phoneNumberLabel}: ${sessionScope.user.phoneNumber}
+    <br/>
+    ${userNameLabel}:
+    <input type="text" placeholder="${sessionScope.user.userName}" name="userName" maxlength="32" minlength="10"/></label>
     <br/>
     <input type="submit" value="${button}"/>
 </form>

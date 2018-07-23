@@ -19,5 +19,10 @@ public final class JspParameter {
     public static final String ACTIVITY_DESCRIPTION = "activityDescription";
     public static final String ACTIVITY_PRICE = "activityPrice";
     public static final String ACTIVITY_STATUS = "activityStatus";
+    public static final String ACTIVITY_LIST = "activityList";
+
+    public static final String ORDER_ID = "orderId";
+    public static final String ORDER_TIME = "orderTime";
+    public static final String ORDER_STATUS = "orderStatus";
     private JspParameter(){}
 }

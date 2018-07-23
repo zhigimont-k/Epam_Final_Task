@@ -321,7 +321,6 @@ public class UserDaoImpl implements UserDao {
                 preparedStatement = connection.prepareStatement(UPDATE_USER_STATUS);
                 preparedStatement.setString(1, status);
                 preparedStatement.setString(2, login);
-                logger.log(Level.INFO, preparedStatement);
                 logger.log(Level.INFO, "Setting user's " + login + " status to " + status);
                 preparedStatement.executeUpdate();
             } else {

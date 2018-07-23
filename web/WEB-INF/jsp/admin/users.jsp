@@ -34,25 +34,37 @@
             <th>${phoneNumber}</th>
             <th>Change status</th>
         </tr>
-        <c:forEach var="user" items="${sessionScope.userList}">
-            <tr>
-                <form name="loginForm" method="POST" action="app">
-                    <input type="hidden" name="command" value="changeUserStatus"/>
-                    <input type="hidden" name="login" value="${user.login}"/>
-                    <td>${user.login}</td>
-                    <td>${user.userName}</td>
-                    <td>${user.status}</td>
-                    <td>${user.email}</td>
-                    <td>${user.phoneNumber}</td>
-                    <td>
-                        <select name="userStatus">
+        <c:forEach var="user" items="${userList}">
+        <tr>
+            <form name="loginForm" method="POST" action="app">
+                <input type="hidden" name="command" value="changeUserStatus"/>
+                <input type="hidden" name="login" value="${user.login}"/>
+                <td>${user.login}</td>
+                <td>${user.userName}</td>
+                <td>
+                    <c:choose>
+                        <c:when test="${user.status == 'admin'}">
+                        ${adminRole}
+                    </c:when>
+                    <c:when test="${user.status == 'banned'}">
+                        ${bannedRole}
+                    </c:when>
+                    <c:otherwise>
+                        ${userRole}
+                    </c:otherwise>
+                    </c:choose>
+                </td>
+                <td>${user.email}</td>
+                <td>${user.phoneNumber}</td>
+                <td>
+                    <select name="userStatus">
                         <option value="user">${userRole}</option>
                         <option value="admin">${adminRole}</option>
                         <option value="banned">${bannedRole}</option>
                     </select>
-                        <input type="submit" value="Submit"></td>
-                </form>
-            </tr>
+                    <input type="submit" value="Submit"></td>
+            </form>
+        </tr>
         </c:forEach>
     </table>
 </div>
