@@ -3,14 +3,13 @@ package by.epam.web.command.user;
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
 import by.epam.web.controller.constant.JspAddress;
-import by.epam.web.controller.constant.JspAttribute;
 import by.epam.web.controller.constant.JspParameter;
 import by.epam.web.entity.Order;
 import by.epam.web.service.OrderService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
-import by.epam.web.util.NoSuchRequestParameterException;
-import by.epam.web.util.SessionRequestContent;
+import by.epam.web.util.sessionrequestcontent.NoSuchRequestParameterException;
+import by.epam.web.util.sessionrequestcontent.SessionRequestContent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,7 +33,7 @@ public class CancelOrderCommand implements Command {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(JspAttribute.ERROR_MESSAGE, e.getMessage());
+            requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(JspAddress.ERROR_PAGE);
         }

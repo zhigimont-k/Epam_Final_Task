@@ -18,7 +18,7 @@
     <fmt:message bundle="${locale}" key="locale.user.warning.auth.fail" var="authFailMessage"/>
 
     <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
-    <title>${pageTitle} | ${projectName}</title>
+    <title>PasswordReset | ${projectName}</title>
 </head>
 <body>
 
@@ -28,25 +28,13 @@
         <jsp:forward page="/home" />
     </c:when>
 </c:choose>
-<form name="loginForm" method="POST" action="app">
-    <input type="hidden" name="command" value="login"/>
-    <label>${loginLabel}
-    <input type="text" name="login" maxlength="20" required/></label>
-    <label>${passwordLabel}
-    <input type="password" name="password" maxlength="32" required/></label>
+<form name="resetPasswordForm" method="POST" action="app">
+    <input type="hidden" name="command" value="resetPassword"/>
+    <label>E-mail:
+        <input type="email" name="email" maxlength="20" required/></label>
     <br/>
     <input type="submit" value="${button}"/>
     <br/>
-    <c:if test="${authFail == true}">
-        ${authFailMessage}
-    </c:if>
-    <br/>
 </form>
-
-
-${toRegister} <a href="${pageContext.request.contextPath}/register">${signUp}</a>
-    <br/>
-
-    Forgot your password?
 </body>
 </html>

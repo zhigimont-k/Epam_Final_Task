@@ -13,4 +13,5 @@ public interface ReviewDao extends AbstractDao<Review> {
     Optional<Review> findReviewById(int id) throws DaoException;
     List<Review> findReviewsByActivityId(int activityId) throws DaoException;
     List<Review> findReviewsByUserId(int userId) throws DaoException;
+    void deleteReviewById(int ind) throws DaoException;
 }

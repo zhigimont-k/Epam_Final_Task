@@ -45,6 +45,9 @@ public class ReviewDaoImpl implements ReviewDao {
             "review.user_id, review.service_id, review.creation_date, review.mark, review.message " +
             "FROM review " +
             "WHERE review.service_id = ?";
+    private static final String DELETE_REVIEW_BY_ID = "DELETE  " +
+            "FROM review " +
+            "WHERE review.review_id = ?";
 
 
     @Override
@@ -234,6 +237,31 @@ public class ReviewDaoImpl implements ReviewDao {
             }
 
             return reviewList;
+        } catch (SQLException e) {
+            throw new DaoException("Failed to find review by user id", e);
+        } finally {
+            try {
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
+            } catch (PoolException e) {
+                throw new DaoException(e);
+            }
+        }
+    }
+
+    @Override
+    public void deleteReviewById(int id) throws DaoException {
+        ProxyConnection connection = null;
+        ResultSet resultSet;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = pool.getConnection();
+
+            preparedStatement = connection.prepareStatement(DELETE_REVIEW_BY_ID);
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+
+            logger.log(Level.INFO, "Deleted review: " + id);
         } catch (SQLException e) {
             throw new DaoException("Failed to find review by user id", e);
         } finally {

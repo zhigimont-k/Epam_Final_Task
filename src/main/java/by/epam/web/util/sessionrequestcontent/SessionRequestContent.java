@@ -1,7 +1,8 @@
-package by.epam.web.util;
+package by.epam.web.util.sessionrequestcontent;
+
+import by.epam.web.util.sessionrequestcontent.NoSuchRequestParameterException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,6 +62,10 @@ public class SessionRequestContent {
     public void removeSessionAttribute(String attribute) {
         sessionAttributes.remove(attribute);
         request.getSession().removeAttribute(attribute);
+    }
+
+    public void invalidateSession(){
+        request.getSession().invalidate();
     }
 
     private void extractValues(HttpServletRequest request) {

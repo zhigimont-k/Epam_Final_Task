@@ -3,23 +3,16 @@ package by.epam.web.command.user;
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
 import by.epam.web.controller.constant.JspAddress;
-import by.epam.web.controller.constant.JspAttribute;
 import by.epam.web.controller.constant.JspParameter;
 import by.epam.web.entity.User;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.service.UserService;
-import by.epam.web.util.NoSuchRequestParameterException;
-import by.epam.web.util.SessionRequestContent;
+import by.epam.web.util.sessionrequestcontent.NoSuchRequestParameterException;
+import by.epam.web.util.sessionrequestcontent.SessionRequestContent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
 
 public class LoginCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -33,12 +26,11 @@ public class LoginCommand implements Command {
             UserService service = ServiceFactory.getInstance().getUserService();
             if (service.findUserByLoginAndPassword(login, password)) {
                 User user = service.userLogin(login, password).get();
-                requestContent.setSessionAttribute(JspAttribute.USER, user);
+                requestContent.setSessionAttribute(JspParameter.USER, user);
                 router.setTransitionType(PageRouter.TransitionType.REDIRECT);
                 router.setPage(JspAddress.HOME_PAGE);
-                return router;
             } else {
-                requestContent.setAttribute(JspAttribute.AUTH_FAIL, true);
+                requestContent.setAttribute(JspParameter.AUTH_FAIL, true);
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);
                 router.setPage(JspAddress.LOGIN_PAGE);
             }

@@ -24,6 +24,9 @@
 
     <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
     <title>${pageTitle} | ${projectName}</title>
+
+    <script type="text/javascript" src="../js/phoneNumberField.js">
+    </script>
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
@@ -48,7 +51,9 @@
     </c:if>
     <br/>
     <label>${phoneNumberLabel}
-    <input type="text" name="phoneNumber" maxlength="32" minlength="10"/></label>
+    <input type="text" name="phoneNumber" maxlength="32" minlength="10"
+           onkeydown="javascript:backspacerDOWN(this,event);"
+           onkeyup="javascript:backspacerUP(this,event);"/></label>
     <c:if test="${phoneNumberExists == true}">
         ${phoneNumberWarning}
     </c:if>

@@ -3,7 +3,6 @@ package by.epam.web.command.user;
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
 import by.epam.web.controller.constant.JspAddress;
-import by.epam.web.controller.constant.JspAttribute;
 import by.epam.web.controller.constant.JspParameter;
 import by.epam.web.entity.Activity;
 import by.epam.web.entity.User;
@@ -11,13 +10,12 @@ import by.epam.web.service.ActivityService;
 import by.epam.web.service.OrderService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
-import by.epam.web.util.NoSuchRequestParameterException;
-import by.epam.web.util.SessionRequestContent;
+import by.epam.web.util.sessionrequestcontent.NoSuchRequestParameterException;
+import by.epam.web.util.sessionrequestcontent.SessionRequestContent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +29,7 @@ public class AddOrderCommand implements Command {
         PageRouter router = new PageRouter();
         try {
 
-            int userId = ((User)requestContent.getSessionAttribute(JspAttribute.USER)).getId();
+            int userId = ((User)requestContent.getSessionAttribute(JspParameter.USER)).getId();
 
             Timestamp time = new Timestamp(1L);
 
@@ -54,7 +52,7 @@ public class AddOrderCommand implements Command {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(JspAttribute.ERROR_MESSAGE, e.getMessage());
+            requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
 
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(JspAddress.ERROR_PAGE);

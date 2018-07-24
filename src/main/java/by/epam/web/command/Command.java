@@ -3,8 +3,8 @@ package by.epam.web.command;
 import by.epam.web.controller.PageRouter;
 import by.epam.web.controller.constant.JspAddress;
 import by.epam.web.controller.constant.JspParameter;
-import by.epam.web.util.NoSuchRequestParameterException;
-import by.epam.web.util.SessionRequestContent;
+import by.epam.web.util.sessionrequestcontent.NoSuchRequestParameterException;
+import by.epam.web.util.sessionrequestcontent.SessionRequestContent;
 
 import javax.servlet.ServletException;
 import java.io.IOException;

@@ -3,20 +3,16 @@ package by.epam.web.command.admin;
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
 import by.epam.web.controller.constant.JspAddress;
-import by.epam.web.controller.constant.JspAttribute;
 import by.epam.web.controller.constant.JspParameter;
-import by.epam.web.entity.Activity;
 import by.epam.web.service.ActivityService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
-import by.epam.web.util.NoSuchRequestParameterException;
-import by.epam.web.util.SessionRequestContent;
+import by.epam.web.util.sessionrequestcontent.NoSuchRequestParameterException;
+import by.epam.web.util.sessionrequestcontent.SessionRequestContent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
 import java.math.BigDecimal;
 
 public class AddActivityCommand implements Command{
@@ -38,7 +34,7 @@ public class AddActivityCommand implements Command{
             boolean nameExists = service.nameExists(name);
             if (nameExists) {
                 logger.log(Level.INFO, "Activity  " + name + " exists");
-                requestContent.setAttribute(JspAttribute.ACTIVITY_EXISTS, true);
+                requestContent.setAttribute(JspParameter.ACTIVITY_EXISTS, true);
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);
                 router.setPage(JspAddress.REGISTER_PAGE);
             } else {
@@ -50,7 +46,7 @@ public class AddActivityCommand implements Command{
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(JspAttribute.ERROR_MESSAGE, e.getMessage());
+            requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
 
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(JspAddress.ERROR_PAGE);

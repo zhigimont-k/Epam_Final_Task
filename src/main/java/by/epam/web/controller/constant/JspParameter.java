@@ -6,6 +6,18 @@ public final class JspParameter {
     public static final String PAGE = "page";
     public static final String QUERY = "query";
 
+    public static final String USER = "user";
+    public static final String LOCAL = "local";
+    public static final String LOGIN_EXISTS = "loginExists";
+    public static final String EMAIL_EXISTS = "emailExists";
+    public static final String PHONE_NUMBER_EXISTS = "phoneNumberExists";
+    public static final String AUTH_FAIL = "authFail";
+    public static final String USER_LIST = "userList";
+
+    public static final String ACTIVITY_EXISTS = "activityExists";
+
+    public static final String OPERATION_RESULT = "operationResult";
+
     public static final String ERROR_MESSAGE = "errorMessage";
 
     public static final String LOGIN = "login";
@@ -20,6 +32,10 @@ public final class JspParameter {
     public static final String ACTIVITY_PRICE = "activityPrice";
     public static final String ACTIVITY_STATUS = "activityStatus";
     public static final String ACTIVITY_LIST = "activityList";
+    public static final String ACTIVITY_ID = "activityId";
+    public static final String NEW_ACTIVITY_NAME = "newActivityName";
+    public static final String NEW_ACTIVITY_DESCRIPTION = "newActivityDescription";
+    public static final String NEW_ACTIVITY_PRICE = "newActivityPrice";
 
     public static final String ORDER_ID = "orderId";
     public static final String ORDER_TIME = "orderTime";

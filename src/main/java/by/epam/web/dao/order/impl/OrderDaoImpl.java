@@ -35,6 +35,8 @@ public class OrderDaoImpl implements OrderDao {
     private static final String DB_ACTIVITY_PRICE_FIELD = "service_price";
     private static final String DB_ACTIVITY_STATUS_FIELD = "service_status";
 
+    private static final String DB_USER_EMAIL_FIELD = "user_email";
+
     private static final String INSERT_ORDER_INFO = "INSERT INTO order_info " +
             "(user_id, service_id, order_time) " +
             "VALUES (?, ?, ?)";
@@ -58,13 +60,17 @@ public class OrderDaoImpl implements OrderDao {
             "WHERE order_info.user_id = ?";
     private static final String FIND_ORDERS_BY_USER_ID_AND_ORDER_STATUS =
             "SELECT order_info.order_id, " +
-            "order_info.user_id, order_info.order_status, order_info.order_time " +
-            "FROM order_info " +
-            "WHERE order_info.user_id = ? AND order_info.order_status = ?";
+                    "order_info.user_id, order_info.order_status, order_info.order_time " +
+                    "FROM order_info " +
+                    "WHERE order_info.user_id = ? AND order_info.order_status = ?";
     private static final String FIND_ACTIVITIES_BY_ORDER_ID = "SELECT service.service_id, " +
             "service_name, service_description, service_status, service_price FROM service " +
             "JOIN order_link ON service.service_id = order_link.service_id " +
             "WHERE order_id = ?";
+    private static final String FIND_EMAILS_FOR_UPCOMING_ORDERS = "SELECT user.user_email " +
+            "FROM user " +
+            "JOIN order_info ON order_info.user_id = user.user_id " +
+            "WHERE DATE(order_time) < CURRENT_DATE - INTERVAL 2 DAY";
 
     @Override
     public Order addOrder(Order order) throws DaoException {
@@ -76,7 +82,7 @@ public class OrderDaoImpl implements OrderDao {
             int userId = order.getUserId();
             Timestamp time = order.getDateTime();
             List<Activity> activityList = new ArrayList<>();
-            for (int i = 0; i < order.activityListSize(); i++){
+            for (int i = 0; i < order.activityListSize(); i++) {
                 activityList.add(order.getActivity(i));
             }
 
@@ -98,7 +104,7 @@ public class OrderDaoImpl implements OrderDao {
                 throw new DaoException("Couldn't retrieve order's ID and status");
             }
 
-            for (Activity activity : activityList){
+            for (Activity activity : activityList) {
                 preparedStatement = connection.prepareStatement(INSERT_ORDER_ACTIVITIES);
 
                 preparedStatement.setInt(1, order.getId());
@@ -208,7 +214,7 @@ public class OrderDaoImpl implements OrderDao {
                 order.setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD));
                 order.setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD));
                 List<Activity> activityList = findActivitiesByOrderId(currentOrderId);
-                for (Activity activity : activityList){
+                for (Activity activity : activityList) {
                     order.addActivity(activity);
                 }
                 logger.log(Level.INFO, "Found order: " + order);
@@ -248,7 +254,7 @@ public class OrderDaoImpl implements OrderDao {
                 order.setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD));
                 order.setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD));
                 List<Activity> activityList = findActivitiesByOrderId(id);
-                for (Activity activity : activityList){
+                for (Activity activity : activityList) {
                     order.addActivity(activity);
                 }
                 logger.log(Level.INFO, "Found order by id: " + order);
@@ -392,6 +398,34 @@ public class OrderDaoImpl implements OrderDao {
             return activityList;
         } catch (SQLException e) {
             throw new DaoException("Failed to find activities by order id", e);
+        } finally {
+            try {
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
+            } catch (PoolException e) {
+                throw new DaoException(e);
+            }
+        }
+    }
+
+    public List<String> findEmailsForUpcomingOrders() throws DaoException {
+        ProxyConnection connection = null;
+        ResultSet resultSet;
+        PreparedStatement preparedStatement = null;
+        List<String> emailList = new ArrayList<>();
+        try {
+            connection = pool.getConnection();
+
+            preparedStatement = connection.prepareStatement(FIND_EMAILS_FOR_UPCOMING_ORDERS);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                emailList.add(resultSet.getString(DB_USER_EMAIL_FIELD));
+            }
+
+            return emailList;
+        } catch (SQLException e) {
+            throw new DaoException("Failed to find emails for upcoming orders", e);
         } finally {
             try {
                 pool.releaseConnection(connection);

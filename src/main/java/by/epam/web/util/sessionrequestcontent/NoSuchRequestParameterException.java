@@ -1,4 +1,4 @@
-package by.epam.web.util;
+package by.epam.web.util.sessionrequestcontent;
 
 public class NoSuchRequestParameterException extends Exception {
     public NoSuchRequestParameterException() {

@@ -7,6 +7,8 @@ public class ServiceFactory {
     private UserService userService = new UserService();
     private ActivityService activityService = new ActivityService();
 
+    private ReviewService reviewService = new ReviewService();
+
     public static ServiceFactory getInstance() {
         return instance;
     }
@@ -23,5 +25,10 @@ public class ServiceFactory {
         return activityService;
     }
 
-    private ServiceFactory(){}
+    public ReviewService getReviewService() {
+        return reviewService;
+    }
+
+    private ServiceFactory() {
+    }
 }

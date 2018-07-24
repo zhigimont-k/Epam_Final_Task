@@ -3,18 +3,16 @@ package by.epam.web.command.common;
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
 import by.epam.web.controller.constant.JspAddress;
-import by.epam.web.controller.constant.JspAttribute;
+import by.epam.web.controller.constant.JspParameter;
 import by.epam.web.entity.Activity;
 import by.epam.web.service.ActivityService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
-import by.epam.web.util.SessionRequestContent;
+import by.epam.web.util.sessionrequestcontent.SessionRequestContent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
 import java.util.List;
 
 public class ViewActivitiesCommand implements Command {
@@ -26,9 +24,9 @@ public class ViewActivitiesCommand implements Command {
         try {
 
             ActivityService service = ServiceFactory.getInstance().getActivityService();
-            List<Activity> userList = service.findAllActivities();
+            List<Activity> activityList = service.findAllActivities();
 
-            requestContent.setSessionAttribute(JspAttribute.ACTIVITY_LIST, userList);
+            requestContent.setAttribute(JspParameter.ACTIVITY_LIST, activityList);
 
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(JspAddress.ACTIVITIES_PAGE);

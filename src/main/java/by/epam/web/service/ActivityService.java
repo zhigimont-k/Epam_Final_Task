@@ -45,7 +45,7 @@ public class ActivityService {
         }
     }
 
-    public Optional<Activity> findActivityByName(String name) throws ServiceException{
+    public Optional<Activity> findActivityByName(String name) throws ServiceException {
         try {
             return activityDao.findActivityByName(name);
         } catch (DaoException e) {
@@ -78,6 +78,14 @@ public class ActivityService {
         try {
             return activityDao.updateActivity(activity.getId(), activity.getName(),
                     activity.getDescription(), activity.getPrice());
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public Optional<Activity> findActivityById(int id) throws ServiceException {
+        try {
+            return activityDao.findActivityById(id);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
