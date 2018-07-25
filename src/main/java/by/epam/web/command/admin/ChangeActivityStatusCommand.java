@@ -32,7 +32,7 @@ public class ChangeActivityStatusCommand implements Command{
 
             List<Activity> activityList = service.findAllActivities();
 
-            requestContent.setSessionAttribute(JspParameter.ACTIVITY_LIST, activityList);
+            requestContent.setAttribute(JspParameter.ACTIVITY_LIST, activityList);
 
             requestContent.setAttribute(JspParameter.OPERATION_RESULT, true);
 

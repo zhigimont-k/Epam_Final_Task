@@ -376,4 +376,42 @@ public class UserDaoImpl implements UserDao {
             }
         }
     }
+
+    @Override
+    public Optional<User> findUserByEmail(String email) throws DaoException{
+        ProxyConnection connection = null;
+        ResultSet resultSet;
+        PreparedStatement preparedStatement = null;
+        Optional<User> result = Optional.empty();
+        try {
+            connection = pool.getConnection();
+
+            preparedStatement = connection.prepareStatement(FIND_USER_BY_EMAIL);
+            preparedStatement.setString(1, email);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getInt(DB_USER_ID_FIELD));
+                user.setLogin(DB_LOGIN_FIELD);
+                user.setPassword(DB_PASSWORD_FIELD);
+                user.setEmail(email);
+                user.setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD));
+                user.setUserName(resultSet.getString(DB_USER_NAME_FIELD));
+                user.setStatus(resultSet.getString(DB_USER_STATUS_FIELD));
+                result = Optional.of(user);
+            }
+
+            return result;
+        } catch (SQLException e) {
+            throw new DaoException("Failed to find user by email", e);
+        } finally {
+            try {
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
+            } catch (PoolException e) {
+                throw new DaoException(e);
+            }
+        }
+    }
 }

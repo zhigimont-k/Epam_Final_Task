@@ -37,8 +37,8 @@
     <label>${oldPasswordLabel}:
         <input type="password" name="password" maxlength="32" minlength="10"/></label>
     <br/>
-    ${newPasswordLabel}:
-        <input type="password" name="password" maxlength="32" minlength="10"/></label>
+    <label>${newPasswordLabel}:
+        <input type="password" name="newPassword" maxlength="32" minlength="10"/></label>
     <br/>
     <c:if test="${passwordChangeFail == true}">
         ${passwordChangeFail}
@@ -49,7 +49,8 @@
     ${phoneNumberLabel}: ${sessionScope.user.phoneNumber}
     <br/>
     ${userNameLabel}:
-    <input type="text" placeholder="${sessionScope.user.userName}" name="userName" maxlength="32" minlength="10"/></label>
+    <input type="text" name="userName" placeholder="${sessionScope.user.userName}"
+           maxlength="20" minlength="3"/></label>
     <br/>
     <input type="submit" value="${button}"/>
 </form>

@@ -95,6 +95,15 @@
         <url-pattern>/users</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ResetPassword</servlet-name>
+        <jsp-file>/jsp/resetPassword.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ResetPassword</servlet-name>
+        <url-pattern>/resetPassword</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>encodingFilter</filter-name>
         <filter-class>by.epam.web.controller.filter.EncodingFilter</filter-class>

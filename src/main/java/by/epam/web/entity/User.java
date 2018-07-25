@@ -1,5 +1,7 @@
 package by.epam.web.entity;
 
+import java.util.Objects;
+
 public class User extends Entity {
     public enum Status {
         USER("user"), ADMIN("admin"), BANNED("banned");
@@ -105,18 +107,17 @@ public class User extends Entity {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return id == user.id &&
-                login.equals(user.login) &&
-                password.equals(user.password) &&
-                userName.equals(user.userName) &&
-                email.equals(user.email) &&
-                phoneNumber.equals(user.phoneNumber);
+                Objects.equals(login, user.login) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(userName, user.userName) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(phoneNumber, user.phoneNumber) &&
+                status == user.status;
     }
 
     @Override
     public int hashCode() {
-        int hash = 31;
-        hash += id + login.hashCode() + password.hashCode() + userName.hashCode() +
-                email.hashCode() + phoneNumber.hashCode();
-        return hash;
+
+        return Objects.hash(id, login, password, userName, email, phoneNumber, status);
     }
 }

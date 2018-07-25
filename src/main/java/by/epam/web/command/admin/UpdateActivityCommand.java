@@ -27,11 +27,12 @@ public class UpdateActivityCommand implements Command {
         try {
 
             ActivityService service = ServiceFactory.getInstance().getActivityService();
-            int id = Integer.parseInt(requestContent.getParameter("activityId"));
-            String newName = requestContent.getParameter("newActivityName");
-            String newDescription = requestContent.getParameter("newActivityDescription");
+            int id = Integer.parseInt(requestContent.getParameter
+                    (JspParameter.ACTIVITY_ID));
+            String newName = requestContent.getParameter(JspParameter.NEW_ACTIVITY_NAME);
+            String newDescription = requestContent.getParameter(JspParameter.NEW_ACTIVITY_DESCRIPTION);
             BigDecimal newPrice =
-                    new BigDecimal(requestContent.getParameter("newActivityPrice"));
+                    new BigDecimal(requestContent.getParameter(JspParameter.NEW_ACTIVITY_PRICE));
 
             Optional<Activity> found = service.findActivityById(id);
             if (found.isPresent()) {

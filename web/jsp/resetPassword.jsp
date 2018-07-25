@@ -31,9 +31,9 @@
 <form name="resetPasswordForm" method="POST" action="app">
     <input type="hidden" name="command" value="resetPassword"/>
     <label>E-mail:
-        <input type="email" name="email" maxlength="20" required/></label>
+        <input type="email" name="email" maxlength="35" required/></label>
     <br/>
-    <input type="submit" value="${button}"/>
+    <input type="submit" value="Reset password"/>
     <br/>
 </form>
 </body>

@@ -1,6 +1,7 @@
 package by.epam.web.entity;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 public class Review extends Entity{
     private int id;
@@ -68,5 +69,24 @@ public class Review extends Entity{
                 ", message='" + message + '\'' +
                 ", mark=" + mark +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Review review = (Review) o;
+        return id == review.id &&
+                userId == review.userId &&
+                activityId == review.activityId &&
+                mark == review.mark &&
+                Objects.equals(creationDate, review.creationDate) &&
+                Objects.equals(message, review.message);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, userId, activityId, creationDate, message, mark);
     }
 }

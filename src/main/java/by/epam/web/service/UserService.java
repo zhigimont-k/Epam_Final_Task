@@ -68,6 +68,14 @@ public class UserService {
         }
     }
 
+    public Optional<User> findUserByEmail(String email) throws ServiceException {
+        try {
+            return userDao.findUserByEmail(email);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
     public List<User> findAllUsers() throws ServiceException {
         try {
             return userDao.findAllUsers();

@@ -1,9 +1,11 @@
 package by.epam.web.entity;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class Order extends Entity {
@@ -25,6 +27,7 @@ public class Order extends Entity {
     private List<Activity> activityList = new ArrayList<>();
     private Status status;
     private Timestamp dateTime;
+    private BigDecimal price;
 
     public int getId() {
         return id;
@@ -110,6 +113,14 @@ public class Order extends Entity {
         this.dateTime = dateTime;
     }
 
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
@@ -118,6 +129,26 @@ public class Order extends Entity {
                 ", activityList=" + activityList +
                 ", status=" + status +
                 ", dateTime=" + dateTime +
+                ", price=" + price +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return id == order.id &&
+                userId == order.userId &&
+                Objects.equals(activityList, order.activityList) &&
+                status == order.status &&
+                Objects.equals(dateTime, order.dateTime) &&
+                Objects.equals(price, order.price);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, userId, activityList, status, dateTime, price);
     }
 }

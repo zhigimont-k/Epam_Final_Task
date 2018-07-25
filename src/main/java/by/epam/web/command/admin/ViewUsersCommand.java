@@ -30,7 +30,6 @@ public class ViewUsersCommand implements Command {
 
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(JspAddress.USERS_PAGE);
-            return router;
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setTransitionType(PageRouter.TransitionType.FORWARD);

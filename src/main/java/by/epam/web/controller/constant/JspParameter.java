@@ -27,12 +27,12 @@ public final class JspParameter {
     public static final String PHONE_NUMBER = "phoneNumber";
     public static final String USER_STATUS = "userStatus";
 
+    public static final String ACTIVITY_ID = "activityId";
     public static final String ACTIVITY_NAME = "activityName";
     public static final String ACTIVITY_DESCRIPTION = "activityDescription";
     public static final String ACTIVITY_PRICE = "activityPrice";
     public static final String ACTIVITY_STATUS = "activityStatus";
     public static final String ACTIVITY_LIST = "activityList";
-    public static final String ACTIVITY_ID = "activityId";
     public static final String NEW_ACTIVITY_NAME = "newActivityName";
     public static final String NEW_ACTIVITY_DESCRIPTION = "newActivityDescription";
     public static final String NEW_ACTIVITY_PRICE = "newActivityPrice";
@@ -40,5 +40,13 @@ public final class JspParameter {
     public static final String ORDER_ID = "orderId";
     public static final String ORDER_TIME = "orderTime";
     public static final String ORDER_STATUS = "orderStatus";
+    public static final String ORDER_ACTIVITY_LIST = "orderActivityList";
+    public static final String ORDER_PRICE = "orderPrice";
+    public static final String ORDER_LIST = "orderList";
+
+    public static final String REVIEW_MARK = "reviewMark";
+    public static final String REVIEW_MESSAGE = "reviewMessage";
+    public static final String REVIEW_ID = "reviewId";
+    public static final String REVIEW_LIST = "reviewList";
     private JspParameter(){}
 }

@@ -1,6 +1,7 @@
 package by.epam.web.entity;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Activity extends Entity {
     public enum Status {
@@ -69,10 +70,6 @@ public class Activity extends Entity {
         }
     }
 
-    public boolean isAvailable(){
-        return Status.AVAILABLE.equals(status);
-    }
-
     @Override
     public String toString() {
         return "Activity{" +
@@ -82,5 +79,23 @@ public class Activity extends Entity {
                 ", description='" + description + '\'' +
                 ", status=" + status +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Activity activity = (Activity) o;
+        return id == activity.id &&
+                Objects.equals(price, activity.price) &&
+                Objects.equals(name, activity.name) &&
+                Objects.equals(description, activity.description) &&
+                status == activity.status;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, price, name, description, status);
     }
 }

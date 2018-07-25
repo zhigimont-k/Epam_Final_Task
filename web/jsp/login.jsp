@@ -47,6 +47,6 @@
 ${toRegister} <a href="${pageContext.request.contextPath}/register">${signUp}</a>
     <br/>
 
-    Forgot your password?
+<a href="${pageContext.request.contextPath}/resetPassword">Forgot your password?</a>
 </body>
 </html>

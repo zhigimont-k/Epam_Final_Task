@@ -22,7 +22,7 @@ public class DeleteReviewCommand implements Command{
         try {
 
             ReviewService service = ServiceFactory.getInstance().getReviewService();
-            String id = requestContent.getParameter("reviewId");
+            String id = requestContent.getParameter(JspParameter.REVIEW_ID);
             service.deleteReview(Integer.parseInt(id));
 
             requestContent.setAttribute(JspParameter.OPERATION_RESULT, true);

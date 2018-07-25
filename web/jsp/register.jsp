@@ -36,7 +36,7 @@
 <form name="registerForm" method="POST" action="app">
     <input type="hidden" name="command" value="register"/>
     <label>${loginLabel}
-    <input type="text" name="login" maxlength="20" minlength="4" required/></label>
+    <input type="text" name="login" pattern="(\w){4,20}" maxlength="20" minlength="4" required/></label>
     <c:if test="${loginExists == true}">
         ${loginWarning}
     </c:if>

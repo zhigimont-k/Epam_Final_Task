@@ -111,6 +111,8 @@ public class OrderDaoImpl implements OrderDao {
                 preparedStatement.setInt(2, activity.getId());
             }
 
+            order.setPrice(calculateOrderPrice(order.getId()));
+
             logger.log(Level.INFO, "Added order: " + order);
 
             return order;
@@ -217,6 +219,8 @@ public class OrderDaoImpl implements OrderDao {
                 for (Activity activity : activityList) {
                     order.addActivity(activity);
                 }
+
+                order.setPrice(calculateOrderPrice(order.getId()));
                 logger.log(Level.INFO, "Found order: " + order);
                 orderList.add(order);
             }
@@ -257,6 +261,8 @@ public class OrderDaoImpl implements OrderDao {
                 for (Activity activity : activityList) {
                     order.addActivity(activity);
                 }
+
+                order.setPrice(calculateOrderPrice(order.getId()));
                 logger.log(Level.INFO, "Found order by id: " + order);
                 result = Optional.of(order);
             }
@@ -300,6 +306,8 @@ public class OrderDaoImpl implements OrderDao {
                 for (Activity activity : activityList) {
                     order.addActivity(activity);
                 }
+
+                order.setPrice(calculateOrderPrice(order.getId()));
                 logger.log(Level.INFO, "Found order: " + order);
                 orderList.add(order);
             }
@@ -344,6 +352,8 @@ public class OrderDaoImpl implements OrderDao {
                 for (Activity activity : activityList) {
                     order.addActivity(activity);
                 }
+
+                order.setPrice(calculateOrderPrice(order.getId()));
                 logger.log(Level.INFO, "Found order: " + order);
                 orderList.add(order);
             }
