@@ -49,7 +49,7 @@
     ${phoneNumberLabel}: ${sessionScope.user.phoneNumber}
     <br/>
     ${userNameLabel}:
-    <input type="text" name="userName" placeholder="${sessionScope.user.userName}"
+    <input type="text" name="userName" value="${sessionScope.user.userName}"
            maxlength="20" minlength="3"/></label>
     <br/>
     <input type="submit" value="${button}"/>

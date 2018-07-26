@@ -22,11 +22,14 @@
             <tr>
                 <form name="activityListForm" method="POST" action="app">
                     <input type="hidden" name="command" value="addActivityToOrder"/>
-                    <input type="hidden" name="activityName" value="${activity.name}"/>
+                    <input type="hidden" name="activityId" value="${activity.id}"/>
                     <td>${activity.name}</td>
                     <td>${activity.description}</td>
                     <td>${activity.price}</td>
-
+                    <td>${activity.status}</td>
+                    <c:if test="${sessionScope.user.status == 'admin'}">
+                    <td><a href="app?command=editActivity&activityId=${activity.id}">edit</a></td>
+                    </c:if>
                 </form>
             </tr>
         </c:forEach>

@@ -27,6 +27,7 @@ public final class JspParameter {
     public static final String PHONE_NUMBER = "phoneNumber";
     public static final String USER_STATUS = "userStatus";
 
+    public static final String ACTIVITY = "activity";
     public static final String ACTIVITY_ID = "activityId";
     public static final String ACTIVITY_NAME = "activityName";
     public static final String ACTIVITY_DESCRIPTION = "activityDescription";

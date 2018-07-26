@@ -29,24 +29,28 @@ public class UpdateActivityCommand implements Command {
             ActivityService service = ServiceFactory.getInstance().getActivityService();
             int id = Integer.parseInt(requestContent.getParameter
                     (JspParameter.ACTIVITY_ID));
-            String newName = requestContent.getParameter(JspParameter.NEW_ACTIVITY_NAME);
-            String newDescription = requestContent.getParameter(JspParameter.NEW_ACTIVITY_DESCRIPTION);
+            String newName = requestContent.getParameter(JspParameter.ACTIVITY_NAME);
+            String newDescription = requestContent.getParameter(JspParameter.ACTIVITY_DESCRIPTION);
             BigDecimal newPrice =
-                    new BigDecimal(requestContent.getParameter(JspParameter.NEW_ACTIVITY_PRICE));
+                    new BigDecimal(requestContent.getParameter(JspParameter.ACTIVITY_PRICE));
+            String newStatus = requestContent.getParameter(JspParameter.ACTIVITY_STATUS);
 
             Optional<Activity> found = service.findActivityById(id);
             if (found.isPresent()) {
                 found.get().setName(newName);
                 found.get().setDescription(newDescription);
                 found.get().setPrice(newPrice);
+                found.get().setStatus(newStatus);
                 service.updateActivity(found.get());
                 requestContent.setAttribute(JspParameter.OPERATION_RESULT, true);
+                router.setPage(JspAddress.OPERATION_RESULT);
 
             } else {
-                requestContent.setAttribute(JspParameter.OPERATION_RESULT, false);
+                requestContent.setAttribute(JspParameter.ERROR_MESSAGE, "Error while updating activity");
+                router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                router.setPage(JspAddress.ERROR_PAGE);
             }
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.OPERATION_RESULT);
 
 
         } catch (NoSuchRequestParameterException e) {

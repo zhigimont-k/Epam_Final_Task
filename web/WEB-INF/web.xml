@@ -69,6 +69,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>Service</servlet-name>
+        <jsp-file>/WEB-INF/jsp/admin/editService.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Service</servlet-name>
+        <url-pattern>/editService</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>Account</servlet-name>
         <jsp-file>/jsp/account.jsp</jsp-file>
     </servlet>

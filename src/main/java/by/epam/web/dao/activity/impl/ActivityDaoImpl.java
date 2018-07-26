@@ -52,7 +52,7 @@ public class ActivityDaoImpl implements ActivityDao {
     private static final String UPDATE_ACTIVITY_STATUS = "UPDATE service " +
             "SET service_status = ? WHERE service_id = ?";
     private static final String UPDATE_ACTIVITY = "UPDATE service " +
-            "SET service_name = ?, service_description = ?, service_price = ?" +
+            "SET service_name = ?, service_description = ?, service_price = ?, service_status = ? " +
             "WHERE service_id = ?";
 
     @Override
@@ -276,7 +276,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     @Override
     public Optional<Activity> updateActivity(int id, String name, String description,
-                                             BigDecimal price) throws DaoException {
+                                             BigDecimal price, String status) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         Optional<Activity> activity;
@@ -290,7 +290,8 @@ public class ActivityDaoImpl implements ActivityDao {
                 preparedStatement.setString(1, name);
                 preparedStatement.setString(2, description);
                 preparedStatement.setBigDecimal(3, price);
-                preparedStatement.setInt(4, id);
+                preparedStatement.setString(4, status);
+                preparedStatement.setInt(5, id);
                 preparedStatement.executeUpdate();
             } else {
                 throw new DaoException("Couldn't find activity by id: " + id);
@@ -298,7 +299,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
             return activity;
         } catch (SQLException e) {
-            throw new DaoException("Failed to update activity", e);
+            throw new DaoException("Failed to update activity:  "+e.getLocalizedMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);

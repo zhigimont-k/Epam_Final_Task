@@ -77,7 +77,7 @@ public class ActivityService {
     public Optional<Activity> updateActivity(Activity activity) throws ServiceException {
         try {
             return activityDao.updateActivity(activity.getId(), activity.getName(),
-                    activity.getDescription(), activity.getPrice());
+                    activity.getDescription(), activity.getPrice(), activity.getStatus());
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

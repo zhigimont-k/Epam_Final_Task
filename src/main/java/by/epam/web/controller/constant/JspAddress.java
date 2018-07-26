@@ -10,7 +10,7 @@ public final class JspAddress {
     public static final String ACTIVITIES_PAGE = "/services";
     public static final String ACCOUNT_PAGE = "/account";
     public static final String ORDERS_PAGE = "/orders";
-    public static final String RESET_PASSWORD_PAGE = "jsp/resetPassword.jsp";
     public static final String OPERATION_RESULT = "WEB-INF/jsp/common/operationResult.jsp";
+    public static final String EDIT_ACTIVITY = "/editService";
     private JspAddress(){}
 }
