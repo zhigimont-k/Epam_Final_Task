@@ -21,8 +21,9 @@ public enum CommandType {
     UPDATE_USER("updateUser", new UpdateUserCommand()),
 
     ADD_ACTIVITY("addActivity", new AddActivityCommand()),
+    EDIT_ACTIVITY("editActivity", new EditActivityCommand()),
     UPDATE_ACTIVITY("updateActivity", new UpdateActivityCommand()),
-    VIEW_ACTIVITY("editActivity", new ViewActivityCommand()),
+    VIEW_ACTIVITY("viewActivity", new ViewActivityCommand()),
     VIEW_ACTIVITIES("viewActivities", new ViewActivitiesCommand()),
 
     ADD_ORDER("addOrder", new AddOrderCommand()),
@@ -32,6 +33,7 @@ public enum CommandType {
     VIEW_ALL_ORDERS("viewAllOrders", new ViewOrdersCommand()),
 
     ADD_REVIEW("addReview", new AddReviewCommand()),
+    EDIT_REVIEW("editReview", new EditReviewCommand()),
     UPDATE_REVIEW("updateReview", new UpdateReviewCommand()),
     DELETE_REVIEW("deleteReview", new DeleteReviewCommand());
 

@@ -76,6 +76,14 @@ public class UserService {
         }
     }
 
+    public Optional<User> findUserById(int id) throws ServiceException {
+        try {
+            return userDao.findUserById(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
     public List<User> findAllUsers() throws ServiceException {
         try {
             return userDao.findAllUsers();

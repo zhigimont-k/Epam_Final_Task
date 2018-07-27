@@ -10,6 +10,7 @@ public class Review extends Entity{
     private Timestamp creationDate;
     private String message = "";
     private int mark;
+    private String userLogin;
 
     public int getId() {
         return id;
@@ -59,6 +60,14 @@ public class Review extends Entity{
         this.mark = mark;
     }
 
+    public String getUserLogin() {
+        return userLogin;
+    }
+
+    public void setUserLogin(String userLogin) {
+        this.userLogin = userLogin;
+    }
+
     @Override
     public String toString() {
         return "Review{" +
@@ -66,8 +75,9 @@ public class Review extends Entity{
                 ", userId=" + userId +
                 ", activityId=" + activityId +
                 ", creationDate=" + creationDate +
-                ", message='" + message + '\'' +
+                ", message='" + message +
                 ", mark=" + mark +
+                ", userLogin=" + userLogin +
                 '}';
     }
 
@@ -81,12 +91,13 @@ public class Review extends Entity{
                 activityId == review.activityId &&
                 mark == review.mark &&
                 Objects.equals(creationDate, review.creationDate) &&
-                Objects.equals(message, review.message);
+                Objects.equals(message, review.message) &&
+                Objects.equals(userLogin, review.userLogin);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, userId, activityId, creationDate, message, mark);
+        return Objects.hash(id, userId, activityId, creationDate, message, mark, userLogin);
     }
 }

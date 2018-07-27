@@ -69,12 +69,21 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>Service</servlet-name>
+        <servlet-name>Edit service</servlet-name>
         <jsp-file>/WEB-INF/jsp/admin/editService.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Service</servlet-name>
+        <servlet-name>Edit service</servlet-name>
         <url-pattern>/editService</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>View service</servlet-name>
+        <jsp-file>/jsp/service.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>View service</servlet-name>
+        <url-pattern>/viewService</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -111,6 +120,15 @@
     <servlet-mapping>
         <servlet-name>ResetPassword</servlet-name>
         <url-pattern>/resetPassword</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Edit review</servlet-name>
+        <jsp-file>/WEB-INF/jsp/user/editReview.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Edit review</servlet-name>
+        <url-pattern>/editReview</url-pattern>
     </servlet-mapping>
 
     <filter>

@@ -12,5 +12,7 @@ public final class JspAddress {
     public static final String ORDERS_PAGE = "/orders";
     public static final String OPERATION_RESULT = "WEB-INF/jsp/common/operationResult.jsp";
     public static final String EDIT_ACTIVITY = "/editService";
+    public static final String VIEW_ACTIVITY = "/viewService";
+    public static final String EDIT_REVIEW = "/editReview";
     private JspAddress(){}
 }

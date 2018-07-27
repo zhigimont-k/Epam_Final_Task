@@ -6,10 +6,8 @@ import by.epam.web.controller.constant.JspAddress;
 import by.epam.web.controller.constant.JspParameter;
 import by.epam.web.entity.Activity;
 import by.epam.web.entity.Review;
-import by.epam.web.service.ActivityService;
-import by.epam.web.service.ReviewService;
-import by.epam.web.service.ServiceException;
-import by.epam.web.service.ServiceFactory;
+import by.epam.web.entity.User;
+import by.epam.web.service.*;
 import by.epam.web.util.sessionrequestcontent.NoSuchRequestParameterException;
 import by.epam.web.util.sessionrequestcontent.SessionRequestContent;
 import org.apache.logging.log4j.Level;
@@ -33,11 +31,18 @@ public class ViewActivityCommand implements Command {
             if (found.isPresent()){
                 ReviewService reviewService = ServiceFactory.getInstance().getReviewService();
                 List<Review> reviewList = reviewService.findReviewByActivityId(activityId);
+                UserService userService = ServiceFactory.getInstance().getUserService();
+                for (Review review : reviewList){
+                    Optional<User> foundUser = userService.findUserById(review.getUserId());
+                    if (foundUser.isPresent()){
+                        review.setUserLogin(foundUser.get().getLogin());
+                    }
+                }
                 requestContent.setAttribute(JspParameter.ACTIVITY, found.get());
                 requestContent.setAttribute(JspParameter.REVIEW_LIST, reviewList);
 
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);
-                router.setPage(JspAddress.EDIT_ACTIVITY);
+                router.setPage(JspAddress.VIEW_ACTIVITY);
             }
 
             return router;

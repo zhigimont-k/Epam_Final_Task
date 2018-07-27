@@ -23,7 +23,7 @@
                 <form name="activityListForm" method="POST" action="app">
                     <input type="hidden" name="command" value="addActivityToOrder"/>
                     <input type="hidden" name="activityId" value="${activity.id}"/>
-                    <td>${activity.name}</td>
+                    <td><a href="app?command=viewActivity&activityId=${activity.id}">${activity.name}</a></td>
                     <td>${activity.description}</td>
                     <td>${activity.price}</td>
                     <td>${activity.status}</td>

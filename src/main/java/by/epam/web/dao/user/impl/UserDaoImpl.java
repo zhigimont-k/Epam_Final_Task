@@ -92,10 +92,12 @@ public class UserDaoImpl implements UserDao {
             resultSet = preparedStatement.getGeneratedKeys();
 
             if (resultSet.next()) {
-                int userID = resultSet.getInt(DB_USER_ID_FIELD);
-                user.setId(userID);
-                String userStatus = resultSet.getString(DB_USER_STATUS_FIELD);
-                user.setStatus(userStatus);
+                int userId = resultSet.getInt(1);
+                user.setId(userId);
+                Optional<User> added = findUserById(userId);
+                if (added.isPresent()) {
+                    user.setStatus(added.get().getStatus());
+                }
             } else {
                 throw new DaoException("Couldn't retrieve user's ID and status");
             }
@@ -104,7 +106,7 @@ public class UserDaoImpl implements UserDao {
 
             return user;
         } catch (SQLException e) {
-            throw new DaoException("Failed to register user", e);
+            throw new DaoException("Failed to register user"+ e.getMessage(), e);
         } finally {
 
             try {
@@ -180,7 +182,7 @@ public class UserDaoImpl implements UserDao {
 
             return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user by login and password", e);
+            throw new DaoException("Failed to find user by login and password"+ e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -219,7 +221,7 @@ public class UserDaoImpl implements UserDao {
 
             return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user by login", e);
+            throw new DaoException("Failed to find user by login"+ e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -258,7 +260,7 @@ public class UserDaoImpl implements UserDao {
 
             return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user by id", e);
+            throw new DaoException("Failed to find user by id"+ e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -296,7 +298,7 @@ public class UserDaoImpl implements UserDao {
             }
             return userList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find users", e);
+            throw new DaoException("Failed to find users"+ e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -329,7 +331,7 @@ public class UserDaoImpl implements UserDao {
 
             return user;
         } catch (SQLException e) {
-            throw new DaoException("Failed to change user status", e);
+            throw new DaoException("Failed to change user status"+ e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -366,7 +368,7 @@ public class UserDaoImpl implements UserDao {
 
             return user;
         } catch (SQLException e) {
-            throw new DaoException("Failed to change user status", e);
+            throw new DaoException("Failed to change user status"+ e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -404,7 +406,7 @@ public class UserDaoImpl implements UserDao {
 
             return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user by email", e);
+            throw new DaoException("Failed to find user by email"+ e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);

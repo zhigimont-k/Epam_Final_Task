@@ -22,7 +22,7 @@ public class ReviewDaoImpl implements ReviewDao {
 
     private static final String DB_REVIEW_ID_FIELD = "review_id";
     private static final String DB_REVIEW_USER_ID_FIELD = "user_id";
-    private static final String DB_REVIEW_ACTIVITY_ID_FIELD = "activity_id";
+    private static final String DB_REVIEW_ACTIVITY_ID_FIELD = "service_id";
     private static final String DB_REVIEW_CREATION_DATE_FIELD = "creation_date";
     private static final String DB_REVIEW_MARK_FIELD = "mark";
     private static final String DB_REVIEW_MESSAGE_FIELD = "message";
@@ -75,10 +75,12 @@ public class ReviewDaoImpl implements ReviewDao {
             resultSet = preparedStatement.getGeneratedKeys();
 
             if (resultSet.next()) {
-                int reviewId = resultSet.getInt(DB_REVIEW_ID_FIELD);
+                int reviewId = resultSet.getInt(1);
                 review.setId(reviewId);
-                Timestamp reviewCreationDate = resultSet.getTimestamp(DB_REVIEW_CREATION_DATE_FIELD);
-                review.setCreationDate(reviewCreationDate);
+                Optional<Review> added = findReviewById(reviewId);
+                if (added.isPresent()) {
+                    review.setCreationDate(added.get().getCreationDate());
+                }
             } else {
                 throw new DaoException("Couldn't retrieve review's ID and creation date");
             }
@@ -87,7 +89,7 @@ public class ReviewDaoImpl implements ReviewDao {
 
             return review;
         } catch (SQLException e) {
-            throw new DaoException("Failed to add review", e);
+            throw new DaoException("Failed to add review" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -120,7 +122,7 @@ public class ReviewDaoImpl implements ReviewDao {
 
             return review;
         } catch (SQLException e) {
-            throw new DaoException("Failed to update review", e);
+            throw new DaoException("Failed to update review" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -159,7 +161,7 @@ public class ReviewDaoImpl implements ReviewDao {
 
             return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find review by id", e);
+            throw new DaoException("Failed to find review by id" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -199,7 +201,7 @@ public class ReviewDaoImpl implements ReviewDao {
 
             return reviewList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find review by activity id", e);
+            throw new DaoException("Failed to find review by activity id" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -238,7 +240,7 @@ public class ReviewDaoImpl implements ReviewDao {
 
             return reviewList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find review by user id", e);
+            throw new DaoException("Failed to find review by user id" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -263,7 +265,7 @@ public class ReviewDaoImpl implements ReviewDao {
 
             logger.log(Level.INFO, "Deleted review: " + id);
         } catch (SQLException e) {
-            throw new DaoException("Failed to find review by user id", e);
+            throw new DaoException("Failed to find review by user id" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);

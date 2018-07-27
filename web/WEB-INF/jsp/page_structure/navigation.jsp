@@ -34,10 +34,7 @@
             <%--</ul>--%>
         </li>
         <li>
-            <form action="${pageContext.request.contextPath}/app" method="get">
-                <input type="hidden" name="command" value="viewActivities"/>
-                <input type="submit" value="${servicesPage}"/>
-            </form>
+            <a href="app?command=viewActivities">${servicesPage}</a>
         </li>
 
         <c:if test="${empty sessionScope.user}">
@@ -49,11 +46,8 @@
             <li><a href="${pageContext.request.contextPath}/account">${accountPage}</a></li>
         </c:if>
         <c:if test="${sessionScope.user.status == 'admin'}">
-            <li class="">
-                <form action="${pageContext.request.contextPath}/app" method="get">
-                    <input type="hidden" name="command" value="viewUsers"/>
-                    <input type="submit" value="${usersPage}"/>
-                </form>
+            <li class>
+                <a href="app?command=viewUsers">${usersPage}</a>
             </li>
         </c:if>
         <c:if test="${sessionScope.user ne null}">

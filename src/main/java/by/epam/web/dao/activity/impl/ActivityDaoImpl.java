@@ -74,7 +74,7 @@ public class ActivityDaoImpl implements ActivityDao {
             preparedStatement.executeUpdate();
 
             Optional<Activity> added = findActivityByName(name);
-            if (added.isPresent()){
+            if (added.isPresent()) {
                 activity.setId(added.get().getId());
                 activity.setStatus(added.get().getStatus());
             }
@@ -83,7 +83,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
             return activity;
         } catch (SQLException e) {
-            throw new DaoException("Failed to add activity: "+e.getMessage(), e);
+            throw new DaoException("Failed to add activity: " + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -95,7 +95,7 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public Optional<Activity> findActivityById(int id) throws DaoException{
+    public Optional<Activity> findActivityById(int id) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -120,7 +120,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
             return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find activity by id", e);
+            throw new DaoException("Failed to find activity by id" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -157,7 +157,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
             return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find activity by name", e);
+            throw new DaoException("Failed to find activity by name" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -193,7 +193,7 @@ public class ActivityDaoImpl implements ActivityDao {
             }
             return activityList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find activities", e);
+            throw new DaoException("Failed to find activities" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -227,7 +227,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
             return activity;
         } catch (SQLException e) {
-            throw new DaoException("Failed to change activity status", e);
+            throw new DaoException("Failed to change activity status" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -239,7 +239,7 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public List<Activity> findAvailableActivities() throws DaoException{
+    public List<Activity> findAvailableActivities() throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -263,7 +263,7 @@ public class ActivityDaoImpl implements ActivityDao {
             }
             return activityList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find available activities", e);
+            throw new DaoException("Failed to find available activities" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -299,7 +299,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
             return activity;
         } catch (SQLException e) {
-            throw new DaoException("Failed to update activity:  "+e.getLocalizedMessage(), e);
+            throw new DaoException("Failed to update activity:  " + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);

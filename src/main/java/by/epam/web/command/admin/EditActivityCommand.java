@@ -1,10 +1,12 @@
-package by.epam.web.command.user;
+package by.epam.web.command.admin;
 
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
 import by.epam.web.controller.constant.JspAddress;
 import by.epam.web.controller.constant.JspParameter;
-import by.epam.web.entity.User;
+import by.epam.web.entity.Activity;
+import by.epam.web.entity.Review;
+import by.epam.web.service.ActivityService;
 import by.epam.web.service.ReviewService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
@@ -14,7 +16,10 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class AddReviewCommand implements Command {
+import java.util.List;
+import java.util.Optional;
+
+public class EditActivityCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
 
     @Override
@@ -22,32 +27,24 @@ public class AddReviewCommand implements Command {
         PageRouter router = new PageRouter();
         try {
 
-            int userId = ((User) requestContent.getSessionAttribute(JspParameter.USER)).getId();
+            ActivityService service = ServiceFactory.getInstance().getActivityService();
+            int activityId = Integer.parseInt(requestContent.getParameter(JspParameter.ACTIVITY_ID));
+            Optional<Activity> found = service.findActivityById(activityId);
+            if (found.isPresent()){
+                requestContent.setAttribute(JspParameter.ACTIVITY, found.get());
 
-            int activityId = Integer.parseInt(
-                    requestContent.getParameter(JspParameter.ACTIVITY_ID));
+                router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                router.setPage(JspAddress.EDIT_ACTIVITY);
+            }
 
-            int mark = Integer.parseInt(
-                    requestContent.getParameter(JspParameter.REVIEW_MARK));
-            String message = requestContent.getParameter(JspParameter.REVIEW_MESSAGE);
-
-            ReviewService service = ServiceFactory.getInstance().getReviewService();
-
-            service.addReview(userId, activityId, mark, message);
-
-            requestContent.setAttribute(JspParameter.OPERATION_RESULT, true);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.OPERATION_RESULT);
+            return router;
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
-
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(JspAddress.ERROR_PAGE);
         }
         return router;
-
     }
 }

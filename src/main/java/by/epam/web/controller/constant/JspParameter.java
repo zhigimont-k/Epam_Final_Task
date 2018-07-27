@@ -45,6 +45,7 @@ public final class JspParameter {
     public static final String ORDER_PRICE = "orderPrice";
     public static final String ORDER_LIST = "orderList";
 
+    public static final String REVIEW = "review";
     public static final String REVIEW_MARK = "reviewMark";
     public static final String REVIEW_MESSAGE = "reviewMessage";
     public static final String REVIEW_ID = "reviewId";
