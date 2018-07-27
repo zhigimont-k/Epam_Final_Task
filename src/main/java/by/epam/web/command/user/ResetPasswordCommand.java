@@ -8,6 +8,7 @@ import by.epam.web.entity.User;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.service.UserService;
+import by.epam.web.util.mail.MailComposer;
 import by.epam.web.util.mail.MailSenderThread;
 import by.epam.web.util.mail.Settings;
 import by.epam.web.util.passwordgenerator.PasswordGenerator;
@@ -31,11 +32,11 @@ public class ResetPasswordCommand implements Command {
             UserService service = ServiceFactory.getInstance().getUserService();
             Optional<User> found = service.findUserByEmail(email);
             if (found.isPresent()) {
-                logger.log(Level.INFO, "Resetting password for: " + email);
 
                 String newPassword = PasswordGenerator.generatePassword();
 
                 found.get().setPassword(newPassword);
+                logger.log(Level.INFO, "Resetting password for: "+found.get());
                 service.updateUser(found.get());
 
 
@@ -52,7 +53,8 @@ public class ResetPasswordCommand implements Command {
                     logger.log(Level.ERROR, ex);
                     settings.setPortValue(DEFAULT_PORT);
                 }
-                new MailSenderThread(email, "CBB test", "ehlo", settings).start();
+                new MailSenderThread(email, MailComposer.getResetPasswordMessageTheme(),
+                        MailComposer.getResetPasswordMessage(newPassword), settings).start();
 
 
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);

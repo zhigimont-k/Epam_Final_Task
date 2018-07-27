@@ -8,7 +8,9 @@ public class PasswordGenerator {
 
     public static String generatePassword(){
         RandomStringGenerator generator = new RandomStringGenerator.Builder()
-                .withinRange('a', 'z').build();
+                .withinRange('0', 'z')
+                .filteredBy(Character::isLetterOrDigit)
+                .build();
         return generator.generate(length);
     }
 

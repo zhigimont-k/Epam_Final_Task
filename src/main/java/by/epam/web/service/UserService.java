@@ -10,7 +10,9 @@ import java.util.Optional;
 
 public class UserService {
     private static final UserDao userDao = new UserDaoImpl();
-    UserService(){}
+
+    UserService() {
+    }
 
     public User registerUser(String login, String password, String email, String phoneNumber, String userName) throws ServiceException {
         User newUser;

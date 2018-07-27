@@ -395,8 +395,8 @@ public class UserDaoImpl implements UserDao {
             if (resultSet.next()) {
                 User user = new User();
                 user.setId(resultSet.getInt(DB_USER_ID_FIELD));
-                user.setLogin(DB_LOGIN_FIELD);
-                user.setPassword(DB_PASSWORD_FIELD);
+                user.setLogin(resultSet.getString(DB_LOGIN_FIELD));
+                user.setPassword(resultSet.getString(DB_PASSWORD_FIELD));
                 user.setEmail(email);
                 user.setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD));
                 user.setUserName(resultSet.getString(DB_USER_NAME_FIELD));

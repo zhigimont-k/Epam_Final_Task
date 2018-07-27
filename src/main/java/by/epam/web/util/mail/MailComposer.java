@@ -4,10 +4,6 @@ import java.util.Map;
 
 public class MailComposer {
 
-    public enum MessageType {
-        PASSWORD_RESET, ORDER_REMINDER
-    }
-
     private static final String PASSWORD_RESET_MESSAGE_THEME = "CBB | Password reset";
     private static final String ORDER_REMINDER_MESSAGE_THEME = "CBB | Order reminder";
 
@@ -17,9 +13,11 @@ public class MailComposer {
     private static final String ORDER_REMINDER_MESSAGE = "Dear %s, you have an " +
             "upcoming order in CBB soon. Thank you for using our service. Have a nice day.";
 
-    private Map<String, String> message;
+    public static String getResetPasswordMessage(String newPassword){
+        return String.format(PASSWORD_RESET_MESSAGE, newPassword);
+    }
 
-    public Map<String, String> getMessage(MessageType type) {
-        return message;
+    public static String getResetPasswordMessageTheme(){
+        return PASSWORD_RESET_MESSAGE_THEME;
     }
 }

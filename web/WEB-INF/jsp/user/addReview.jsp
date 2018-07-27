@@ -30,7 +30,7 @@
     <br/>
     <label>Comment:
         <br/>
-        <textarea name="reviewMessage" cols="30" rows="10" required></textarea>
+        <textarea name="reviewMessage" maxlength="280" cols="30" rows="10"></textarea>
     </label>
 
     <br/>

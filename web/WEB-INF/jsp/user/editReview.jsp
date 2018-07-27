@@ -18,9 +18,6 @@
     <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
-<c:if test="${sessionScope.user.status ne 'admin'}">
-    <jsp:forward page="${pageContext.request.contextPath}/home"/>
-</c:if>
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
 
@@ -36,8 +33,7 @@
         <br/>
         <label>Comment:
             <br/>
-            <textarea name="reviewMessage" cols="30" rows="10" required>${review.message}
-            </textarea>
+            <textarea name="reviewMessage" maxlength="280" cols="30" rows="10">${review.message}</textarea>
         </label>
         <br/>
         <input type="submit" value="${button}"/>

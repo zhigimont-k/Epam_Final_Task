@@ -8,7 +8,7 @@ public class Review extends Entity{
     private int userId;
     private int activityId;
     private Timestamp creationDate;
-    private String message = "";
+    private String message;
     private int mark;
     private String userLogin;
 
