@@ -50,6 +50,14 @@ public class SessionRequestContent {
         }
     }
 
+    public Object getRequestAttribute(String attributeName) throws NoSuchRequestParameterException {
+        if (requestAttributes.get(attributeName) != null) {
+            return requestAttributes.get(attributeName);
+        } else {
+            throw new NoSuchRequestParameterException("Couldn't find attribute: " + attributeName);
+        }
+    }
+
     public void insertValues(HttpServletRequest request) {
         for (Map.Entry<String, Object> requestAttribute : requestAttributes.entrySet()) {
             request.setAttribute(requestAttribute.getKey(), requestAttribute.getValue());

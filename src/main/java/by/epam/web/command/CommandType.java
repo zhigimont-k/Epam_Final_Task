@@ -26,6 +26,8 @@ public enum CommandType {
     VIEW_ACTIVITY("viewActivity", new ViewActivityCommand()),
     VIEW_ACTIVITIES("viewActivities", new ViewActivitiesCommand()),
 
+    CREATE_ORDER("createOrder", new CreateOrderCommand()),
+    VIEW_ORDER("viewOrder", new ViewOrderCommand()),
     ADD_ORDER("addOrder", new AddOrderCommand()),
     CHANGE_ORDER_STATUS("changeOrderStatus", new ChangeOrderStatusCommand()),
     CANCEL_ORDER("cancelOrder", new CancelOrderCommand()),

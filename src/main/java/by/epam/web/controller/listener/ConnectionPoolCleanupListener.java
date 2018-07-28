@@ -23,7 +23,6 @@ public class ConnectionPoolCleanupListener implements ServletContextListener {
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         try {
             ConnectionPool.getInstance().closeConnectionPool();
-            logger.log(Level.INFO, "Destroying connection pool");
         } catch (PoolException e){
             logger.fatal("Can't close connection pool", e);
             throw new RuntimeException("Can't close connection pool", e);

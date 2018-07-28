@@ -19,35 +19,35 @@
 </head>
 <body>
 
-<c:if test="${sessionScope.user.status ne 'admin'}">
+
+<c:if test="${empty sessionScope.user && sessionScope.user.status == 'banned'}">
     <jsp:forward page="${pageContext.request.contextPath}/home"/>
 </c:if>
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-<form name="addServiceForm" method="POST" action="app">
-    <input type="hidden" name="command" value="addActivity"/>
-    Add a service:
-    <label>${serviceNameLabel}
-        <br/>
-        <input type="text" name="activityName" maxlength="20" minlength="4" required/>
-    </label>
+<form name="orderCheckForm" method="POST" action="app">
+    <input type="hidden" name="command" value="addOrder"/>
+   Order info:<br/>
+
+    Time: ${order.dateTime}
+    <input type="hidden" name="orderTime" value="${order.dateTime}"/>
+    <br/>
+    Services:<br/>
+    <table>
+    <c:forEach var="activity" items="${order.activityList}">
+        <tr>
+            <input type="hidden" name="activityId" value="${activity.id}"/>
+                <td>${activity.name}</td>
+                <td>${activity.description}</td>
+                <td>${activity.price}</td>
+        </tr>
+    </c:forEach>
+    </table>
+    <br/>
+    Price: ${order.price}
 
     <br/>
-    <label>${serviceDescriptionLabel}
-        <br/>
-        <textarea name="activityDescription" cols="30" rows="10" required></textarea>
-    </label>
-    <br/>
-    <label>${servicePriceLabel}
-        <br/>
-        <input type="text" name="activityPrice" maxlength="5" minlength="1" required/>
-    </label>
-
-    <br/>
-    <input type="submit" value="${button}"/>
-    <c:if test="${activityExists == true}">
-        Activity with this name already exists.
-    </c:if>
+    <input type="submit" value="Confirm order"/>
 </form>
 </body>
 </html>

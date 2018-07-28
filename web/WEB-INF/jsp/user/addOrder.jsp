@@ -19,34 +19,32 @@
 </head>
 <body>
 
-<c:if test="${sessionScope.user.status ne 'admin'}">
+<c:if test="${empty sessionScope.user && sessionScope.user.status == 'banned'}">
     <jsp:forward page="${pageContext.request.contextPath}/home"/>
 </c:if>
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-<form name="addServiceForm" method="POST" action="app">
-    <input type="hidden" name="command" value="addActivity"/>
-    Add a service:
-    <label>${serviceNameLabel}
-        <br/>
-        <input type="text" name="activityName" maxlength="20" minlength="4" required/>
-    </label>
+<form name="addOrderForm" method="POST" action="app">
+    <input type="hidden" name="command" value="viewOrder"/>
+    Add an order:
 
     <br/>
-    <label>${serviceDescriptionLabel}
+    <label>Choose date and time for your order:
         <br/>
-        <textarea name="activityDescription" cols="30" rows="10" required></textarea>
+        <input type="datetime-local" name="orderTime" required/>
     </label>
     <br/>
-    <label>${servicePriceLabel}
+    Choose services to be included in your order:
+    <br/>
+    <c:forEach var="activity" items="${activityList}">
+        <input type="checkbox" name="activityId" value="${activity.id}">${activity.name}<br>
         <br/>
-        <input type="text" name="activityPrice" maxlength="5" minlength="1" required/>
-    </label>
+    </c:forEach>
 
     <br/>
-    <input type="submit" value="${button}"/>
+    <input type="submit" value="Go to check"/>
     <c:if test="${activityExists == true}">
-        Activity with this name already exists.
+        Please make sure that service list is not empty and date is valid.
     </c:if>
 </form>
 </body>

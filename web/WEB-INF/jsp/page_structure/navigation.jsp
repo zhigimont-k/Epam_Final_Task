@@ -42,13 +42,21 @@
             <li><a href="${pageContext.request.contextPath}/login">${signIn}</a></li>
         </c:if>
         <c:if test="${sessionScope.user ne null}">
-            <li><a href="${pageContext.request.contextPath}/orders">${ordersPage}</a></li>
+            <c:if test="${sessionScope.user.status == 'user'}">
+                <li><a href="app?command=viewUserOrders">${ordersPage}</a></li>
+            </c:if>
+            <c:if test="${sessionScope.user.status == 'admin'}">
+                <li><a href="app?command=viewAllOrders">${ordersPage}</a></li>
+            </c:if>
             <li><a href="${pageContext.request.contextPath}/account">${accountPage}</a></li>
         </c:if>
         <c:if test="${sessionScope.user.status == 'admin'}">
             <li class>
                 <a href="app?command=viewUsers">${usersPage}</a>
             </li>
+        </c:if>
+        <c:if test="${sessionScope.user ne null && sessionScope.user.status ne 'banned'}">
+            <li><a href="app?command=createOrder">Make an order</a></li>
         </c:if>
         <c:if test="${sessionScope.user ne null}">
             <li><a href="app?command=logout">${logout}</a></li>

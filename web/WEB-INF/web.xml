@@ -131,6 +131,24 @@
         <url-pattern>/editReview</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Add order</servlet-name>
+        <jsp-file>/WEB-INF/jsp/user/addOrder.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Add order</servlet-name>
+        <url-pattern>/addOrder</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>View order</servlet-name>
+        <jsp-file>/WEB-INF/jsp/user/orderCheck.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>View order</servlet-name>
+        <url-pattern>/viewOrder</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>encodingFilter</filter-name>
         <filter-class>by.epam.web.controller.filter.EncodingFilter</filter-class>

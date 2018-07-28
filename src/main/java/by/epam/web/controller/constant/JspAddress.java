@@ -14,5 +14,7 @@ public final class JspAddress {
     public static final String EDIT_ACTIVITY = "/editService";
     public static final String VIEW_ACTIVITY = "/viewService";
     public static final String EDIT_REVIEW = "/editReview";
+    public static final String VIEW_ORDER = "/viewOrder";
+    public static final String ADD_ORDER = "/addOrder";
     private JspAddress(){}
 }

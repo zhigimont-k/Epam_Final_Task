@@ -45,6 +45,14 @@ public class ActivityService {
         }
     }
 
+    public List<Activity> findAvailableActivities() throws ServiceException {
+        try {
+            return activityDao.findAvailableActivities();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
     public Optional<Activity> findActivityByName(String name) throws ServiceException {
         try {
             return activityDao.findActivityByName(name);

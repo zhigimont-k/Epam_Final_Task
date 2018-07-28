@@ -38,8 +38,8 @@ public class OrderDaoImpl implements OrderDao {
     private static final String DB_USER_EMAIL_FIELD = "user_email";
 
     private static final String INSERT_ORDER_INFO = "INSERT INTO order_info " +
-            "(user_id, service_id, order_time) " +
-            "VALUES (?, ?, ?)";
+            "(user_id, order_time) " +
+            "VALUES (?, ?)";
     private static final String INSERT_ORDER_ACTIVITIES = "INSERT INTO order_link " +
             "(order_id, service_id) " +
             "VALUES (?, ?)";
@@ -96,10 +96,13 @@ public class OrderDaoImpl implements OrderDao {
             resultSet = preparedStatement.getGeneratedKeys();
 
             if (resultSet.next()) {
-                int orderId = resultSet.getInt(DB_ORDER_ID_FIELD);
+                int orderId = resultSet.getInt(1);
                 order.setId(orderId);
-                String orderStatus = resultSet.getString(DB_ORDER_STATUS_FIELD);
-                order.setStatus(orderStatus);
+                logger.log(Level.INFO, "Added order info: " + order);
+                Optional<Order> added = findOrderById(orderId);
+                if (added.isPresent()) {
+                    order.setStatus(added.get().getStatus());
+                }
             } else {
                 throw new DaoException("Couldn't retrieve order's ID and status");
             }
@@ -109,6 +112,8 @@ public class OrderDaoImpl implements OrderDao {
 
                 preparedStatement.setInt(1, order.getId());
                 preparedStatement.setInt(2, activity.getId());
+
+                preparedStatement.executeUpdate();
             }
 
             order.setPrice(calculateOrderPrice(order.getId()));
@@ -117,7 +122,7 @@ public class OrderDaoImpl implements OrderDao {
 
             return order;
         } catch (SQLException e) {
-            throw new DaoException("Failed to add order"+e.getMessage(), e);
+            throw new DaoException("Failed to add order" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -151,7 +156,7 @@ public class OrderDaoImpl implements OrderDao {
 
             return order;
         } catch (SQLException e) {
-            throw new DaoException("Failed to change order status"+e.getMessage(), e);
+            throw new DaoException("Failed to change order status" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -184,7 +189,7 @@ public class OrderDaoImpl implements OrderDao {
 
             return order;
         } catch (SQLException e) {
-            throw new DaoException("Failed to cancel order"+e.getMessage(), e);
+            throw new DaoException("Failed to cancel order" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -226,7 +231,7 @@ public class OrderDaoImpl implements OrderDao {
             }
             return orderList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find orders"+e.getMessage(), e);
+            throw new DaoException("Failed to find orders" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -248,6 +253,7 @@ public class OrderDaoImpl implements OrderDao {
             connection = pool.getConnection();
 
             preparedStatement = connection.prepareStatement(FIND_ORDER_BY_ID);
+            preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
@@ -268,7 +274,7 @@ public class OrderDaoImpl implements OrderDao {
             }
             return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find order by id"+e.getMessage(), e);
+            throw new DaoException("Failed to find order by id" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -313,7 +319,7 @@ public class OrderDaoImpl implements OrderDao {
             }
             return orderList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find orders by user"+e.getMessage(), e);
+            throw new DaoException("Failed to find orders by user" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -359,7 +365,7 @@ public class OrderDaoImpl implements OrderDao {
             }
             return orderList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find orders by user and order status"+e.getMessage(), e);
+            throw new DaoException("Failed to find orders by user and order status" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -407,7 +413,7 @@ public class OrderDaoImpl implements OrderDao {
 
             return activityList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find activities by order id"+e.getMessage(), e);
+            throw new DaoException("Failed to find activities by order id" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -435,7 +441,7 @@ public class OrderDaoImpl implements OrderDao {
 
             return emailList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find emails for upcoming orders"+e.getMessage(), e);
+            throw new DaoException("Failed to find emails for upcoming orders" + e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);

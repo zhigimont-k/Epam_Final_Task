@@ -23,9 +23,9 @@ public class ViewOrdersCommand implements Command {
         try {
 
             OrderService service = ServiceFactory.getInstance().getOrderService();
-            List<Order> activityList = service.findAllOrders();
+            List<Order> orderList = service.findAllOrders();
 
-            requestContent.setAttribute(JspParameter.ORDER_LIST, activityList);
+            requestContent.setAttribute(JspParameter.ORDER_LIST, orderList);
 
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(JspAddress.ORDERS_PAGE);

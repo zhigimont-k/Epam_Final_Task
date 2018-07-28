@@ -44,8 +44,6 @@ public class ViewActivityCommand implements Command {
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);
                 router.setPage(JspAddress.VIEW_ACTIVITY);
             }
-
-            return router;
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {

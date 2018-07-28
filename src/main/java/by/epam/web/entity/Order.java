@@ -2,15 +2,12 @@ package by.epam.web.entity;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class Order extends Entity {
     public enum Status {
-        PENDING_APPROVAL("pending_approval"), CONFIRMED("confirmed"), CANCELLED("cancelled"), FINISHED("finished");
+        PENDING("pending"), CONFIRMED("confirmed"), CANCELLED("cancelled"), FINISHED("finished");
         private String name;
 
         Status(String name) {
@@ -87,6 +84,10 @@ public class Order extends Entity {
 
     public void forEach(Consumer<? super Activity> action) {
         activityList.forEach(action);
+    }
+
+    public List<Activity> getActivityList() {
+        return Collections.unmodifiableList(activityList);
     }
 
     public String getStatus() {

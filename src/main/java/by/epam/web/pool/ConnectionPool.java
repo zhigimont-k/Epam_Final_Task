@@ -123,6 +123,7 @@ public class ConnectionPool {
     }
 
     public void closeConnectionPool() throws PoolException {
+        logger.log(Level.INFO, "Closing connection pool...");
         ProxyConnection connection;
         int currentPoolSize = availableConnections.size() + unavailableConnections.size();
         for (int i = 0; i < currentPoolSize; i++) {
