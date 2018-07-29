@@ -2,8 +2,11 @@ package by.epam.web.controller;
 
 import by.epam.web.command.Command;
 import by.epam.web.command.CommandFactory;
+import by.epam.web.controller.constant.JspAddress;
 import by.epam.web.controller.constant.JspParameter;
+import by.epam.web.service.ServiceException;
 import by.epam.web.util.sessionrequestcontent.SessionRequestContent;
+import org.apache.logging.log4j.Level;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,6 +19,7 @@ import java.util.Optional;
 
 @WebServlet(name = "FrontController", urlPatterns = {"/app"})
 public class FrontController extends HttpServlet {
+
     private static final String UTF_8_ENCODING = "UTF-8";
     private static final String HTML_CONTENT_TYPE = "text/html";
     @Override

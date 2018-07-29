@@ -41,17 +41,16 @@ public class ResetPasswordCommand implements Command {
 
 
                 Settings settings = new Settings();
-                final int DEFAULT_PORT = 587;
-                settings.setHostValue("smtp.gmail.com");
-                settings.setUserValue("catbeautysalonmeow@gmail.com");
-                settings.setPasswordValue("cBBgf78ejndfgu#Q");
-                settings.setProtocolValue("smtp");
+                settings.setHostValue(Settings.HOST_VALUE);
+                settings.setUserValue(Settings.USER_VALUE);
+                settings.setPasswordValue(Settings.PASSWORD_VALUE);
+                settings.setProtocolValue(Settings.PROTOCOL_VALUE);
                 try {
                     int portValue = Integer.parseInt(Settings.PORT);
                     settings.setPortValue(portValue);
                 } catch (NumberFormatException ex) {
                     logger.log(Level.ERROR, ex);
-                    settings.setPortValue(DEFAULT_PORT);
+                    settings.setPortValue(Settings.DEFAULT_PORT);
                 }
                 new MailSenderThread(email, MailComposer.getResetPasswordMessageTheme(),
                         MailComposer.getResetPasswordMessage(newPassword), settings).start();
@@ -68,6 +67,7 @@ public class ResetPasswordCommand implements Command {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
+            requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(JspAddress.ERROR_PAGE);
         }

@@ -19,7 +19,7 @@ public class AddActivityCommand implements Command{
     private static final Logger logger = LogManager.getLogger();
 
     @Override
-    public PageRouter execute(SessionRequestContent requestContent) {
+    public PageRouter execute(SessionRequestContent requestContent){
         PageRouter router = new PageRouter();
         try {
 
@@ -47,7 +47,6 @@ public class AddActivityCommand implements Command{
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
-
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(JspAddress.ERROR_PAGE);
         }

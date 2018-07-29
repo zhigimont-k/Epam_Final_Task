@@ -15,6 +15,7 @@ import java.util.Properties;
 
 public class MailSenderThread extends Thread {
     private static final Logger logger = LogManager.getLogger();
+    private static final String FROM_MAIL = "catbeautysalonmeow@gmail.com";
     private String mailTo;
     private String mailFrom;
     private String mailSubject;
@@ -24,7 +25,7 @@ public class MailSenderThread extends Thread {
 
     public MailSenderThread(String mailTo, String mailSubject, String mailContent, Settings settings) {
         this.mailTo = mailTo;
-        this.mailFrom = "catbeautysalonmeow@gmail.com";
+        this.mailFrom = FROM_MAIL;
         this.mailSubject = mailSubject;
         this.mailContent = mailContent;
         this.settings = settings;
@@ -32,12 +33,12 @@ public class MailSenderThread extends Thread {
 
     private void buildMailSession() {
         Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
+        props.put(Settings.SMTP_AUTH, "true");
         props.put(Settings.PROTOCOL, settings.getProtocolValue());
         props.put(Settings.HOST, settings.getHostValue());
         props.put(Settings.USER, "true");
         props.put(Settings.SEND_PARTIAL, "true");
-        props.put("mail.smtp.starttls.enable", "true");
+        props.put(Settings.START_TLS_ENABLE, "true");
         mailSession=Session.getDefaultInstance(props);
         mailSession.setDebug(true);
     }
@@ -56,7 +57,7 @@ public class MailSenderThread extends Thread {
             transport.connect(settings.getHostValue(), settings.getPortValue(), settings.getUserValue(), settings.getPasswordValue());
             transport.sendMessage(message, message.getRecipients(Message.RecipientType.TO));
             transport.close();
-            logger.log(Level.INFO, "Sended");
+            logger.log(Level.INFO, "Message sent");
         } catch (MessagingException e) {
             logger.log(Level.ERROR, e);
         }

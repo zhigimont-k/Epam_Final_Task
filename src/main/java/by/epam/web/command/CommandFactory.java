@@ -22,4 +22,11 @@ public class CommandFactory {
                 .findFirst()
                 .map(CommandType::getCommand);
     }
+
+    public Optional<CommandRight> getCommandRight(String commandName){
+        return Arrays.stream(CommandType.values())
+                .filter(command -> command.getName().equalsIgnoreCase(commandName))
+                .findFirst()
+                .map(CommandType::getCommandRights);
+    }
 }

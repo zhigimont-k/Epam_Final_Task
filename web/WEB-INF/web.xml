@@ -161,4 +161,13 @@
         <filter-name>encodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+
+    <filter>
+        <filter-name>Access check filter</filter-name>
+        <filter-class>by.epam.web.controller.filter.AccessCheckFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>Access check filter</filter-name>
+        <url-pattern>/app</url-pattern>
+    </filter-mapping>
 </web-app>

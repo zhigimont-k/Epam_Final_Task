@@ -14,6 +14,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Optional;
+
 public class LoginCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
 
@@ -25,10 +27,13 @@ public class LoginCommand implements Command {
             String password = requestContent.getParameter(JspParameter.PASSWORD);
             UserService service = ServiceFactory.getInstance().getUserService();
             if (service.findUserByLoginAndPassword(login, password)) {
-                User user = service.userLogin(login, password).get();
-                requestContent.setSessionAttribute(JspParameter.USER, user);
-                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-                router.setPage(JspAddress.HOME_PAGE);
+                Optional<User> found = service.userLogin(login, password);
+                if (found.isPresent()){
+                    User user = found.get();
+                    requestContent.setSessionAttribute(JspParameter.USER, user);
+                    router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                    router.setPage(JspAddress.HOME_PAGE);
+                }
             } else {
                 requestContent.setAttribute(JspParameter.AUTH_FAIL, true);
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);
@@ -38,6 +43,7 @@ public class LoginCommand implements Command {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
+            requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(JspAddress.ERROR_PAGE);
         }

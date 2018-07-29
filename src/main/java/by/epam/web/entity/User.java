@@ -77,6 +77,10 @@ public class User extends Entity {
         return status.getName();
     }
 
+    public Status getUserStatus(){
+        return status;
+    }
+
     public void setStatus(Status status) {
         this.status = status;
     }

@@ -30,9 +30,9 @@ public class ViewActivitiesCommand implements Command {
 
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(JspAddress.ACTIVITIES_PAGE);
-            return router;
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
+            requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(JspAddress.ERROR_PAGE);
         }

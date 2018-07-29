@@ -59,7 +59,6 @@ public class AddOrderCommand implements Command {
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
-
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(JspAddress.ERROR_PAGE);
         }

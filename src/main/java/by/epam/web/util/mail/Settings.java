@@ -7,6 +7,15 @@ public class Settings {
     public static final String PASSWORD="smtps.auth.pass";
     public static final String PROTOCOL="mail.transport.protocol";
     public static final String SEND_PARTIAL="mail.smtp.sendpartial";
+    public static final String SMTP_AUTH = "mail.smtp.auth";
+    public static final String START_TLS_ENABLE = "mail.smtp.starttls.enable";
+
+    public static final String HOST_VALUE = "smtp.gmail.com";
+    public static final String USER_VALUE = "catbeautysalonmeow@gmail.com";
+    public static final String PASSWORD_VALUE = "cBBgf78ejndfgu#Q";
+    public static final String PROTOCOL_VALUE = "smtp";
+    public static final int DEFAULT_PORT = 587;
+
 
     private String hostValue;
     private int portValue;

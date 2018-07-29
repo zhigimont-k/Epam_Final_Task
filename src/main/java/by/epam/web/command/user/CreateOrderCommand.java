@@ -8,7 +8,6 @@ import by.epam.web.entity.Activity;
 import by.epam.web.service.ActivityService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
-import by.epam.web.util.sessionrequestcontent.NoSuchRequestParameterException;
 import by.epam.web.util.sessionrequestcontent.SessionRequestContent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -33,7 +32,6 @@ public class CreateOrderCommand implements Command {
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
-
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(JspAddress.ERROR_PAGE);
         }

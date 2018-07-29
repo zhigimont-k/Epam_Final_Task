@@ -10,16 +10,10 @@ import javax.servlet.ServletException;
 import java.io.IOException;
 
 public interface Command {
-    PageRouter execute(SessionRequestContent requestContent) throws IOException, ServletException;
+    PageRouter execute(SessionRequestContent requestContent);
     default String constructRedirectAddress(SessionRequestContent requestContent) throws NoSuchRequestParameterException{
         String page = requestContent.getParameter(JspParameter.PAGE);
         String query = requestContent.getParameter(JspParameter.QUERY);
-        String address = (query.isEmpty()) ? page : JspAddress.SERVLET_NAME + "?" + query;
-        return address;
-    }
-    default String constructRedirectAddress(SessionRequestContent requestContent, String page) throws NoSuchRequestParameterException{
-        String query = requestContent.getParameter(JspParameter.QUERY);
-        String address = (query.isEmpty()) ? page : JspAddress.SERVLET_NAME + "?" + query;
-        return address;
+        return (query.isEmpty()) ? page : JspAddress.SERVLET_NAME + "?" + query;
     }
 }

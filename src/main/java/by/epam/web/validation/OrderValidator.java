@@ -9,7 +9,7 @@ public class OrderValidator implements AbstractValidator<Order> {
         return false;
     }
 
-    public boolean checkAccess(User user, Order entity) {
-        return false;
+    public boolean checkAccess(User user, Order order) {
+        return user.getId() == order.getUserId();
     }
 }

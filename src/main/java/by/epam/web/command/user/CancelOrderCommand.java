@@ -28,7 +28,6 @@ public class CancelOrderCommand implements Command {
 
             router.setTransitionType(PageRouter.TransitionType.REDIRECT);
             router.setPage(JspAddress.HOME_PAGE);
-            return router;
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {
