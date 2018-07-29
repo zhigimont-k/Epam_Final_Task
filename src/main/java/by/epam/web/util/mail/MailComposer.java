@@ -20,4 +20,12 @@ public class MailComposer {
     public static String getResetPasswordMessageTheme(){
         return PASSWORD_RESET_MESSAGE_THEME;
     }
+
+    public static String getOrderReminderMessage(String userLogin){
+        return String.format(ORDER_REMINDER_MESSAGE, userLogin);
+    }
+
+    public static String getOrderReminderMessageTheme(){
+        return ORDER_REMINDER_MESSAGE_THEME;
+    }
 }

@@ -26,14 +26,12 @@ public class LoginCommand implements Command {
             String login = requestContent.getParameter(JspParameter.LOGIN);
             String password = requestContent.getParameter(JspParameter.PASSWORD);
             UserService service = ServiceFactory.getInstance().getUserService();
-            if (service.findUserByLoginAndPassword(login, password)) {
-                Optional<User> found = service.userLogin(login, password);
-                if (found.isPresent()){
-                    User user = found.get();
-                    requestContent.setSessionAttribute(JspParameter.USER, user);
-                    router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-                    router.setPage(JspAddress.HOME_PAGE);
-                }
+            Optional<User> found = service.findUserByLoginAndPassword(login, password);
+            if (found.isPresent()) {
+                User user = found.get();
+                requestContent.setSessionAttribute(JspParameter.USER, user);
+                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setPage(JspAddress.HOME_PAGE);
             } else {
                 requestContent.setAttribute(JspParameter.AUTH_FAIL, true);
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);

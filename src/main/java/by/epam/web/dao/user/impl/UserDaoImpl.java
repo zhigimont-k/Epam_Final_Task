@@ -63,7 +63,11 @@ public class UserDaoImpl implements UserDao {
     private static final String UPDATE_USER_STATUS = "UPDATE user " +
             "SET user_status = ? WHERE login = ?";
     private static final String UPDATE_USER = "UPDATE user " +
-            "SET login = ?, password = SHA1(?), user_name = ?, user_email = ?, phone_number = ?" +
+            "SET password = SHA1(?), user_name = ? " +
+            "WHERE user_id = ?";
+
+    private static final String UPDATE_USER_NAME = "UPDATE user " +
+            "SET user_name = ? " +
             "WHERE user_id = ?";
 
     @Override
@@ -343,32 +347,52 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> updateUser(int id, String login, String password, String userName,
-                                 String email, String phoneNumber) throws DaoException {
+    public Optional<User> updateUser(int id, String password, String userName) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         Optional<User> user;
         try {
             connection = pool.getConnection();
 
-            user = findUserById(id);
+            preparedStatement = connection.prepareStatement(UPDATE_USER);
+            preparedStatement.setString(1, password);
+            preparedStatement.setString(2, userName);
+            preparedStatement.setInt(3, id);
+            preparedStatement.executeUpdate();
 
-            if (user.isPresent()) {
-                preparedStatement = connection.prepareStatement(UPDATE_USER);
-                preparedStatement.setString(1, login);
-                preparedStatement.setString(2, password);
-                preparedStatement.setString(3, userName);
-                preparedStatement.setString(4, email);
-                preparedStatement.setString(5, phoneNumber);
-                preparedStatement.setInt(6, id);
-                preparedStatement.executeUpdate();
-            } else {
-                throw new DaoException("Couldn't find user by id: " + login);
-            }
+            user = findUserById(id);
 
             return user;
         } catch (SQLException e) {
-            throw new DaoException("Failed to change user status"+ e.getMessage(), e);
+            throw new DaoException("Failed to update user "+ e.getMessage(), e);
+        } finally {
+            try {
+                pool.releaseConnection(connection);
+                closeStatement(preparedStatement);
+            } catch (PoolException e) {
+                throw new DaoException(e);
+            }
+        }
+    }
+
+    @Override
+    public Optional<User> updateUserName(int id, String userName) throws DaoException {
+        ProxyConnection connection = null;
+        PreparedStatement preparedStatement = null;
+        Optional<User> user;
+        try {
+            connection = pool.getConnection();
+
+            preparedStatement = connection.prepareStatement(UPDATE_USER_NAME);
+            preparedStatement.setString(1, userName);
+            preparedStatement.setInt(2, id);
+            preparedStatement.executeUpdate();
+
+            user = findUserById(id);
+
+            return user;
+        } catch (SQLException e) {
+            throw new DaoException("Failed to change user name "+ e.getMessage(), e);
         } finally {
             try {
                 pool.releaseConnection(connection);

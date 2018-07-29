@@ -17,6 +17,6 @@ public interface UserDao extends AbstractDao<User> {
     Optional<User> findUserByEmail(String email) throws DaoException;
     List<User> findAllUsers() throws DaoException;
     Optional<User> changeUserStatus(String login, String status) throws DaoException;
-    Optional<User> updateUser(int id, String login, String password, String userName,
-                    String email, String phoneNumber) throws DaoException;
+    Optional<User> updateUser(int id, String password, String userName) throws DaoException;
+    Optional<User> updateUserName(int id, String userName) throws DaoException;
 }

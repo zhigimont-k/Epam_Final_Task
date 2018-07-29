@@ -41,7 +41,7 @@ public class AccessCheckFilter implements Filter {
             if (accessGranted(commandRight, user)) {
                 filterChain.doFilter(servletRequest, servletResponse);
             } else {
-                logger.log(Level.INFO, "Tried to call command " + command + " without access");
+                logger.log(Level.ERROR, "Tried to call command " + command + " without access");
                 HttpServletResponse response = (HttpServletResponse) servletResponse;
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
             }
@@ -58,7 +58,8 @@ public class AccessCheckFilter implements Filter {
             return commandRight == CommandRight.GUEST;
         } else {
             User.Status userStatus = user.getUserStatus();
-            return userStatus == User.Status.USER && commandRight == CommandRight.USER ||
+            return userStatus == User.Status.USER && (commandRight == CommandRight.USER
+                    || commandRight == CommandRight.GUEST) ||
                     userStatus == User.Status.ADMIN;
         }
     }

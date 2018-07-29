@@ -72,10 +72,6 @@ public class SessionRequestContent {
         request.getSession().removeAttribute(attribute);
     }
 
-    public void invalidateSession(){
-        request.getSession().invalidate();
-    }
-
     private void extractValues(HttpServletRequest request) {
         requestParameters = request.getParameterMap();
         extractRequestAttributes(request);

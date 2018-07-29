@@ -25,13 +25,22 @@ public class UpdateUserCommand implements Command {
             UserService service = ServiceFactory.getInstance().getUserService();
             User user = (User) requestContent.getSessionAttribute(JspParameter.USER);
             String newName = requestContent.getParameter(JspParameter.USER_NAME);
-            user.setUserName(newName);
-            service.updateUser(user);
+            String oldPassword = requestContent.getParameter(JspParameter.PASSWORD);
+            String newPassword = requestContent.getParameter(JspParameter.NEW_PASSWORD);
+            if (!oldPassword.isEmpty() && !newPassword.isEmpty()){
+                if (service.findUserByLoginAndPassword(user.getLogin(), oldPassword).isPresent()){
+                    user = service.updateUser(user.getId(), newPassword, newName).get();
+                    logger.log(Level.INFO, "Updated user: "+user.getLogin()+" "+newPassword);
+                } else {
+                    requestContent.setAttribute(JspParameter.AUTH_FAIL, true);
+                }
+            } else {
+                user = service.updateUserName(user.getId(), newName).get();
+            }
 
             requestContent.setSessionAttribute(JspParameter.USER, user);
-//            requestContent.setAttribute(JspParameter.OPERATION_RESULT, true);
 
-            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+            router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(JspAddress.ACCOUNT_PAGE);
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);

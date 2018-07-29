@@ -10,7 +10,6 @@ import by.epam.web.service.ServiceFactory;
 import by.epam.web.service.UserService;
 import by.epam.web.util.mail.MailComposer;
 import by.epam.web.util.mail.MailSenderThread;
-import by.epam.web.util.mail.Settings;
 import by.epam.web.util.passwordgenerator.PasswordGenerator;
 import by.epam.web.util.sessionrequestcontent.NoSuchRequestParameterException;
 import by.epam.web.util.sessionrequestcontent.SessionRequestContent;
@@ -35,25 +34,12 @@ public class ResetPasswordCommand implements Command {
 
                 String newPassword = PasswordGenerator.generatePassword();
 
-                found.get().setPassword(newPassword);
                 logger.log(Level.INFO, "Resetting password for: "+found.get());
-                service.updateUser(found.get());
+                service.updateUser(found.get().getId(), newPassword, found.get().getUserName());
+                found.get().setPassword(newPassword);
 
-
-                Settings settings = new Settings();
-                settings.setHostValue(Settings.HOST_VALUE);
-                settings.setUserValue(Settings.USER_VALUE);
-                settings.setPasswordValue(Settings.PASSWORD_VALUE);
-                settings.setProtocolValue(Settings.PROTOCOL_VALUE);
-                try {
-                    int portValue = Integer.parseInt(Settings.PORT);
-                    settings.setPortValue(portValue);
-                } catch (NumberFormatException ex) {
-                    logger.log(Level.ERROR, ex);
-                    settings.setPortValue(Settings.DEFAULT_PORT);
-                }
                 new MailSenderThread(email, MailComposer.getResetPasswordMessageTheme(),
-                        MailComposer.getResetPasswordMessage(newPassword), settings).start();
+                        MailComposer.getResetPasswordMessage(newPassword)).start();
 
 
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);

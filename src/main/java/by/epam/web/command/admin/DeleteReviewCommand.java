@@ -27,7 +27,7 @@ public class DeleteReviewCommand implements Command{
 
             requestContent.setAttribute(JspParameter.OPERATION_RESULT, true);
 
-            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+            router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(JspAddress.OPERATION_RESULT);
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);

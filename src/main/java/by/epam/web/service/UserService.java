@@ -29,7 +29,7 @@ public class UserService {
         }
     }
 
-    public Optional<User> userLogin(String login, String password) throws ServiceException {
+    public Optional<User> findUserByLoginAndPassword(String login, String password) throws ServiceException {
         try {
             return userDao.findUserByLoginAndPassword(login, password);
         } catch (DaoException e) {
@@ -56,15 +56,6 @@ public class UserService {
     public boolean phoneNumberExists(String phoneNumber) throws ServiceException {
         try {
             return userDao.propertyExists(UserDaoImpl.UniqueUserInfo.PHONE_NUMBER, phoneNumber);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public boolean findUserByLoginAndPassword(String login, String password) throws ServiceException {
-        try {
-            Optional<User> found = userDao.findUserByLoginAndPassword(login, password);
-            return found.isPresent();
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -102,10 +93,17 @@ public class UserService {
         }
     }
 
-    public Optional<User> updateUser(User user) throws ServiceException {
+    public Optional<User> updateUser(int id, String newPassword, String newUserName) throws ServiceException {
         try {
-            return userDao.updateUser(user.getId(), user.getLogin(), user.getPassword(),
-                    user.getUserName(), user.getEmail(), user.getPhoneNumber());
+            return userDao.updateUser(id, newPassword, newUserName);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public Optional<User> updateUserName(int id, String newUserName) throws ServiceException {
+        try {
+            return userDao.updateUserName(id, newUserName);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

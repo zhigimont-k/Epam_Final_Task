@@ -39,7 +39,7 @@ public class UserValidator implements AbstractValidator<User> {
                 && matcher.matches();
     }
 
-    private boolean validatePassword(String password){
+    public boolean validatePassword(String password){
         Matcher matcher = Pattern.compile(PASSWORD_FORMAT).matcher(password);
         return password.length() >= MIN_PASSWORD_LENGTH &&
                 password.length() <= MAX_PASSWORD_LENGTH
@@ -58,7 +58,7 @@ public class UserValidator implements AbstractValidator<User> {
                 && matcher.matches();
     }
 
-    private boolean validateUserName(String login){
+    public boolean validateUserName(String login){
         Matcher matcher = Pattern.compile(LOGIN_FORMAT).matcher(login);
         return login.length() >= MIN_LOGIN_LENGTH && login.length() <= MAX_LOGIN_LENGTH
                 && matcher.matches();

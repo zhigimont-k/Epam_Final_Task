@@ -12,7 +12,6 @@ public class LogoutCommand implements Command {
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         requestContent.removeSessionAttribute(JspParameter.USER);
-        requestContent.invalidateSession();
         router.setTransitionType(PageRouter.TransitionType.REDIRECT);
         router.setPage(JspAddress.HOME_PAGE);
         return router;

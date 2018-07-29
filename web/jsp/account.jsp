@@ -19,6 +19,9 @@
     <fmt:message bundle="${locale}" key="locale.user.role.user" var="user"/>
     <fmt:message bundle="${locale}" key="locale.user.role.banned" var="banned"/>
 
+
+    <fmt:message bundle="${locale}" key="locale.user.warning.auth.fail" var="authFailMessage"/>
+
     <fmt:message bundle="${locale}" key="locale.common.button.update" var="button"/>
 
     <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
@@ -40,19 +43,19 @@
     <label>${newPasswordLabel}:
         <input type="password" name="newPassword" maxlength="32" minlength="10"/></label>
     <br/>
-    <c:if test="${passwordChangeFail == true}">
-        ${passwordChangeFail}
-        <br/>
-    </c:if>
     ${emailLabel}: ${sessionScope.user.email}
     <br/>
     ${phoneNumberLabel}: ${sessionScope.user.phoneNumber}
     <br/>
-    ${userNameLabel}:
+    <label>${userNameLabel}:
     <input type="text" name="userName" value="${sessionScope.user.userName}"
            maxlength="20" minlength="3"/></label>
     <br/>
     <input type="submit" value="${button}"/>
+    <br/>
+    <c:if test="${authFail == true}">
+        ${authFailMessage}
+    </c:if>
 </form>
 </body>
 </html>

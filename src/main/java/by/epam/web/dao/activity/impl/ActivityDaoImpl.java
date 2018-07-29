@@ -112,7 +112,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
                 activity.setId(id);
                 activity.setName(resultSet.getString(DB_ACTIVITY_NAME_FIELD));
-                activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD));
+                activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim());
                 activity.setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD));
                 activity.setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD));
                 result = Optional.of(activity);
@@ -149,7 +149,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
                 activity.setId(resultSet.getInt(DB_ACTIVITY_ID_FIELD));
                 activity.setName(name);
-                activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD));
+                activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim());
                 activity.setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD));
                 activity.setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD));
                 result = Optional.of(activity);
@@ -185,7 +185,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
                 activity.setId(resultSet.getInt(DB_ACTIVITY_ID_FIELD));
                 activity.setName(resultSet.getString(DB_ACTIVITY_NAME_FIELD));
-                activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD));
+                activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim());
                 activity.setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD));
                 activity.setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD));
                 logger.log(Level.INFO, "Found activity: " + activity);
@@ -255,7 +255,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
                 activity.setId(resultSet.getInt(DB_ACTIVITY_ID_FIELD));
                 activity.setName(resultSet.getString(DB_ACTIVITY_NAME_FIELD));
-                activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD));
+                activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim());
                 activity.setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD));
                 activity.setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD));
                 logger.log(Level.INFO, "Found available activity: " + activity);

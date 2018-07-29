@@ -21,21 +21,19 @@ public class MailSenderThread extends Thread {
     private String mailSubject;
     private String mailContent;
     private Session mailSession;
-    private Settings settings;
 
-    public MailSenderThread(String mailTo, String mailSubject, String mailContent, Settings settings) {
+    public MailSenderThread(String mailTo, String mailSubject, String mailContent) {
         this.mailTo = mailTo;
         this.mailFrom = FROM_MAIL;
         this.mailSubject = mailSubject;
         this.mailContent = mailContent;
-        this.settings = settings;
     }
 
     private void buildMailSession() {
         Properties props = new Properties();
         props.put(Settings.SMTP_AUTH, "true");
-        props.put(Settings.PROTOCOL, settings.getProtocolValue());
-        props.put(Settings.HOST, settings.getHostValue());
+        props.put(Settings.PROTOCOL, Settings.PROTOCOL_VALUE);
+        props.put(Settings.HOST, Settings.HOST_VALUE);
         props.put(Settings.USER, "true");
         props.put(Settings.SEND_PARTIAL, "true");
         props.put(Settings.START_TLS_ENABLE, "true");
@@ -54,7 +52,8 @@ public class MailSenderThread extends Thread {
             message.setContent(mailContent, "text/html; charset=UTF-8");
             message.setSentDate(new Date());
             Transport transport = mailSession.getTransport();
-            transport.connect(settings.getHostValue(), settings.getPortValue(), settings.getUserValue(), settings.getPasswordValue());
+            transport.connect(Settings.HOST_VALUE, Settings.DEFAULT_PORT,
+                    Settings.USER_VALUE, Settings.PASSWORD_VALUE);
             transport.sendMessage(message, message.getRecipients(Message.RecipientType.TO));
             transport.close();
             logger.log(Level.INFO, "Message sent");

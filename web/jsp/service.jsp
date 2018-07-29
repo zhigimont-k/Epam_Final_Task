@@ -23,7 +23,6 @@
 
 <div>
     <input type="hidden" name="activityId" value="${activity.id}"/>
-    Activity id: ${activity.id}
     <br/>
     <form name="activityEditForm" method="POST" action="app">
         <input type="hidden" name="command" value="updateActivity"/>

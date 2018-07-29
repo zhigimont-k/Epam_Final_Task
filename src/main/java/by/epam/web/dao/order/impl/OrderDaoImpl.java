@@ -44,9 +44,9 @@ public class OrderDaoImpl implements OrderDao {
             "(order_id, service_id) " +
             "VALUES (?, ?)";
     private static final String CANCEL_ORDER = "UPDATE order_info " +
-            "SET order_status = 'cancelled' WHERE order_id = ?";
+            "SET order_status = 'cancelled', order_time = order_time WHERE order_id = ?";
     private static final String UPDATE_ORDER_STATUS = "UPDATE order_info " +
-            "SET order_status = ? WHERE order_id = ?";
+            "SET order_status = ?, order_time = order_time WHERE order_id = ?";
     private static final String FIND_ALL_ORDERS = "SELECT order_info.order_id, " +
             "order_info.user_id, order_info.order_status, order_info.order_time " +
             "FROM order_info ";
@@ -67,10 +67,13 @@ public class OrderDaoImpl implements OrderDao {
             "service_name, service_description, service_status, service_price FROM service " +
             "JOIN order_link ON service.service_id = order_link.service_id " +
             "WHERE order_id = ?";
-    private static final String FIND_EMAILS_FOR_UPCOMING_ORDERS = "SELECT user.user_email " +
+    private static final String FIND_EMAILS_FOR_UPCOMING_ORDERS =
+            "SELECT DISTINCT user.user_email " +
             "FROM user " +
-            "JOIN order_info ON order_info.user_id = user.user_id " +
-            "WHERE DATE(order_time) < CURRENT_DATE - INTERVAL 2 DAY";
+            "JOIN order_info " +
+            "ON order_info.user_id = user.user_id " +
+            "WHERE DATE(order_time) <= CURRENT_DATE + INTERVAL 1 DAY " +
+            "AND order_info.order_status = 'confirmed'";
 
     @Override
     public Order addOrder(Order order) throws DaoException {
@@ -399,18 +402,17 @@ public class OrderDaoImpl implements OrderDao {
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 Activity activity = new Activity();
 
                 activity.setId(resultSet.getInt(DB_ACTIVITY_ID_FIELD));
                 activity.setName(resultSet.getString(DB_ACTIVITY_NAME_FIELD));
-                activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD));
+                activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim());
                 activity.setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD));
                 activity.setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD));
 
                 activityList.add(activity);
             }
-
             return activityList;
         } catch (SQLException e) {
             throw new DaoException("Failed to find activities by order id" + e.getMessage(), e);
@@ -438,6 +440,8 @@ public class OrderDaoImpl implements OrderDao {
             while (resultSet.next()) {
                 emailList.add(resultSet.getString(DB_USER_EMAIL_FIELD));
             }
+
+            logger.log(Level.INFO, "List for email sending: "+emailList);
 
             return emailList;
         } catch (SQLException e) {
