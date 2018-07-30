@@ -10,6 +10,7 @@
     <fmt:message bundle="${locale}" key="locale.page.title.auth" var="pageTitle"/>
     <fmt:message bundle="${locale}" key="locale.user.label.login" var="loginLabel"/>
     <fmt:message bundle="${locale}" key="locale.user.label.password" var="passwordLabel"/>
+    <fmt:message bundle="${locale}" key="locale.user.label.showPassword" var="showPassword"/>
     <fmt:message bundle="${locale}" key="locale.user.button.signin" var="button"/>
 
     <fmt:message bundle="${locale}" key="locale.user.text.noAccountYet" var="toRegister"/>
@@ -19,35 +20,41 @@
 
     <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
     <title>${pageTitle} | ${projectName}</title>
-    <script type="text/javascript" src="../js/navigationbar.js"></script>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+
     <script type="text/javascript" src="../js/inputScript.js"></script>
 </head>
 <body>
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-<c:choose>
-    <c:when test = "${not empty sessionScope.user}">
-        <jsp:forward page="/home" />
-    </c:when>
-</c:choose>
-<form name="loginForm" method="POST" action="app">
-    <input type="hidden" name="command" value="login"/>
-    <label>${loginLabel}
-    <input type="text" name="login" maxlength="20" required/></label>
-    <jsp:include page="/WEB-INF/jsp/page_structure/fields/passwordField.jsp"/>
-    <br/>
-    <input type="submit" value="${button}"/>
-    <br/>
-    <c:if test="${authFail == true}">
-        ${authFailMessage}
-    </c:if>
-    <br/>
-</form>
+<c:if test="${not empty sessionScope.user}">
+    <jsp:forward page="/home"/>
+</c:if>
+<div id="custom-form">
+    <div>
+        <form name="loginForm" method="POST" action="app">
+            <input type="hidden" name="command" value="login"/>
+            <label>${loginLabel}
+                <input type="text" name="login" maxlength="20" required/></label>
+            <label>${passwordLabel}
+                <br/>
+                <input type="password" name="password" id="passwordField" maxlength="32" required/></label>
+            <br/>
+            <label><input type="checkbox" onclick="togglePasswordVisibility()">${showPassword}</label>
+            <br/>
+            <input type="submit" value="${button}"/>
+            <br/>
+            <c:if test="${authFail == true}">
+                ${authFailMessage}
+            </c:if>
+            <br/>
+    </form>
 
-
-${toRegister} <a href="${pageContext.request.contextPath}/register">${signUp}</a>
+    ${toRegister} <a href="${pageContext.request.contextPath}/register">${signUp}</a>
     <br/>
+    <a href="${pageContext.request.contextPath}/resetPassword">Forgot your password?</a>
 
-<a href="${pageContext.request.contextPath}/resetPassword">Forgot your password?</a>
+    </div>
+</div>
 </body>
 </html>

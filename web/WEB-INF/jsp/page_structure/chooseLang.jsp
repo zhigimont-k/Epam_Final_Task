@@ -10,6 +10,8 @@
     <fmt:message bundle="${locale}" key="locale.lang.text.chooseLang" var="chooseLang"/>
     <fmt:message bundle="${locale}" key="locale.lang.text.english" var="eng"/>
     <fmt:message bundle="${locale}" key="locale.lang.text.russian" var="rus"/>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+
 
 </head>
 <body>

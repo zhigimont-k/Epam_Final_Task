@@ -11,6 +11,7 @@
     <fmt:message bundle="${locale}" key="locale.user.label.login" var="loginLabel"/>
     <fmt:message bundle="${locale}" key="locale.user.label.password.old" var="oldPasswordLabel"/>
     <fmt:message bundle="${locale}" key="locale.user.label.password.new" var="newPasswordLabel"/>
+    <fmt:message bundle="${locale}" key="locale.user.label.showPassword" var="showPassword"/>
     <fmt:message bundle="${locale}" key="locale.user.label.username" var="userNameLabel"/>
     <fmt:message bundle="${locale}" key="locale.user.label.email" var="emailLabel"/>
     <fmt:message bundle="${locale}" key="locale.user.label.phonenumber" var="phoneNumberLabel"/>
@@ -25,6 +26,9 @@
     <fmt:message bundle="${locale}" key="locale.common.button.update" var="button"/>
 
     <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+
+    <script type="text/javascript" src="../js/inputScript.js"></script>
     <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
@@ -33,29 +37,37 @@
 <c:if test="${empty sessionScope.user}">
     <jsp:forward page="${pageContext.request.contextPath}/login"/>
 </c:if>
-<form name="updateUserForm" method="POST" action="app">
-    <input type="hidden" name="command" value="updateUser"/>
-    ${loginLabel}: ${sessionScope.user.login}
+<div id="custom-form">
+    <form name="updateUserForm" method="POST" action="app">
+        <input type="hidden" name="command" value="updateUser"/>
+        ${loginLabel}: ${sessionScope.user.login}
         <br/>
-    <label>${oldPasswordLabel}:
-        <input type="password" name="password" maxlength="32" minlength="10"/></label>
-    <br/>
-    <label>${newPasswordLabel}:
-        <input type="password" name="newPassword" maxlength="32" minlength="10"/></label>
-    <br/>
-    ${emailLabel}: ${sessionScope.user.email}
-    <br/>
-    ${phoneNumberLabel}: ${sessionScope.user.phoneNumber}
-    <br/>
-    <label>${userNameLabel}:
-    <input type="text" name="userName" value="${sessionScope.user.userName}"
-           maxlength="20" minlength="3"/></label>
-    <br/>
-    <input type="submit" value="${button}"/>
-    <br/>
-    <c:if test="${authFail == true}">
-        ${authFailMessage}
-    </c:if>
-</form>
+        <label>${oldPasswordLabel}:
+            <input type="password" name="password" id="passwordField" minlength="10"
+                   maxlength="32" required/></label>
+        <br/>
+        <input type="checkbox" onclick="togglePasswordVisibility()">${showPassword}
+        <br/>
+        <label>${newPasswordLabel}:
+        <input type="password" name="newPassword" id="passwordField" minlength="10"
+               maxlength="32" required/></label>
+        <br/>
+        <input type="checkbox" onclick="togglePasswordVisibility()">${showPassword}
+        <br/>
+        ${emailLabel}: ${sessionScope.user.email}
+        <br/>
+        ${phoneNumberLabel}: ${sessionScope.user.phoneNumber}
+        <br/>
+        <label>${userNameLabel}:
+            <input type="text" name="userName" value="${sessionScope.user.userName}"
+                   maxlength="20" minlength="3"/></label>
+        <br/>
+        <input type="submit" value="${button}"/>
+        <br/>
+        <c:if test="${authFail == true}">
+            ${authFailMessage}
+        </c:if>
+    </form>
+</div>
 </body>
 </html>

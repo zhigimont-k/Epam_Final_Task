@@ -18,23 +18,27 @@
     <fmt:message bundle="${locale}" key="locale.user.warning.auth.fail" var="authFailMessage"/>
 
     <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+
     <title>PasswordReset | ${projectName}</title>
 </head>
 <body>
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-<c:choose>
-    <c:when test = "${not empty sessionScope.user}">
-        <jsp:forward page="/home" />
-    </c:when>
-</c:choose>
-<form name="resetPasswordForm" method="POST" action="app">
-    <input type="hidden" name="command" value="resetPassword"/>
-    <label>E-mail:
-        <input type="email" name="email" maxlength="35" required/></label>
-    <br/>
-    <input type="submit" value="Reset password"/>
-    <br/>
-</form>
+<c:if test="${not empty sessionScope.user}">
+    <jsp:forward page="/home"/>
+</c:if>
+<div id="custom-form">
+    <div>
+        <form name="resetPasswordForm" method="POST" action="app">
+            <input type="hidden" name="command" value="resetPassword"/>
+            <label>E-mail:
+                <input type="email" name="email" maxlength="35" required/></label>
+            <br/>
+            <input type="submit" value="Reset password"/>
+            <br/>
+        </form>
+    </div>
+</div>
 </body>
 </html>

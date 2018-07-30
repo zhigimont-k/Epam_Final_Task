@@ -4,8 +4,8 @@
 
 <html>
 <head>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-    <script src="${pageContext.request.contextPath}/js/navigationbar.js"></script>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+
     <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
@@ -21,8 +21,8 @@
 </head>
 <body>
 
-<nav class="navbar">
-    <ul class="nav">
+<div id="navigation">
+    <ul>
         <li>
             <a href="${pageContext.request.contextPath}/home">${homePage}</a>
         </li>
@@ -46,9 +46,9 @@
             <li><a href="app?command=createOrder">Make an order</a></li>
         </c:if>
         <c:if test="${sessionScope.user ne null}">
-            <li><a href="app?command=logout">${logout}</a></li>
+            <li style="float:right"><a href="app?command=logout">${logout}</a></li>
         </c:if>
     </ul>
-</nav>
+</div>
 </body>
 </html>

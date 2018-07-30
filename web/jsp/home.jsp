@@ -1,7 +1,7 @@
 <%@ page isELIgnored="false" contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<html lang="${lang}">
+<html lang="${locale}">
 <head>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
@@ -10,6 +10,8 @@
 
 
     <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
+
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
     <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
@@ -19,5 +21,13 @@
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
 <jsp:include page="/WEB-INF/jsp/page_structure/welcomePanel.jsp"/>
+
+<div id="header">
+    <div id="header-title">${projectName}</div>
+    <div id="header-text">
+        ${welcome}
+    </div>
+</div>
+
 </body>
 </html>

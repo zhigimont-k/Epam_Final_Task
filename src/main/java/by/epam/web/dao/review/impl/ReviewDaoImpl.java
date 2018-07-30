@@ -31,7 +31,7 @@ public class ReviewDaoImpl implements ReviewDao {
             "(user_id, service_id, mark, message) " +
             "VALUES (?, ?, ?, ?)";
     private static final String UPDATE_REVIEW = "UPDATE review " +
-            "SET mark = ?, message = ? " +
+            "SET mark = ?, message = ?, creation_date = creation_date " +
             "WHERE review_id = ?";
     private static final String FIND_REVIEW_BY_ID = "SELECT review.review_id, " +
             "review.user_id, review.service_id, review.creation_date, review.mark, review.message " +

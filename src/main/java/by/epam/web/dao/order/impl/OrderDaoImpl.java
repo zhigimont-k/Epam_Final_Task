@@ -84,6 +84,7 @@ public class OrderDaoImpl implements OrderDao {
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.getConnection();
+            connection.setAutoCommit(false);
             int userId = order.getUserId();
             Timestamp time = order.getDateTime();
             List<Activity> activityList = new ArrayList<>();
@@ -122,6 +123,8 @@ public class OrderDaoImpl implements OrderDao {
             }
 
             order.setPrice(calculateOrderPrice(order.getId()));
+            connection.commit();
+            connection.setAutoCommit(true);
 
             logger.log(Level.INFO, "Added order: " + order);
 

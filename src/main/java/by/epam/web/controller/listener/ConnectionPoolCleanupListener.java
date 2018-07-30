@@ -3,6 +3,7 @@ package by.epam.web.controller.listener;
 import by.epam.web.pool.ConnectionPool;
 import by.epam.web.pool.PoolException;
 import com.mysql.jdbc.AbandonedConnectionCleanupThread;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,6 +21,7 @@ public class ConnectionPoolCleanupListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
+        logger.log(Level.INFO, "Destroying connection pool...");
         try {
             ConnectionPool.getInstance().closeConnectionPool();
         } catch (PoolException e){
