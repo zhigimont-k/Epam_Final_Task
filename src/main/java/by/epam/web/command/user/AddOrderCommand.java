@@ -53,7 +53,7 @@ public class AddOrderCommand implements Command {
             service.addOrder(userId, Timestamp.valueOf(
                     orderTime.replace("T", " ")), activityList);
             router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-            router.setPage(JspAddress.HOME_PAGE);
+            router.setPage("app?command=viewUserOrders");
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {

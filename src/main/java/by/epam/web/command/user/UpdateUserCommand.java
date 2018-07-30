@@ -40,7 +40,7 @@ public class UpdateUserCommand implements Command {
 
             requestContent.setSessionAttribute(JspParameter.USER, user);
 
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
             router.setPage(JspAddress.ACCOUNT_PAGE);
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);

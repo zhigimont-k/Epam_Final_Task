@@ -68,12 +68,14 @@ public class OrderDaoImpl implements OrderDao {
             "JOIN order_link ON service.service_id = order_link.service_id " +
             "WHERE order_id = ?";
     private static final String FIND_EMAILS_FOR_UPCOMING_ORDERS =
-            "SELECT DISTINCT user.user_email " +
+            "SELECT DISTINCT user.user_email, order_info.order_id " +
             "FROM user " +
             "JOIN order_info " +
             "ON order_info.user_id = user.user_id " +
             "WHERE DATE(order_time) <= CURRENT_DATE + INTERVAL 1 DAY " +
-            "AND order_info.order_status = 'confirmed'";
+            "AND order_info.order_status = 'confirmed' AND order_info.reminded = 0";
+    private static final String SET_ORDER_REMINDED = "UPDATE order_info " +
+            "SET reminded = 1, order_time = order_time WHERE order_id = ?";
 
     @Override
     public Order addOrder(Order order) throws DaoException {
@@ -431,6 +433,7 @@ public class OrderDaoImpl implements OrderDao {
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         List<String> emailList = new ArrayList<>();
+        List<Integer> orderIdList = new ArrayList<>();
         try {
             connection = pool.getConnection();
 
@@ -439,6 +442,13 @@ public class OrderDaoImpl implements OrderDao {
 
             while (resultSet.next()) {
                 emailList.add(resultSet.getString(DB_USER_EMAIL_FIELD));
+                orderIdList.add(resultSet.getInt(DB_ORDER_ID_FIELD));
+            }
+            preparedStatement = connection.prepareStatement(SET_ORDER_REMINDED);
+
+            for (int orderId : orderIdList){
+                preparedStatement.setInt(1, orderId);
+                preparedStatement.executeUpdate();
             }
 
             logger.log(Level.INFO, "List for email sending: "+emailList);

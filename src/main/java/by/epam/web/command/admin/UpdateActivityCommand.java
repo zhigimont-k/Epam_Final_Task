@@ -42,8 +42,8 @@ public class UpdateActivityCommand implements Command {
                 found.get().setPrice(newPrice);
                 found.get().setStatus(newStatus);
                 service.updateActivity(found.get());
-                requestContent.setAttribute(JspParameter.OPERATION_RESULT, true);
-                router.setPage(JspAddress.OPERATION_RESULT);
+                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setPage("app?command=viewActivities");
 
             } else {
                 requestContent.setAttribute(JspParameter.ERROR_MESSAGE, "Error while updating activity");

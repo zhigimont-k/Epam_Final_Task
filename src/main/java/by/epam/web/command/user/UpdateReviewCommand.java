@@ -30,17 +30,19 @@ public class UpdateReviewCommand implements Command {
             int newMark = Integer.parseInt(requestContent.getParameter
                     (JspParameter.REVIEW_MARK));
             String newMessage = requestContent.getParameter(JspParameter.REVIEW_MESSAGE);
+            int activityId = 0;
 
             Optional<Review> found = service.findReviewById(id);
             if (found.isPresent()) {
                 service.updateReview(id, newMark, newMessage);
+                activityId = found.get().getActivityId();
                 requestContent.setAttribute(JspParameter.OPERATION_RESULT, true);
 
             } else {
                 requestContent.setAttribute(JspParameter.OPERATION_RESULT, false);
             }
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.OPERATION_RESULT);
+            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+            router.setPage("app?command=viewActivity&activityId="+activityId);
 
 
         } catch (NoSuchRequestParameterException e) {

@@ -40,7 +40,7 @@ public class AddActivityCommand implements Command{
             } else {
                 service.addActivity(name, description, price);
                 router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-                router.setPage(JspAddress.HOME_PAGE);
+                router.setPage("app?command=viewActivities");
             }
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);

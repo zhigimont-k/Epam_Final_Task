@@ -26,10 +26,8 @@ public class ChangeOrderStatusCommand implements Command {
             String status = requestContent.getParameter(JspParameter.ORDER_STATUS);
             service.changeOrderStatus(Integer.parseInt(id), status);
 
-            requestContent.setAttribute(JspParameter.OPERATION_RESULT, true);
-
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.OPERATION_RESULT);
+            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+            router.setPage("app?command=viewAllOrders");
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {

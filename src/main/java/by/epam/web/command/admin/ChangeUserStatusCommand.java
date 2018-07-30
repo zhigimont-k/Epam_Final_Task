@@ -27,15 +27,10 @@ public class ChangeUserStatusCommand implements Command {
             UserService service = ServiceFactory.getInstance().getUserService();
             String login = requestContent.getParameter(JspParameter.LOGIN);
             String status = requestContent.getParameter(JspParameter.USER_STATUS);
-            Optional<User> found = service.changeUserStatus(login, status);
-            if (found.isPresent()){
-                requestContent.setSessionAttribute(JspParameter.USER, found.get());
-            }
+            service.changeUserStatus(login, status);
 
-            requestContent.setAttribute(JspParameter.OPERATION_RESULT, true);
-
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.OPERATION_RESULT);
+            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+            router.setPage("app?command=viewUsers");
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {

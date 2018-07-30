@@ -35,9 +35,8 @@ public class AddReviewCommand implements Command {
 
             service.addReview(userId, activityId, mark, message);
 
-            requestContent.setAttribute(JspParameter.OPERATION_RESULT, true);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.OPERATION_RESULT);
+            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+            router.setPage("app?command=viewActivity&activityId="+activityId);
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {

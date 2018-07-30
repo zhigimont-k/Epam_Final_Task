@@ -27,7 +27,7 @@ public class CancelOrderCommand implements Command {
             service.changeOrderStatus(Integer.parseInt(id), Order.Status.CANCELLED.getName());
 
             router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-            router.setPage(JspAddress.HOME_PAGE);
+            router.setPage("app?command=viewUserOrders");
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {

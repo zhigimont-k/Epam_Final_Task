@@ -4,6 +4,7 @@ import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
 import by.epam.web.controller.constant.JspAddress;
 import by.epam.web.controller.constant.JspParameter;
+import by.epam.web.entity.Review;
 import by.epam.web.service.ReviewService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
@@ -12,6 +13,8 @@ import by.epam.web.util.sessionrequestcontent.SessionRequestContent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Optional;
 
 public class DeleteReviewCommand implements Command{
     private static final Logger logger = LogManager.getLogger();
@@ -23,12 +26,17 @@ public class DeleteReviewCommand implements Command{
 
             ReviewService service = ServiceFactory.getInstance().getReviewService();
             String id = requestContent.getParameter(JspParameter.REVIEW_ID);
-            service.deleteReview(Integer.parseInt(id));
+            int activityId = 0;
+            Optional<Review> found = service.findReviewById(Integer.parseInt(id));
+            if (found.isPresent()){
+                activityId = found.get().getActivityId();
+                service.deleteReview(Integer.parseInt(id));
+            }
 
             requestContent.setAttribute(JspParameter.OPERATION_RESULT, true);
 
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.OPERATION_RESULT);
+            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+            router.setPage("app?command=viewActivity&activityId="+activityId);
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {
