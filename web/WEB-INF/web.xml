@@ -179,4 +179,13 @@
         <filter-name>Access check filter</filter-name>
         <url-pattern>/app</url-pattern>
     </filter-mapping>
+
+    <filter>
+        <filter-name>Session invalidator</filter-name>
+        <filter-class>by.epam.web.controller.filter.SessionInvalidator</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>Session invalidator</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 </web-app>

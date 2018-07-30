@@ -1,5 +1,9 @@
 package by.epam.web.util.sessionrequestcontent;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -9,10 +13,8 @@ public class SessionRequestContent {
     private Map<String, Object> requestAttributes = new HashMap<>();
     private Map<String, String[]> requestParameters = new HashMap<>();
     private Map<String, Object> sessionAttributes = new HashMap<>();
-    private HttpServletRequest request;
 
     public SessionRequestContent(HttpServletRequest request) {
-        this.request = request;
         extractValues(request);
     }
 
@@ -67,7 +69,6 @@ public class SessionRequestContent {
 
     public void removeSessionAttribute(String attribute) {
         sessionAttributes.remove(attribute);
-        request.getSession().removeAttribute(attribute);
     }
 
     private void extractValues(HttpServletRequest request) {
