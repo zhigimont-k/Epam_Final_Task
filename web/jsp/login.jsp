@@ -19,6 +19,8 @@
 
     <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
     <title>${pageTitle} | ${projectName}</title>
+    <script type="text/javascript" src="../js/navigationbar.js"></script>
+    <script type="text/javascript" src="../js/inputScript.js"></script>
 </head>
 <body>
 
@@ -32,8 +34,7 @@
     <input type="hidden" name="command" value="login"/>
     <label>${loginLabel}
     <input type="text" name="login" maxlength="20" required/></label>
-    <label>${passwordLabel}
-    <input type="password" name="password" maxlength="32" required/></label>
+    <jsp:include page="/WEB-INF/jsp/page_structure/fields/passwordField.jsp"/>
     <br/>
     <input type="submit" value="${button}"/>
     <br/>

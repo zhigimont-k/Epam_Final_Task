@@ -18,5 +18,6 @@
 </c:if>
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
+<jsp:include page="/WEB-INF/jsp/page_structure/welcomePanel.jsp"/>
 </body>
 </html>

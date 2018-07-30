@@ -17,4 +17,6 @@ public class PasswordGenerator {
     public static void setLength(int newLength){
         length = newLength;
     }
+
+    private PasswordGenerator(){}
 }

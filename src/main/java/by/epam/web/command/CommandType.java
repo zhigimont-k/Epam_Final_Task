@@ -7,7 +7,6 @@ import by.epam.web.command.common.ViewActivityCommand;
 import by.epam.web.command.user.*;
 import by.epam.web.command.common.RegisterCommand;
 import by.epam.web.command.user.ViewUserOrdersCommand;
-import by.epam.web.entity.User;
 
 public enum CommandType {
     REGISTER("register", new RegisterCommand(), CommandRight.GUEST),

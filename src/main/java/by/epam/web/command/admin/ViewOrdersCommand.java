@@ -28,7 +28,7 @@ public class ViewOrdersCommand implements Command {
             requestContent.setAttribute(JspParameter.ORDER_LIST, orderList);
 
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.ORDERS_PAGE);
+            router.setPage(JspAddress.ALL_ORDERS_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());

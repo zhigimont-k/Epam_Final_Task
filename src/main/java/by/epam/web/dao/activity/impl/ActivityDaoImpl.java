@@ -172,13 +172,13 @@ public class ActivityDaoImpl implements ActivityDao {
     public List<Activity> findAllActivities() throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
-        PreparedStatement preparedStatement = null;
+        Statement statement = null;
         List<Activity> activityList = new ArrayList<>();
         try {
             connection = pool.getConnection();
 
-            preparedStatement = connection.prepareStatement(FIND_ALL_ACTIVITIES);
-            resultSet = preparedStatement.executeQuery();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(FIND_ALL_ACTIVITIES);
 
             while (resultSet.next()) {
                 Activity activity = new Activity();
@@ -197,7 +197,7 @@ public class ActivityDaoImpl implements ActivityDao {
         } finally {
             try {
                 pool.releaseConnection(connection);
-                closeStatement(preparedStatement);
+                closeStatement(statement);
             } catch (PoolException e) {
                 throw new DaoException(e);
             }
@@ -242,13 +242,13 @@ public class ActivityDaoImpl implements ActivityDao {
     public List<Activity> findAvailableActivities() throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
-        PreparedStatement preparedStatement = null;
+        Statement statement = null;
         List<Activity> activityList = new LinkedList<>();
         try {
             connection = pool.getConnection();
 
-            preparedStatement = connection.prepareStatement(FIND_AVAILABLE_ACTIVITIES);
-            resultSet = preparedStatement.executeQuery();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(FIND_AVAILABLE_ACTIVITIES);
 
             while (resultSet.next()) {
                 Activity activity = new Activity();
@@ -267,7 +267,7 @@ public class ActivityDaoImpl implements ActivityDao {
         } finally {
             try {
                 pool.releaseConnection(connection);
-                closeStatement(preparedStatement);
+                closeStatement(statement);
             } catch (PoolException e) {
                 throw new DaoException(e);
             }

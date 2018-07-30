@@ -29,12 +29,12 @@
     <input type="hidden" name="command" value="addOrder"/>
    Order info:<br/>
 
-    Time: ${order.dateTime}
-    <input type="hidden" name="orderTime" value="${order.dateTime}"/>
+    Time: ${sessionScope.order.dateTime}
+    <input type="hidden" name="orderTime" value="${sessionScope.order.dateTime}"/>
     <br/>
     Services:<br/>
     <table>
-    <c:forEach var="activity" items="${order.activityList}">
+    <c:forEach var="activity" items="${sessionScope.order.activityList}">
         <tr>
             <input type="hidden" name="activityId" value="${activity.id}"/>
                 <td>${activity.name}</td>
@@ -44,7 +44,7 @@
     </c:forEach>
     </table>
     <br/>
-    Price: ${order.price}
+    Price: ${sessionScope.order.price}
 
     <br/>
     <input type="submit" value="Confirm order"/>

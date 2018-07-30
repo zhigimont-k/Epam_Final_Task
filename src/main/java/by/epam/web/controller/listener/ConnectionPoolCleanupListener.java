@@ -3,7 +3,6 @@ package by.epam.web.controller.listener;
 import by.epam.web.pool.ConnectionPool;
 import by.epam.web.pool.PoolException;
 import com.mysql.jdbc.AbandonedConnectionCleanupThread;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

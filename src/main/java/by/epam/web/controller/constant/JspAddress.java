@@ -9,7 +9,8 @@ public final class JspAddress {
     public static final String USERS_PAGE = "/users";
     public static final String ACTIVITIES_PAGE = "/services";
     public static final String ACCOUNT_PAGE = "/account";
-    public static final String ORDERS_PAGE = "/orders";
+    public static final String USER_ORDERS_PAGE = "/userOrders";
+    public static final String ALL_ORDERS_PAGE = "/allOrders";
     public static final String OPERATION_RESULT = "WEB-INF/jsp/common/operationResult.jsp";
     public static final String EDIT_ACTIVITY = "/editService";
     public static final String VIEW_ACTIVITY = "/viewService";

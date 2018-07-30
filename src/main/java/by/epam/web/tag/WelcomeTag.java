@@ -2,8 +2,6 @@ package by.epam.web.tag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 @SuppressWarnings("serial")
 public class WelcomeTag extends TagSupport{

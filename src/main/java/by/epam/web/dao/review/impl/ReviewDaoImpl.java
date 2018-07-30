@@ -254,7 +254,6 @@ public class ReviewDaoImpl implements ReviewDao {
     @Override
     public void deleteReviewById(int id) throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.getConnection();

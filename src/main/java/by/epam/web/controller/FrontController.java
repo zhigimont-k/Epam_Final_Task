@@ -2,14 +2,10 @@ package by.epam.web.controller;
 
 import by.epam.web.command.Command;
 import by.epam.web.command.CommandFactory;
-import by.epam.web.controller.constant.JspAddress;
 import by.epam.web.controller.constant.JspParameter;
-import by.epam.web.service.ServiceException;
 import by.epam.web.util.sessionrequestcontent.SessionRequestContent;
-import org.apache.logging.log4j.Level;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -36,7 +32,6 @@ public class FrontController extends HttpServlet {
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(HTML_CONTENT_TYPE);
         request.setCharacterEncoding(UTF_8_ENCODING);
-        ServletContext sc = request.getServletContext();
         String commandName = request.getParameter(JspParameter.COMMAND);
 
         Optional<Command> foundCommand = CommandFactory.getInstance().defineCommand(commandName);

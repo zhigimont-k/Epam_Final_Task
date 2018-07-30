@@ -20,8 +20,6 @@ public class Activity extends Entity {
     private String description;
     private Status status;
 
-    public Activity(){}
-
     public int getId() {
         return id;
     }

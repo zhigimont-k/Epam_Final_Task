@@ -96,12 +96,21 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>Orders</servlet-name>
-        <jsp-file>/jsp/orders.jsp</jsp-file>
+        <servlet-name>User orders</servlet-name>
+        <jsp-file>/WEB-INF/jsp/user/userOrders.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Orders</servlet-name>
-        <url-pattern>/orders</url-pattern>
+        <servlet-name>User orders</servlet-name>
+        <url-pattern>/userOrders</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>All orders</servlet-name>
+        <jsp-file>/WEB-INF/jsp/admin/allOrders.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>All orders</servlet-name>
+        <url-pattern>/allOrders</url-pattern>
     </servlet-mapping>
 
     <servlet>

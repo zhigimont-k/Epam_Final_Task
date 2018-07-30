@@ -22,9 +22,6 @@ public class User extends Entity {
     private String phoneNumber;
     private Status status;
 
-    public User() {
-    }
-
     public int getId() {
         return id;
     }

@@ -1,7 +1,5 @@
 package by.epam.web.util.mail;
 
-import java.util.Map;
-
 public class MailComposer {
 
     private static final String PASSWORD_RESET_MESSAGE_THEME = "CBB | Password reset";
@@ -28,4 +26,6 @@ public class MailComposer {
     public static String getOrderReminderMessageTheme(){
         return ORDER_REMINDER_MESSAGE_THEME;
     }
+
+    private MailComposer(){}
 }

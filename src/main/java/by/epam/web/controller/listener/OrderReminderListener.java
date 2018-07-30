@@ -14,7 +14,7 @@ public class OrderReminderListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleWithFixedDelay(new OrderReminderThread(), 0,12,
+        executorService.scheduleWithFixedDelay(new OrderReminderThread(), 0, 24,
                 TimeUnit.HOURS);
     }
 

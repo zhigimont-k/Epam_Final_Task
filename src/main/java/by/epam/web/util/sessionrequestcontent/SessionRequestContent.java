@@ -1,7 +1,5 @@
 package by.epam.web.util.sessionrequestcontent;
 
-import by.epam.web.util.sessionrequestcontent.NoSuchRequestParameterException;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 import java.util.HashMap;

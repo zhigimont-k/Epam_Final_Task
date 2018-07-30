@@ -25,13 +25,6 @@
     <ul class="nav">
         <li>
             <a href="${pageContext.request.contextPath}/home">${homePage}</a>
-            <%--<ul class="dropdown">--%>
-                <%--<li>Menu 1</li>--%>
-                <%--<li>Menu 2</li>--%>
-                <%--<li>Menu 3</li>--%>
-                <%--<li>Menu 4</li>--%>
-                <%--<li>Menu 5</li>--%>
-            <%--</ul>--%>
         </li>
         <li>
             <a href="app?command=viewActivities">${servicesPage}</a>
@@ -42,18 +35,12 @@
             <li><a href="${pageContext.request.contextPath}/login">${signIn}</a></li>
         </c:if>
         <c:if test="${sessionScope.user ne null}">
-            <c:if test="${sessionScope.user.status == 'user'}">
-                <li><a href="app?command=viewUserOrders">${ordersPage}</a></li>
-            </c:if>
-            <c:if test="${sessionScope.user.status == 'admin'}">
-                <li><a href="app?command=viewAllOrders">${ordersPage}</a></li>
-            </c:if>
+            <li><a href="app?command=viewUserOrders">My orders</a></li>
             <li><a href="${pageContext.request.contextPath}/account">${accountPage}</a></li>
         </c:if>
         <c:if test="${sessionScope.user.status == 'admin'}">
-            <li class>
-                <a href="app?command=viewUsers">${usersPage}</a>
-            </li>
+            <li><a href="app?command=viewUsers">${usersPage}</a></li>
+            <li><a href="app?command=viewAllOrders">${ordersPage}</a></li>
         </c:if>
         <c:if test="${sessionScope.user ne null && sessionScope.user.status ne 'banned'}">
             <li><a href="app?command=createOrder">Make an order</a></li>

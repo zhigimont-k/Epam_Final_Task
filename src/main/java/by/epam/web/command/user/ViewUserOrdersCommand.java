@@ -33,7 +33,7 @@ public class ViewUserOrdersCommand implements Command {
             requestContent.setAttribute(JspParameter.ORDER_LIST, orderList);
 
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.ORDERS_PAGE);
+            router.setPage(JspAddress.USER_ORDERS_PAGE);
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {

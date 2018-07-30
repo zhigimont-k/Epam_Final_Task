@@ -33,6 +33,8 @@ public class UpdateUserCommand implements Command {
                     logger.log(Level.INFO, "Updated user: "+user.getLogin()+" "+newPassword);
                 } else {
                     requestContent.setAttribute(JspParameter.AUTH_FAIL, true);
+                    router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                    router.setPage(JspAddress.ACCOUNT_PAGE);
                 }
             } else {
                 user = service.updateUserName(user.getId(), newName).get();

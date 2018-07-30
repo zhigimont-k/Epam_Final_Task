@@ -209,13 +209,13 @@ public class OrderDaoImpl implements OrderDao {
     public List<Order> findAllOrders() throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
-        PreparedStatement preparedStatement = null;
+        Statement statement = null;
         List<Order> orderList = new ArrayList<>();
         try {
             connection = pool.getConnection();
 
-            preparedStatement = connection.prepareStatement(FIND_ALL_ORDERS);
-            resultSet = preparedStatement.executeQuery();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(FIND_ALL_ORDERS);
 
             while (resultSet.next()) {
                 Order order = new Order();
@@ -240,7 +240,7 @@ public class OrderDaoImpl implements OrderDao {
         } finally {
             try {
                 pool.releaseConnection(connection);
-                closeStatement(preparedStatement);
+                closeStatement(statement);
             } catch (PoolException e) {
                 throw new DaoException(e);
             }
@@ -431,14 +431,15 @@ public class OrderDaoImpl implements OrderDao {
     public List<String> findEmailsForUpcomingOrders() throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
+        Statement statement = null;
         PreparedStatement preparedStatement = null;
         List<String> emailList = new ArrayList<>();
         List<Integer> orderIdList = new ArrayList<>();
         try {
             connection = pool.getConnection();
 
-            preparedStatement = connection.prepareStatement(FIND_EMAILS_FOR_UPCOMING_ORDERS);
-            resultSet = preparedStatement.executeQuery();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(FIND_EMAILS_FOR_UPCOMING_ORDERS);
 
             while (resultSet.next()) {
                 emailList.add(resultSet.getString(DB_USER_EMAIL_FIELD));
@@ -459,6 +460,7 @@ public class OrderDaoImpl implements OrderDao {
         } finally {
             try {
                 pool.releaseConnection(connection);
+                closeStatement(statement);
                 closeStatement(preparedStatement);
             } catch (PoolException e) {
                 throw new DaoException(e);

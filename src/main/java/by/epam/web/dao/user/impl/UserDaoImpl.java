@@ -22,10 +22,6 @@ import java.util.Optional;
 public class UserDaoImpl implements UserDao {
     private static final Logger logger = LogManager.getLogger();
 
-    public enum UniqueUserInfo {
-        LOGIN, EMAIL, PHONE_NUMBER
-    }
-
     private static ConnectionPool pool = ConnectionPool.getInstance();
 
     private static final String DB_USER_ID_FIELD = "user_id";
@@ -279,13 +275,13 @@ public class UserDaoImpl implements UserDao {
     public List<User> findAllUsers() throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
-        PreparedStatement preparedStatement = null;
+        Statement statement = null;
         List<User> userList = new ArrayList<>();
         try {
             connection = pool.getConnection();
 
-            preparedStatement = connection.prepareStatement(FIND_ALL_USERS);
-            resultSet = preparedStatement.executeQuery();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(FIND_ALL_USERS);
 
             while (resultSet.next()) {
                 User user = new User();
@@ -306,7 +302,7 @@ public class UserDaoImpl implements UserDao {
         } finally {
             try {
                 pool.releaseConnection(connection);
-                closeStatement(preparedStatement);
+                closeStatement(statement);
             } catch (PoolException e) {
                 throw new DaoException(e);
             }

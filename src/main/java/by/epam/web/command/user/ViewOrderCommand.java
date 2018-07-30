@@ -21,7 +21,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,7 +57,7 @@ public class ViewOrderCommand implements Command {
                 order.addActivity(activity);
             }
             logger.log(Level.INFO, "Viewing order: " + order);
-            requestContent.setAttribute(JspParameter.ORDER, order);
+            requestContent.setSessionAttribute(JspParameter.ORDER, order);
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(JspAddress.VIEW_ORDER);
 

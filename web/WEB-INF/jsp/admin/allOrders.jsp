@@ -32,12 +32,7 @@
             <th>status</th>
             <th>services</th>
             <th>price</th>
-            <c:if test="${sessionScope.user.status == 'user'}">
-                <th>cancel</th>
-            </c:if>
-            <c:if test="${sessionScope.user.status == 'admin'}">
-                <th>change status</th>
-            </c:if>
+            <th>change status</th>
         </tr>
         <c:forEach var="order" items="${orderList}">
             <tr>
@@ -47,28 +42,23 @@
                     <td>${order.dateTime}</td>
                     <td>${order.status}</td>
                     <td><c:forEach var="activity" items="${order.activityList}">
-                        ${activity.name}<br/>
+                        <a href="app?command=viewActivity&activityId=${activity.id}">${activity.name}</a>
+                        <br/>
                     </c:forEach>
                     </td>
                     <td>${order.price}</td>
+                    <c:if test="${order.status ne 'cancelled' && order.status ne 'finished'}">
                     <td>
-                        <c:if test="${sessionScope.user.status == 'admin'}">
-                            <input type="hidden" name="command" value="changeOrderStatus"/>
-                            <select name="orderStatus">
-                                <option value="pending">pending</option>
-                                <option value="cancelled">cancelled</option>
-                                <option value="confirmed">confirmed</option>
-                                <option value="finished">finished</option>
-                            </select>
-                            <input type="submit" value="Submit">
-                        </c:if>
-                        <c:if test="${sessionScope.user.status == 'user' &&
-                        order.status == 'pending'}">
-
-                            <input type="hidden" name="command" value="cancelOrder"/>
-                            <input type="submit" value="cancel">
-                        </c:if>
+                        <input type="hidden" name="command" value="changeOrderStatus"/>
+                        <select name="orderStatus">
+                            <option value="pending">pending</option>
+                            <option value="cancelled">cancelled</option>
+                            <option value="confirmed">confirmed</option>
+                            <option value="finished">finished</option>
+                        </select>
+                        <input type="submit" value="Submit">
                     </td>
+                    </c:if>
 
 
                 </form>

@@ -14,6 +14,5 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/page_structure/navigation.jsp"/>
 <jsp:include page="/WEB-INF/jsp/page_structure/chooseLang.jsp"/>
-<jsp:include page="/WEB-INF/jsp/page_structure/welcomePanel.jsp"/>
 </body>
 </html>

@@ -20,8 +20,6 @@ public class ChangeLocaleCommand implements Command {
 
             router.setTransitionType(PageRouter.TransitionType.REDIRECT);
             router.setPage(constructRedirectAddress(requestContent));
-            logger.log(Level.INFO, "Redirect address: " +
-                    constructRedirectAddress(requestContent));
             requestContent.setSessionAttribute(JspParameter.LOCAL, lang);
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);

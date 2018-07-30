@@ -41,8 +41,7 @@
         ${loginWarning}
     </c:if>
     <br/>
-    <label>${passwordLabel}
-    <input type="password" name="password" maxlength="32" minlength="10" required/></label>
+    <jsp:include page="/WEB-INF/jsp/page_structure/fields/passwordField.jsp"/>
     <br/>
     <label>${emailLabel}
     <input type="email" name="email" maxlength="40" minlength="10" required/></label>
