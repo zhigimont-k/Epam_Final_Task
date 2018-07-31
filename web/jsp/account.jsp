@@ -26,9 +26,10 @@
     <fmt:message bundle="${locale}" key="locale.common.button.update" var="button"/>
 
     <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
     <script type="text/javascript" src="../js/inputScript.js"></script>
+
     <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>

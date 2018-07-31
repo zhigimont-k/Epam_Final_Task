@@ -17,21 +17,23 @@
     <fmt:message bundle="${locale}" key="locale.user.role.banned" var="bannedRole"/>
 
     <title>${pageTitle} | Cat Beauty Bar</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/table.js"></script>
 </head>
 <body>
-<c:if test="${empty sessionScope.user || sessionScope.user.status== 'banned'}">
+<c:if test="${sessionScope.user.status ne 'admin'}">
     <jsp:forward page="${pageContext.request.contextPath}/home"/>
 </c:if>
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
 <div>
-    <table>
+    <table id="sorted-table">
         <tr>
-            <th>id</th>
-            <th>time</th>
-            <th>status</th>
-            <th>services</th>
-            <th>price</th>
+            <th onclick="sortTable(0)">id</th>
+            <th onclick="sortTable(1)">time</th>
+            <th onclick="sortTable(2)">status</th>
+            <th onclick="sortTable(3)">services</th>
+            <th onclick="sortTable(4)">price</th>
             <th>change status</th>
         </tr>
         <c:forEach var="order" items="${orderList}">

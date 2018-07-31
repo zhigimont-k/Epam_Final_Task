@@ -20,6 +20,8 @@
     <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
 
     <title>${pageTitle} | ${projectName}</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/table.js"></script>
 </head>
 <body>
 <c:if test="${empty sessionScope.user || sessionScope.user.status== 'banned'}">
@@ -28,13 +30,13 @@
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
 <div>
-    <table>
+    <table id="sorted-table">
         <tr>
-            <th>id</th>
-            <th>time</th>
-            <th>status</th>
-            <th>services</th>
-            <th>price</th>
+            <th onclick="sortTable(0)">id</th>
+            <th onclick="sortTable(1)">time</th>
+            <th onclick="sortTable(2)">status</th>
+            <th onclick="sortTable(3)">services</th>
+            <th onclick="sortTable(4)">price</th>
         </tr>
         <c:forEach var="order" items="${orderList}">
             <tr>

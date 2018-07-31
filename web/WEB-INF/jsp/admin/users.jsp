@@ -17,6 +17,8 @@
     <fmt:message bundle="${locale}" key="locale.user.role.banned" var="bannedRole"/>
 
     <title>${pageTitle} | Cat Beauty Bar</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/table.js"></script>
 </head>
 <body>
 <c:if test="${sessionScope.user.status ne 'admin'}">
@@ -25,13 +27,13 @@
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
 <div>
-    <table>
+    <table id="sorted-table">
         <tr>
-            <th>${login}</th>
-            <th>${userName}</th>
-            <th>${status}</th>
-            <th>${email}</th>
-            <th>${phoneNumber}</th>
+            <th onclick="sortTable(0)">${login}</th>
+            <th onclick="sortTable(1)">${userName}</th>
+            <th onclick="sortTable(2)">${status}</th>
+            <th onclick="sortTable(3)">${email}</th>
+            <th onclick="sortTable(4)">${phoneNumber}</th>
             <th>Change status</th>
         </tr>
         <c:forEach var="user" items="${userList}">

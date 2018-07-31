@@ -16,6 +16,8 @@
     <fmt:message bundle="${locale}" key="locale.user.warning.email" var="emailWarning"/>
     <fmt:message bundle="${locale}" key="locale.user.warning.phonenumber" var="phoneNumberWarning"/>
 
+    <title>Add service | Cat Beauty Bar</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
 
@@ -24,30 +26,34 @@
 </c:if>
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-<form name="addServiceForm" method="POST" action="app">
-    <input type="hidden" name="command" value="addActivity"/>
-    Add a service:
-    <label>${serviceNameLabel}
-        <br/>
-        <input type="text" name="activityName" maxlength="20" minlength="4" required/>
-    </label>
+<div id="custom-form">
+    <div>
+        <form name="addServiceForm" method="POST" action="app">
+            <input type="hidden" name="command" value="addActivity"/>
+            Add a service:
+            <label>${serviceNameLabel}
+                <br/>
+                <input type="text" name="activityName" maxlength="20" minlength="4" required/>
+            </label>
 
-    <br/>
-    <label>${serviceDescriptionLabel}
-        <br/>
-        <textarea name="activityDescription" cols="30" rows="10" required></textarea>
-    </label>
-    <br/>
-    <label>${servicePriceLabel}
-        <br/>
-        <input type="text" name="activityPrice" maxlength="5" minlength="1" required/>
-    </label>
+            <br/>
+            <label>${serviceDescriptionLabel}
+                <br/>
+                <textarea name="activityDescription" cols="30" rows="10" required></textarea>
+            </label>
+            <br/>
+            <label>${servicePriceLabel}
+                <br/>
+                <input type="text" name="activityPrice" maxlength="5" minlength="1" required/>
+            </label>
 
-    <br/>
-    <input type="submit" value="${button}"/>
-    <c:if test="${activityExists == true}">
-        Activity with this name already exists.
-    </c:if>
-</form>
+            <br/>
+            <input type="submit" value="${button}"/>
+            <c:if test="${activityExists == true}">
+                Activity with this name already exists.
+            </c:if>
+        </form>
+    </div>
+</div>
 </body>
 </html>

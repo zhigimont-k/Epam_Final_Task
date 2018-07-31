@@ -11,13 +11,18 @@
 
     <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
     <title>${pageTitle} | ${projectName}</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/table.js"></script>
 </head>
 <body>
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
+<c:if test="${sessionScope.user.status eq 'admin'}">
+    <jsp:include page="/WEB-INF/jsp/admin/addService.jsp"/>
+</c:if>
 
 <div>
-    <table>
+    <table id="sorted-table">
         <c:forEach var="activity" items="${activityList}">
             <tr>
                 <form name="activityListForm" method="POST" action="app">
