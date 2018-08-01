@@ -2,8 +2,8 @@ package by.epam.web.command.user;
 
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
-import by.epam.web.controller.constant.JspAddress;
-import by.epam.web.controller.constant.JspParameter;
+import by.epam.web.constant.PageAddress;
+import by.epam.web.constant.RequestParameter;
 import by.epam.web.entity.Activity;
 import by.epam.web.entity.Order;
 import by.epam.web.entity.User;
@@ -32,12 +32,12 @@ public class ViewOrderCommand implements Command {
         PageRouter router = new PageRouter();
         try {
 
-            int userId = ((User) requestContent.getSessionAttribute(JspParameter.USER)).getId();
-            String orderTime = requestContent.getParameter(JspParameter.ORDER_TIME);
+            int userId = ((User) requestContent.getSessionAttribute(RequestParameter.USER)).getId();
+            String orderTime = requestContent.getParameter(RequestParameter.ORDER_TIME);
             if (StringUtils.countMatches(orderTime, ":") == 1) {
                 orderTime += ":00";
             }
-            String[] activityIdList = requestContent.getParameters(JspParameter.ACTIVITY_ID);
+            String[] activityIdList = requestContent.getParameters(RequestParameter.ACTIVITY_ID);
             BigDecimal orderPrice = new BigDecimal(BigInteger.ZERO);
             List<Activity> activityList = new ArrayList<>();
             ActivityService activityService = ServiceFactory.getInstance().getActivityService();
@@ -57,17 +57,17 @@ public class ViewOrderCommand implements Command {
                 order.addActivity(activity);
             }
             logger.log(Level.INFO, "Viewing order: " + order);
-            requestContent.setSessionAttribute(JspParameter.ORDER, order);
+            requestContent.setSessionAttribute(RequestParameter.ORDER, order);
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.VIEW_ORDER);
+            router.setPage(PageAddress.VIEW_ORDER_PAGE);
 
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
+            requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.ERROR_PAGE);
+            router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
     }

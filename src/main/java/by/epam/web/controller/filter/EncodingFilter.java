@@ -4,9 +4,10 @@ import javax.servlet.*;
 import java.io.IOException;
 
 public class EncodingFilter implements Filter {
+    private static final String HTML_CONTENT_TYPE = "text/html";
     private String code;
 
-    public void init(FilterConfig fConfig) throws ServletException {
+    public void init(FilterConfig fConfig) {
         code = fConfig.getInitParameter("encoding");
     }
 
@@ -16,6 +17,7 @@ public class EncodingFilter implements Filter {
         if (code != null && !code.equalsIgnoreCase(codeRequest)) {
             request.setCharacterEncoding(code);
             response.setCharacterEncoding(code);
+            response.setContentType(HTML_CONTENT_TYPE);
         }
         chain.doFilter(request, response);
     }

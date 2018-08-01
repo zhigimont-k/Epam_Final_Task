@@ -2,8 +2,8 @@ package by.epam.web.command.user;
 
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
-import by.epam.web.controller.constant.JspAddress;
-import by.epam.web.controller.constant.JspParameter;
+import by.epam.web.constant.PageAddress;
+import by.epam.web.constant.RequestParameter;
 import by.epam.web.entity.Review;
 import by.epam.web.service.ReviewService;
 import by.epam.web.service.ServiceException;
@@ -26,23 +26,23 @@ public class UpdateReviewCommand implements Command {
 
             ReviewService service = ServiceFactory.getInstance().getReviewService();
             int id = Integer.parseInt(requestContent.getParameter
-                    (JspParameter.REVIEW_ID));
+                    (RequestParameter.REVIEW_ID));
             int newMark = Integer.parseInt(requestContent.getParameter
-                    (JspParameter.REVIEW_MARK));
-            String newMessage = requestContent.getParameter(JspParameter.REVIEW_MESSAGE);
+                    (RequestParameter.REVIEW_MARK));
+            String newMessage = requestContent.getParameter(RequestParameter.REVIEW_MESSAGE);
             int activityId = 0;
 
             Optional<Review> found = service.findReviewById(id);
             if (found.isPresent()) {
                 service.updateReview(id, newMark, newMessage);
                 activityId = found.get().getActivityId();
-                requestContent.setAttribute(JspParameter.OPERATION_RESULT, true);
+                requestContent.setAttribute(RequestParameter.OPERATION_RESULT, true);
 
             } else {
-                requestContent.setAttribute(JspParameter.OPERATION_RESULT, false);
+                requestContent.setAttribute(RequestParameter.OPERATION_RESULT, false);
             }
             router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-            router.setPage("app?command=viewActivity&activityId="+activityId);
+            router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
 
 
         } catch (NoSuchRequestParameterException e) {
@@ -50,9 +50,9 @@ public class UpdateReviewCommand implements Command {
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
+            requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.ERROR_PAGE);
+            router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
 

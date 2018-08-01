@@ -2,8 +2,8 @@ package by.epam.web.command.admin;
 
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
-import by.epam.web.controller.constant.JspAddress;
-import by.epam.web.controller.constant.JspParameter;
+import by.epam.web.constant.PageAddress;
+import by.epam.web.constant.RequestParameter;
 import by.epam.web.entity.Order;
 import by.epam.web.service.OrderService;
 import by.epam.web.service.ServiceException;
@@ -25,15 +25,15 @@ public class ViewOrdersCommand implements Command {
             OrderService service = ServiceFactory.getInstance().getOrderService();
             List<Order> orderList = service.findAllOrders();
 
-            requestContent.setAttribute(JspParameter.ORDER_LIST, orderList);
+            requestContent.setAttribute(RequestParameter.ORDER_LIST, orderList);
 
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.ALL_ORDERS_PAGE);
+            router.setPage(PageAddress.ALL_ORDERS_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
+            requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.ERROR_PAGE);
+            router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
     }

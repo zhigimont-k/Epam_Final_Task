@@ -11,7 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class ConnectionManager {
-    private static final Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger();
+    private static ConnectionManager instance = new ConnectionManager();
     private static final String NUMERICAL_PATTERN = "^[1-9]\\d?$";
     static final int INITIAL_POOL_SIZE = 8;
     static final int MAX_POOL_SIZE = 32;
@@ -26,20 +27,27 @@ class ConnectionManager {
     private static String user;
     private static String password;
 
-    static void buildPool() {
+    private ConnectionManager() {
+    }
+
+    static ConnectionManager getInstance() {
+        return instance;
+    }
+
+    void buildPool() {
         register();
     }
 
     private static void register() {
         ResourceBundle bundle = ResourceBundle.getBundle(BASE_NAME);
-        if (bundle == null){
+        if (bundle == null) {
             logger.fatal("Couldn't process DB property file");
             throw new RuntimeException("Couldn't process DB property file");
         }
         url = bundle.getString(DATABASE_URL);
         user = bundle.getString(DATABASE_USER);
         password = bundle.getString(DATABASE_PASSWORD);
-        if (url == null || user == null || password == null){
+        if (url == null || user == null || password == null) {
             logger.fatal("Not enough data to init connection pool");
             throw new RuntimeException("Not enough data to init connection pool");
         }
@@ -65,6 +73,5 @@ class ConnectionManager {
         return new ProxyConnection(DriverManager.getConnection(url, user, password));
     }
 
-    private ConnectionManager() {
-    }
+
 }

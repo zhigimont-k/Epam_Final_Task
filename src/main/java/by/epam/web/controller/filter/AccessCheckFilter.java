@@ -1,8 +1,8 @@
 package by.epam.web.controller.filter;
 
 import by.epam.web.command.CommandFactory;
-import by.epam.web.command.CommandRight;
-import by.epam.web.controller.constant.JspParameter;
+import by.epam.web.command.CommandAccessLevel;
+import by.epam.web.constant.RequestParameter;
 import by.epam.web.entity.User;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -26,23 +26,23 @@ public class AccessCheckFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
                          FilterChain filterChain) throws IOException, ServletException {
-        String command = servletRequest.getParameter(JspParameter.COMMAND);
+        String command = servletRequest.getParameter(RequestParameter.COMMAND);
         if (command == null) {
             HttpServletResponse response = (HttpServletResponse) servletResponse;
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute(JspParameter.USER);
-        Optional<CommandRight> commandRightOptional = CommandFactory.getInstance()
+        User user = (User) session.getAttribute(RequestParameter.USER);
+        Optional<CommandAccessLevel> commandRightOptional = CommandFactory.getInstance()
                 .getCommandRight(command);
         if (commandRightOptional.isPresent()) {
-            CommandRight commandRight = commandRightOptional.get();
-            if (accessGranted(commandRight, user)) {
+            CommandAccessLevel commandAccessLevel = commandRightOptional.get();
+            if (accessGranted(commandAccessLevel, user)) {
                 filterChain.doFilter(servletRequest, servletResponse);
             } else {
                 logger.log(Level.ERROR, "Tried to call command " + command + " without access");
-                logger.log(Level.INFO, "User: "+user+", command right: "+commandRight);
+                logger.log(Level.INFO, "User: "+user+", command right: "+ commandAccessLevel);
                 HttpServletResponse response = (HttpServletResponse) servletResponse;
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
             }
@@ -54,13 +54,13 @@ public class AccessCheckFilter implements Filter {
 
     }
 
-    private boolean accessGranted(CommandRight commandRight, User user) {
+    private boolean accessGranted(CommandAccessLevel commandAccessLevel, User user) {
         if (user == null || user.getUserStatus() == User.Status.BANNED) {
-            return commandRight == CommandRight.GUEST;
+            return commandAccessLevel == CommandAccessLevel.GUEST;
         } else {
             User.Status userStatus = user.getUserStatus();
-            return userStatus == User.Status.USER && (commandRight == CommandRight.USER
-                    || commandRight == CommandRight.GUEST) ||
+            return userStatus == User.Status.USER && (commandAccessLevel == CommandAccessLevel.USER
+                    || commandAccessLevel == CommandAccessLevel.GUEST) ||
                     userStatus == User.Status.ADMIN;
         }
     }

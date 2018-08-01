@@ -1,8 +1,8 @@
 package by.epam.web.service;
 
 import by.epam.web.dao.DaoException;
-import by.epam.web.dao.review.ReviewDao;
-import by.epam.web.dao.review.impl.ReviewDaoImpl;
+import by.epam.web.dao.ReviewDao;
+import by.epam.web.dao.impl.ReviewDaoImpl;
 import by.epam.web.entity.Review;
 
 import java.util.List;

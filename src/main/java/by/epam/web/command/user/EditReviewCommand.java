@@ -2,8 +2,8 @@ package by.epam.web.command.user;
 
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
-import by.epam.web.controller.constant.JspAddress;
-import by.epam.web.controller.constant.JspParameter;
+import by.epam.web.constant.PageAddress;
+import by.epam.web.constant.RequestParameter;
 import by.epam.web.entity.Review;
 import by.epam.web.service.ReviewService;
 import by.epam.web.service.ServiceException;
@@ -25,22 +25,22 @@ public class EditReviewCommand implements Command {
         try {
 
             ReviewService service = ServiceFactory.getInstance().getReviewService();
-            int reviewId = Integer.parseInt(requestContent.getParameter(JspParameter.REVIEW_ID));
+            int reviewId = Integer.parseInt(requestContent.getParameter(RequestParameter.REVIEW_ID));
             Optional<Review> found = service.findReviewById(reviewId);
             if (found.isPresent()){
-                requestContent.setAttribute(JspParameter.REVIEW, found.get());
+                requestContent.setAttribute(RequestParameter.REVIEW, found.get());
 
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);
-                router.setPage(JspAddress.EDIT_REVIEW);
+                router.setPage(PageAddress.EDIT_REVIEW_PAGE);
             }
 
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
+            requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.ERROR_PAGE);
+            router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
     }

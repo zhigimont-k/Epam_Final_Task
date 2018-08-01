@@ -1,7 +1,7 @@
-package by.epam.web.dao.activity.impl;
+package by.epam.web.dao.impl;
 
 import by.epam.web.dao.DaoException;
-import by.epam.web.dao.activity.ActivityDao;
+import by.epam.web.dao.ActivityDao;
 import by.epam.web.entity.Activity;
 import by.epam.web.pool.ConnectionPool;
 import by.epam.web.pool.PoolException;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ActivityDaoImpl implements ActivityDao {
-    private static final Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger();
 
     private static ConnectionPool pool = ConnectionPool.getInstance();
 
@@ -86,10 +86,10 @@ public class ActivityDaoImpl implements ActivityDao {
             throw new DaoException("Failed to add activity: " + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -123,10 +123,10 @@ public class ActivityDaoImpl implements ActivityDao {
             throw new DaoException("Failed to find activity by id" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -160,10 +160,10 @@ public class ActivityDaoImpl implements ActivityDao {
             throw new DaoException("Failed to find activity by name" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -196,10 +196,10 @@ public class ActivityDaoImpl implements ActivityDao {
             throw new DaoException("Failed to find activities" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(statement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -230,10 +230,10 @@ public class ActivityDaoImpl implements ActivityDao {
             throw new DaoException("Failed to change activity status" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -266,10 +266,10 @@ public class ActivityDaoImpl implements ActivityDao {
             throw new DaoException("Failed to find available activities" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(statement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -302,10 +302,10 @@ public class ActivityDaoImpl implements ActivityDao {
             throw new DaoException("Failed to update activity:  " + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }

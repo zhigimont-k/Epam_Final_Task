@@ -2,8 +2,8 @@ package by.epam.web.command.admin;
 
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
-import by.epam.web.controller.constant.JspAddress;
-import by.epam.web.controller.constant.JspParameter;
+import by.epam.web.constant.PageAddress;
+import by.epam.web.constant.RequestParameter;
 import by.epam.web.entity.Activity;
 import by.epam.web.service.ActivityService;
 import by.epam.web.service.ServiceException;
@@ -25,21 +25,21 @@ public class EditActivityCommand implements Command {
         try {
 
             ActivityService service = ServiceFactory.getInstance().getActivityService();
-            int activityId = Integer.parseInt(requestContent.getParameter(JspParameter.ACTIVITY_ID));
+            int activityId = Integer.parseInt(requestContent.getParameter(RequestParameter.ACTIVITY_ID));
             Optional<Activity> found = service.findActivityById(activityId);
             if (found.isPresent()){
-                requestContent.setAttribute(JspParameter.ACTIVITY, found.get());
+                requestContent.setAttribute(RequestParameter.ACTIVITY, found.get());
 
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);
-                router.setPage(JspAddress.EDIT_ACTIVITY);
+                router.setPage(PageAddress.EDIT_ACTIVITY_PAGE);
             }
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
+            requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.ERROR_PAGE);
+            router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
     }

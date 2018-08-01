@@ -2,7 +2,7 @@ package by.epam.web.controller;
 
 import by.epam.web.command.Command;
 import by.epam.web.command.CommandFactory;
-import by.epam.web.controller.constant.JspParameter;
+import by.epam.web.constant.RequestParameter;
 import by.epam.web.util.sessionrequestcontent.SessionRequestContent;
 
 import javax.servlet.RequestDispatcher;
@@ -16,9 +16,6 @@ import java.util.Optional;
 
 @WebServlet(name = "FrontController", urlPatterns = {"/app"})
 public class FrontController extends HttpServlet {
-
-    private static final String UTF_8_ENCODING = "UTF-8";
-    private static final String HTML_CONTENT_TYPE = "text/html";
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
@@ -30,9 +27,7 @@ public class FrontController extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType(HTML_CONTENT_TYPE);
-        request.setCharacterEncoding(UTF_8_ENCODING);
-        String commandName = request.getParameter(JspParameter.COMMAND);
+        String commandName = request.getParameter(RequestParameter.COMMAND);
 
         Optional<Command> foundCommand = CommandFactory.getInstance().defineCommand(commandName);
 

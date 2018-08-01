@@ -1,6 +1,6 @@
-package by.epam.web.controller.constant;
+package by.epam.web.constant;
 
-public final class JspParameter {
+public final class RequestParameter {
     public static final String COMMAND = "command";
     public static final String LANGUAGE = "lang";
     public static final String PAGE = "page";
@@ -49,5 +49,5 @@ public final class JspParameter {
     public static final String REVIEW_MESSAGE = "reviewMessage";
     public static final String REVIEW_ID = "reviewId";
     public static final String REVIEW_LIST = "reviewList";
-    private JspParameter(){}
+    private RequestParameter(){}
 }

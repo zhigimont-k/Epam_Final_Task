@@ -182,7 +182,7 @@
 
     <filter>
         <filter-name>Session invalidator</filter-name>
-        <filter-class>by.epam.web.controller.filter.SessionInvalidator</filter-class>
+        <filter-class>by.epam.web.controller.filter.SessionInvalidationFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>Session invalidator</filter-name>

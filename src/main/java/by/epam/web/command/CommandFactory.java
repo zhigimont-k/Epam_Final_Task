@@ -23,10 +23,10 @@ public class CommandFactory {
                 .map(CommandType::getCommand);
     }
 
-    public Optional<CommandRight> getCommandRight(String commandName){
+    public Optional<CommandAccessLevel> getCommandRight(String commandName){
         return Arrays.stream(CommandType.values())
                 .filter(command -> command.getName().equalsIgnoreCase(commandName))
                 .findFirst()
-                .map(CommandType::getCommandRights);
+                .map(CommandType::getCommandAccessLevel);
     }
 }

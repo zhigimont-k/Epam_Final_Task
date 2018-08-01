@@ -1,4 +1,4 @@
-package by.epam.web.dao.review;
+package by.epam.web.dao;
 
 import by.epam.web.dao.AbstractDao;
 import by.epam.web.dao.DaoException;

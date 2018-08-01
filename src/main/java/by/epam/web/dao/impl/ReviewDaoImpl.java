@@ -1,7 +1,7 @@
-package by.epam.web.dao.review.impl;
+package by.epam.web.dao.impl;
 
 import by.epam.web.dao.DaoException;
-import by.epam.web.dao.review.ReviewDao;
+import by.epam.web.dao.ReviewDao;
 import by.epam.web.entity.Review;
 import by.epam.web.pool.ConnectionPool;
 import by.epam.web.pool.PoolException;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ReviewDaoImpl implements ReviewDao {
-    private static final Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger();
 
     private static ConnectionPool pool = ConnectionPool.getInstance();
 
@@ -92,10 +92,10 @@ public class ReviewDaoImpl implements ReviewDao {
             throw new DaoException("Failed to add review" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -125,10 +125,10 @@ public class ReviewDaoImpl implements ReviewDao {
             throw new DaoException("Failed to update review" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -164,10 +164,10 @@ public class ReviewDaoImpl implements ReviewDao {
             throw new DaoException("Failed to find review by id" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -204,10 +204,10 @@ public class ReviewDaoImpl implements ReviewDao {
             throw new DaoException("Failed to find review by activity id" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -243,10 +243,10 @@ public class ReviewDaoImpl implements ReviewDao {
             throw new DaoException("Failed to find review by user id" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -267,10 +267,10 @@ public class ReviewDaoImpl implements ReviewDao {
             throw new DaoException("Failed to find review by user id" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }

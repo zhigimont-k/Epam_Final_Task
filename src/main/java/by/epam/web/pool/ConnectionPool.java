@@ -25,7 +25,7 @@ public class ConnectionPool {
     private static int poolSize;
 
     private ConnectionPool() {
-        ConnectionManager.buildPool();
+        ConnectionManager.getInstance().buildPool();
         initPool();
     }
 
@@ -44,7 +44,7 @@ public class ConnectionPool {
         return instance;
     }
 
-    static void setPoolSize(int newPoolSize){
+    static void setPoolSize(int newPoolSize) {
         poolSize = newPoolSize;
     }
 
@@ -55,7 +55,7 @@ public class ConnectionPool {
             try {
                 createConnection();
             } catch (SQLException e) {
-                logger.log(Level.ERROR, e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
 
@@ -67,7 +67,7 @@ public class ConnectionPool {
                 try {
                     createConnection();
                 } catch (SQLException e) {
-                    logger.log(Level.ERROR, e);
+                    logger.log(Level.ERROR, e.getMessage(), e);
                 }
             }
         }
@@ -88,7 +88,7 @@ public class ConnectionPool {
             connection = availableConnections.take();
             unavailableConnections.add(connection);
         } catch (InterruptedException e) {
-            logger.log(Level.ERROR, e);
+            logger.log(Level.ERROR, e.getMessage(), e);
             Thread.currentThread().interrupt();
         }
         return connection;
@@ -98,7 +98,7 @@ public class ConnectionPool {
         try {
             availableConnections.add(ConnectionManager.createConnection());
         } catch (SQLException e) {
-            throw new PoolException("Couldn't create connection", e);
+            throw new PoolException("Couldn't create connection: " + e.getMessage(), e);
         }
     }
 
@@ -113,7 +113,7 @@ public class ConnectionPool {
             logger.log(Level.ERROR, e);
             Thread.currentThread().interrupt();
         } catch (SQLException e) {
-            throw new PoolException("Couldn't release connection", e);
+            throw new PoolException("Couldn't release connection: " + e.getMessage(), e);
         }
     }
 
@@ -131,7 +131,7 @@ public class ConnectionPool {
                 logger.log(Level.ERROR, e);
                 Thread.currentThread().interrupt();
             } catch (SQLException e) {
-                throw new PoolException("Couldn't close connection", e);
+                throw new PoolException("Couldn't close connection: " + e.getMessage(), e);
             }
         }
         deregisterDrivers();
@@ -142,7 +142,7 @@ public class ConnectionPool {
             try {
                 DriverManager.deregisterDriver(driver);
             } catch (SQLException e) {
-                logger.error("Couldn't deregister driver", e);
+                logger.error("Couldn't deregister driver: " + e.getMessage(), e);
             }
         });
     }

@@ -1,5 +1,5 @@
 package by.epam.web.command;
 
-public enum CommandRight{
+public enum CommandAccessLevel {
     ADMIN, USER, GUEST
 }

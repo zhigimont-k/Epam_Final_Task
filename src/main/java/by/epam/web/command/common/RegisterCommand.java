@@ -2,8 +2,8 @@ package by.epam.web.command.common;
 
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
-import by.epam.web.controller.constant.JspAddress;
-import by.epam.web.controller.constant.JspParameter;
+import by.epam.web.constant.PageAddress;
+import by.epam.web.constant.RequestParameter;
 import by.epam.web.entity.User;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
@@ -22,11 +22,11 @@ public class RegisterCommand implements Command {
         PageRouter router = new PageRouter();
         try {
 
-            String login = requestContent.getParameter(JspParameter.LOGIN);
-            String password = requestContent.getParameter(JspParameter.PASSWORD);
-            String email = requestContent.getParameter(JspParameter.EMAIL);
-            String userName = requestContent.getParameter(JspParameter.USER_NAME);
-            String phoneNumber = requestContent.getParameter(JspParameter.PHONE_NUMBER);
+            String login = requestContent.getParameter(RequestParameter.LOGIN);
+            String password = requestContent.getParameter(RequestParameter.PASSWORD);
+            String email = requestContent.getParameter(RequestParameter.EMAIL);
+            String userName = requestContent.getParameter(RequestParameter.USER_NAME);
+            String phoneNumber = requestContent.getParameter(RequestParameter.PHONE_NUMBER);
 
             UserService service = ServiceFactory.getInstance().getUserService();
 
@@ -35,35 +35,35 @@ public class RegisterCommand implements Command {
             boolean phoneNumberExists = service.phoneNumberExists(phoneNumber);
             if (loginExists) {
                 logger.log(Level.INFO, "Login " + login + " exists");
-                requestContent.setAttribute(JspParameter.LOGIN_EXISTS, true);
+                requestContent.setAttribute(RequestParameter.LOGIN_EXISTS, true);
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);
-                router.setPage(JspAddress.REGISTER_PAGE);
+                router.setPage(PageAddress.REGISTER_PAGE);
             }
             if (emailExists) {
                 logger.log(Level.INFO, "Email " + email + " exists");
-                requestContent.setAttribute(JspParameter.EMAIL_EXISTS, true);
+                requestContent.setAttribute(RequestParameter.EMAIL_EXISTS, true);
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);
-                router.setPage(JspAddress.REGISTER_PAGE);
+                router.setPage(PageAddress.REGISTER_PAGE);
             }
             if (phoneNumberExists) {
                 logger.log(Level.INFO, "Phone number " + phoneNumber + " exists");
-                requestContent.setAttribute(JspParameter.PHONE_NUMBER_EXISTS, true);
+                requestContent.setAttribute(RequestParameter.PHONE_NUMBER_EXISTS, true);
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);
-                router.setPage(JspAddress.REGISTER_PAGE);
+                router.setPage(PageAddress.REGISTER_PAGE);
             }
             if (!loginExists && !emailExists && !phoneNumberExists) {
                 User user = service.registerUser(login, password, email, phoneNumber, userName);
-                requestContent.setSessionAttribute(JspParameter.USER, user);
+                requestContent.setSessionAttribute(RequestParameter.USER, user);
                 router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-                router.setPage(JspAddress.HOME_PAGE);
+                router.setPage(PageAddress.HOME_PAGE);
             }
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
+            requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.ERROR_PAGE);
+            router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
     }

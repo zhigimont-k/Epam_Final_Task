@@ -2,8 +2,8 @@ package by.epam.web.command.admin;
 
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
-import by.epam.web.controller.constant.JspAddress;
-import by.epam.web.controller.constant.JspParameter;
+import by.epam.web.constant.PageAddress;
+import by.epam.web.constant.RequestParameter;
 import by.epam.web.service.OrderService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
@@ -22,19 +22,19 @@ public class ChangeOrderStatusCommand implements Command {
         try {
 
             OrderService service = ServiceFactory.getInstance().getOrderService();
-            String id = requestContent.getParameter(JspParameter.ORDER_ID);
-            String status = requestContent.getParameter(JspParameter.ORDER_STATUS);
+            String id = requestContent.getParameter(RequestParameter.ORDER_ID);
+            String status = requestContent.getParameter(RequestParameter.ORDER_STATUS);
             service.changeOrderStatus(Integer.parseInt(id), status);
 
             router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-            router.setPage("app?command=viewAllOrders");
+            router.setPage(PageAddress.VIEW_ALL_ORDERS);
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
+            requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.ERROR_PAGE);
+            router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
     }

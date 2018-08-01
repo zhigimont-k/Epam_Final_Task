@@ -1,8 +1,8 @@
 package by.epam.web.service;
 
 import by.epam.web.dao.DaoException;
-import by.epam.web.dao.activity.ActivityDao;
-import by.epam.web.dao.activity.impl.ActivityDaoImpl;
+import by.epam.web.dao.ActivityDao;
+import by.epam.web.dao.impl.ActivityDaoImpl;
 import by.epam.web.entity.Activity;
 
 import java.math.BigDecimal;

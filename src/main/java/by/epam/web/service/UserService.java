@@ -1,8 +1,8 @@
 package by.epam.web.service;
 
 import by.epam.web.dao.DaoException;
-import by.epam.web.dao.user.UserDao;
-import by.epam.web.dao.user.impl.UserDaoImpl;
+import by.epam.web.dao.UserDao;
+import by.epam.web.dao.impl.UserDaoImpl;
 import by.epam.web.entity.User;
 
 import java.util.List;

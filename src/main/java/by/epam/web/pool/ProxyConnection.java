@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-public class ProxyConnection implements Connection{
-    private static final Logger logger = LogManager.getLogger();
+public class ProxyConnection implements Connection {
+    private static Logger logger = LogManager.getLogger();
     private Connection connection;
 
     ProxyConnection(Connection connection) {
@@ -21,7 +21,7 @@ public class ProxyConnection implements Connection{
         try {
             connection.close();
         } catch (SQLException e) {
-            throw new PoolException("Couldn't close connection", e);
+            throw new PoolException("Couldn't close connection: " + e.getMessage(), e);
         }
     }
 

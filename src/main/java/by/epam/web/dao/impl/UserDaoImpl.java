@@ -1,10 +1,10 @@
-package by.epam.web.dao.user.impl;
+package by.epam.web.dao.impl;
 
 import by.epam.web.pool.ConnectionPool;
 import by.epam.web.pool.PoolException;
 import by.epam.web.pool.ProxyConnection;
 import by.epam.web.dao.DaoException;
-import by.epam.web.dao.user.UserDao;
+import by.epam.web.dao.UserDao;
 import by.epam.web.entity.User;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -15,12 +15,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 public class UserDaoImpl implements UserDao {
-    private static final Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger();
 
     private static ConnectionPool pool = ConnectionPool.getInstance();
 
@@ -108,12 +107,11 @@ public class UserDaoImpl implements UserDao {
         } catch (SQLException e) {
             throw new DaoException("Failed to register user"+ e.getMessage(), e);
         } finally {
-
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -146,10 +144,10 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException(e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -185,10 +183,10 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException("Failed to find user by login and password"+ e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -224,10 +222,10 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException("Failed to find user by login"+ e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -263,10 +261,10 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException("Failed to find user by id"+ e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -301,10 +299,10 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException("Failed to find users"+ e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(statement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -334,10 +332,10 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException("Failed to change user status"+ e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -363,10 +361,10 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException("Failed to update user "+ e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -388,13 +386,13 @@ public class UserDaoImpl implements UserDao {
 
             return user;
         } catch (SQLException e) {
-            throw new DaoException("Failed to change user name "+ e.getMessage(), e);
+            throw new DaoException("Failed to change user name: "+ e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -426,13 +424,13 @@ public class UserDaoImpl implements UserDao {
 
             return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user by email"+ e.getMessage(), e);
+            throw new DaoException("Failed to find user by email: "+ e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }

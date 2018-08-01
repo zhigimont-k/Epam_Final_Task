@@ -1,8 +1,8 @@
 package by.epam.web.service;
 
 import by.epam.web.dao.DaoException;
-import by.epam.web.dao.order.OrderDao;
-import by.epam.web.dao.order.impl.OrderDaoImpl;
+import by.epam.web.dao.OrderDao;
+import by.epam.web.dao.impl.OrderDaoImpl;
 import by.epam.web.entity.Activity;
 import by.epam.web.entity.Order;
 import by.epam.web.entity.User;

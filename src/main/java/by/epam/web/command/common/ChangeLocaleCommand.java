@@ -2,7 +2,8 @@ package by.epam.web.command.common;
 
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
-import by.epam.web.controller.constant.JspParameter;
+import by.epam.web.constant.PageAddress;
+import by.epam.web.constant.RequestParameter;
 import by.epam.web.util.sessionrequestcontent.NoSuchRequestParameterException;
 import by.epam.web.util.sessionrequestcontent.SessionRequestContent;
 import org.apache.logging.log4j.Level;
@@ -16,14 +17,21 @@ public class ChangeLocaleCommand implements Command {
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
-            String lang = requestContent.getParameter(JspParameter.LANGUAGE);
+            String lang = requestContent.getParameter(RequestParameter.LANGUAGE);
 
             router.setTransitionType(PageRouter.TransitionType.REDIRECT);
             router.setPage(constructRedirectAddress(requestContent));
-            requestContent.setSessionAttribute(JspParameter.LOCAL, lang);
+            requestContent.setSessionAttribute(RequestParameter.LOCAL, lang);
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         }
         return router;
+    }
+
+    private String constructRedirectAddress(SessionRequestContent requestContent)
+            throws NoSuchRequestParameterException{
+        String page = requestContent.getParameter(RequestParameter.PAGE);
+        String query = requestContent.getParameter(RequestParameter.QUERY);
+        return (query.isEmpty()) ? page : PageAddress.SERVLET_NAME + "?" + query;
     }
 }

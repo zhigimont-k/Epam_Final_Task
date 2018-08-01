@@ -2,8 +2,8 @@ package by.epam.web.command.common;
 
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
-import by.epam.web.controller.constant.JspAddress;
-import by.epam.web.controller.constant.JspParameter;
+import by.epam.web.constant.PageAddress;
+import by.epam.web.constant.RequestParameter;
 import by.epam.web.entity.Activity;
 import by.epam.web.entity.Review;
 import by.epam.web.entity.User;
@@ -26,7 +26,7 @@ public class ViewActivityCommand implements Command {
         try {
 
             ActivityService service = ServiceFactory.getInstance().getActivityService();
-            int activityId = Integer.parseInt(requestContent.getParameter(JspParameter.ACTIVITY_ID));
+            int activityId = Integer.parseInt(requestContent.getParameter(RequestParameter.ACTIVITY_ID));
             Optional<Activity> found = service.findActivityById(activityId);
             if (found.isPresent()){
                 ReviewService reviewService = ServiceFactory.getInstance().getReviewService();
@@ -38,19 +38,19 @@ public class ViewActivityCommand implements Command {
                         review.setUserLogin(foundUser.get().getLogin());
                     }
                 }
-                requestContent.setAttribute(JspParameter.ACTIVITY, found.get());
-                requestContent.setAttribute(JspParameter.REVIEW_LIST, reviewList);
+                requestContent.setAttribute(RequestParameter.ACTIVITY, found.get());
+                requestContent.setAttribute(RequestParameter.REVIEW_LIST, reviewList);
 
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);
-                router.setPage(JspAddress.VIEW_ACTIVITY);
+                router.setPage(PageAddress.VIEW_ACTIVITY_PAGE);
             }
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
+            requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.ERROR_PAGE);
+            router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
     }

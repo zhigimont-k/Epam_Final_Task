@@ -1,7 +1,7 @@
-package by.epam.web.dao.order.impl;
+package by.epam.web.dao.impl;
 
 import by.epam.web.dao.DaoException;
-import by.epam.web.dao.order.OrderDao;
+import by.epam.web.dao.OrderDao;
 import by.epam.web.entity.Activity;
 import by.epam.web.entity.Order;
 import by.epam.web.entity.User;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class OrderDaoImpl implements OrderDao {
-    private static final Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger();
 
     private static ConnectionPool pool = ConnectionPool.getInstance();
 
@@ -133,10 +133,10 @@ public class OrderDaoImpl implements OrderDao {
             throw new DaoException("Failed to add order" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -167,10 +167,10 @@ public class OrderDaoImpl implements OrderDao {
             throw new DaoException("Failed to change order status" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -200,10 +200,10 @@ public class OrderDaoImpl implements OrderDao {
             throw new DaoException("Failed to cancel order" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -242,10 +242,10 @@ public class OrderDaoImpl implements OrderDao {
             throw new DaoException("Failed to find orders" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(statement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -285,10 +285,10 @@ public class OrderDaoImpl implements OrderDao {
             throw new DaoException("Failed to find order by id" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -330,10 +330,10 @@ public class OrderDaoImpl implements OrderDao {
             throw new DaoException("Failed to find orders by user" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -376,10 +376,10 @@ public class OrderDaoImpl implements OrderDao {
             throw new DaoException("Failed to find orders by user and order status" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -423,10 +423,10 @@ public class OrderDaoImpl implements OrderDao {
             throw new DaoException("Failed to find activities by order id" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }
@@ -462,11 +462,10 @@ public class OrderDaoImpl implements OrderDao {
             throw new DaoException("Failed to find emails for upcoming orders" + e.getMessage(), e);
         } finally {
             try {
-                pool.releaseConnection(connection);
-                closeStatement(statement);
                 closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
             } catch (PoolException e) {
-                throw new DaoException(e);
+                logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
     }

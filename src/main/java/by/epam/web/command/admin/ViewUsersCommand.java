@@ -2,8 +2,8 @@ package by.epam.web.command.admin;
 
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
-import by.epam.web.controller.constant.JspAddress;
-import by.epam.web.controller.constant.JspParameter;
+import by.epam.web.constant.PageAddress;
+import by.epam.web.constant.RequestParameter;
 import by.epam.web.entity.User;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
@@ -26,15 +26,15 @@ public class ViewUsersCommand implements Command {
             UserService service = ServiceFactory.getInstance().getUserService();
             List<User> userList = service.findAllUsers();
 
-            requestContent.setAttribute(JspParameter.USER_LIST, userList);
+            requestContent.setAttribute(RequestParameter.USER_LIST, userList);
 
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.USERS_PAGE);
+            router.setPage(PageAddress.USERS_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
+            requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.ERROR_PAGE);
+            router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
     }

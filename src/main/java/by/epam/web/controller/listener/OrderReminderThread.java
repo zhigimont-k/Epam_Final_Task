@@ -1,10 +1,10 @@
 package by.epam.web.controller.listener;
 
 import by.epam.web.dao.DaoException;
-import by.epam.web.dao.order.OrderDao;
-import by.epam.web.dao.order.impl.OrderDaoImpl;
-import by.epam.web.dao.user.UserDao;
-import by.epam.web.dao.user.impl.UserDaoImpl;
+import by.epam.web.dao.OrderDao;
+import by.epam.web.dao.impl.OrderDaoImpl;
+import by.epam.web.dao.UserDao;
+import by.epam.web.dao.impl.UserDaoImpl;
 import by.epam.web.entity.User;
 import by.epam.web.pool.ConnectionPool;
 import by.epam.web.util.mail.MailComposer;
@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class OrderReminderThread implements Runnable {
-    private static final Logger logger = LogManager.getLogger();
+class OrderReminderThread implements Runnable {
+    private static Logger logger = LogManager.getLogger();
     private static final ConnectionPool pool = ConnectionPool.getInstance();
 
     @Override

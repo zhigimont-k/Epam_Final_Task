@@ -2,8 +2,8 @@ package by.epam.web.command.common;
 
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
-import by.epam.web.controller.constant.JspAddress;
-import by.epam.web.controller.constant.JspParameter;
+import by.epam.web.constant.PageAddress;
+import by.epam.web.constant.RequestParameter;
 import by.epam.web.entity.Activity;
 import by.epam.web.service.ActivityService;
 import by.epam.web.service.ServiceException;
@@ -26,15 +26,15 @@ public class ViewActivitiesCommand implements Command {
             ActivityService service = ServiceFactory.getInstance().getActivityService();
             List<Activity> activityList = service.findAllActivities();
 
-            requestContent.setAttribute(JspParameter.ACTIVITY_LIST, activityList);
+            requestContent.setAttribute(RequestParameter.ACTIVITY_LIST, activityList);
 
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.ACTIVITIES_PAGE);
+            router.setPage(PageAddress.ACTIVITIES_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
+            requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.ERROR_PAGE);
+            router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
     }

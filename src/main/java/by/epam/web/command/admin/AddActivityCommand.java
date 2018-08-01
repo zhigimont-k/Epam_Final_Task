@@ -2,8 +2,8 @@ package by.epam.web.command.admin;
 
 import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
-import by.epam.web.controller.constant.JspAddress;
-import by.epam.web.controller.constant.JspParameter;
+import by.epam.web.constant.PageAddress;
+import by.epam.web.constant.RequestParameter;
 import by.epam.web.service.ActivityService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
@@ -23,10 +23,10 @@ public class AddActivityCommand implements Command{
         PageRouter router = new PageRouter();
         try {
 
-            String name = requestContent.getParameter(JspParameter.ACTIVITY_NAME);
-            String description = requestContent.getParameter(JspParameter.ACTIVITY_DESCRIPTION);
+            String name = requestContent.getParameter(RequestParameter.ACTIVITY_NAME);
+            String description = requestContent.getParameter(RequestParameter.ACTIVITY_DESCRIPTION);
             BigDecimal price = BigDecimal.valueOf(Double.valueOf(
-                    requestContent.getParameter(JspParameter.ACTIVITY_PRICE)));
+                    requestContent.getParameter(RequestParameter.ACTIVITY_PRICE)));
             logger.log(Level.INFO, name+", "+description+", "+price);
 
             ActivityService service = ServiceFactory.getInstance().getActivityService();
@@ -34,21 +34,21 @@ public class AddActivityCommand implements Command{
             boolean nameExists = service.nameExists(name);
             if (nameExists) {
                 logger.log(Level.INFO, "Activity  " + name + " exists");
-                requestContent.setAttribute(JspParameter.ACTIVITY_EXISTS, true);
+                requestContent.setAttribute(RequestParameter.ACTIVITY_EXISTS, true);
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);
-                router.setPage(JspAddress.REGISTER_PAGE);
+                router.setPage(PageAddress.REGISTER_PAGE);
             } else {
                 service.addActivity(name, description, price);
                 router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-                router.setPage("app?command=viewActivities");
+                router.setPage(PageAddress.VIEW_ACTIVITIES);
             }
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(JspParameter.ERROR_MESSAGE, e.getMessage());
+            requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(JspAddress.ERROR_PAGE);
+            router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
     }

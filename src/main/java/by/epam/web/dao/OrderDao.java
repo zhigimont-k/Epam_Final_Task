@@ -1,4 +1,4 @@
-package by.epam.web.dao.order;
+package by.epam.web.dao;
 
 import by.epam.web.dao.AbstractDao;
 import by.epam.web.dao.DaoException;
