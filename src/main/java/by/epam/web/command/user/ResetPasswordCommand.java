@@ -10,9 +10,9 @@ import by.epam.web.service.ServiceFactory;
 import by.epam.web.service.UserService;
 import by.epam.web.util.mail.MailComposer;
 import by.epam.web.util.mail.MailSenderThread;
-import by.epam.web.util.passwordgenerator.PasswordGenerator;
-import by.epam.web.util.sessionrequestcontent.NoSuchRequestParameterException;
-import by.epam.web.util.sessionrequestcontent.SessionRequestContent;
+import by.epam.web.util.password.PasswordGenerator;
+import by.epam.web.util.request.NoSuchRequestParameterException;
+import by.epam.web.util.request.SessionRequestContent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,7 +21,7 @@ import java.util.Optional;
 
 
 public class ResetPasswordCommand implements Command {
-    private static final Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger();
 
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {

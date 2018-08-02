@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class AccessCheckFilter implements Filter {
-    private static final Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger();
 
     @Override
     public void init(FilterConfig filterConfig) {

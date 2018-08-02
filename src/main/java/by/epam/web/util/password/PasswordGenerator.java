@@ -1,4 +1,4 @@
-package by.epam.web.util.passwordgenerator;
+package by.epam.web.util.password;
 
 import org.apache.commons.text.RandomStringGenerator;
 

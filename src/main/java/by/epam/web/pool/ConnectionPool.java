@@ -22,8 +22,6 @@ public class ConnectionPool {
     private BlockingQueue<ProxyConnection> availableConnections;
     private Deque<ProxyConnection> unavailableConnections;
 
-    private static int poolSize;
-
     private ConnectionPool() {
         ConnectionManager.getInstance().buildPool();
         initPool();
@@ -44,14 +42,10 @@ public class ConnectionPool {
         return instance;
     }
 
-    static void setPoolSize(int newPoolSize) {
-        poolSize = newPoolSize;
-    }
-
     private void initPool() {
         availableConnections = new LinkedBlockingQueue<>();
         unavailableConnections = new ArrayDeque<>();
-        for (int i = 0; i < poolSize; i++) {
+        for (int i = 0; i < ConnectionManager.getInstance().getPoolSize(); i++) {
             try {
                 createConnection();
             } catch (SQLException e) {
@@ -63,7 +57,8 @@ public class ConnectionPool {
             logger.fatal("Couldn't create any connections");
             throw new RuntimeException("Couldn't create any connections");
         } else if (availableConnections.size() < ConnectionManager.INITIAL_POOL_SIZE) {
-            for (int i = availableConnections.size() - 1; i < poolSize; i++) {
+            for (int i = availableConnections.size() - 1;
+                 i < ConnectionManager.getInstance().getPoolSize(); i++) {
                 try {
                     createConnection();
                 } catch (SQLException e) {
@@ -96,7 +91,7 @@ public class ConnectionPool {
 
     private void createConnection() throws PoolException {
         try {
-            availableConnections.add(ConnectionManager.createConnection());
+            availableConnections.add(ConnectionManager.getInstance().createConnection());
         } catch (SQLException e) {
             throw new PoolException("Couldn't create connection: " + e.getMessage(), e);
         }

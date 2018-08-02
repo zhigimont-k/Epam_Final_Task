@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.Properties;
 
 public class MailSenderThread extends Thread {
-    private static final Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger();
     private static final String FROM_MAIL = "catbeautysalonmeow@gmail.com";
     private String mailTo;
     private String mailFrom;

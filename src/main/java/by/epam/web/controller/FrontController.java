@@ -3,7 +3,7 @@ package by.epam.web.controller;
 import by.epam.web.command.Command;
 import by.epam.web.command.CommandFactory;
 import by.epam.web.constant.RequestParameter;
-import by.epam.web.util.sessionrequestcontent.SessionRequestContent;
+import by.epam.web.util.request.SessionRequestContent;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

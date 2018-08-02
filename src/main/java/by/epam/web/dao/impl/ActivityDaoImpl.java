@@ -79,8 +79,6 @@ public class ActivityDaoImpl implements ActivityDao {
                 activity.setStatus(added.get().getStatus());
             }
 
-            logger.log(Level.INFO, "Added activity: " + activity);
-
             return activity;
         } catch (SQLException e) {
             throw new DaoException("Failed to add activity: " + e.getMessage(), e);
@@ -188,7 +186,6 @@ public class ActivityDaoImpl implements ActivityDao {
                 activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim());
                 activity.setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD));
                 activity.setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD));
-                logger.log(Level.INFO, "Found activity: " + activity);
                 activityList.add(activity);
             }
             return activityList;
@@ -219,7 +216,6 @@ public class ActivityDaoImpl implements ActivityDao {
                 preparedStatement.setString(1, status);
                 preparedStatement.setInt(2, id);
                 logger.log(Level.INFO, preparedStatement);
-                logger.log(Level.INFO, "Setting activity's " + id + " status to " + status);
                 preparedStatement.executeUpdate();
             } else {
                 throw new DaoException("Couldn't find activity by id: " + id);
@@ -258,7 +254,6 @@ public class ActivityDaoImpl implements ActivityDao {
                 activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim());
                 activity.setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD));
                 activity.setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD));
-                logger.log(Level.INFO, "Found available activity: " + activity);
                 activityList.add(activity);
             }
             return activityList;

@@ -85,8 +85,6 @@ public class ReviewDaoImpl implements ReviewDao {
                 throw new DaoException("Couldn't retrieve review's ID and creation date");
             }
 
-            logger.log(Level.INFO, "Added review: " + review);
-
             return review;
         } catch (SQLException e) {
             throw new DaoException("Failed to add review" + e.getMessage(), e);
@@ -155,7 +153,6 @@ public class ReviewDaoImpl implements ReviewDao {
                 review.setCreationDate(resultSet.getTimestamp(DB_REVIEW_CREATION_DATE_FIELD));
                 review.setMark(resultSet.getInt(DB_REVIEW_MARK_FIELD));
                 review.setMessage(resultSet.getString(DB_REVIEW_MESSAGE_FIELD));
-                logger.log(Level.INFO, "Found review: " + review);
                 result = Optional.of(review);
             }
 
@@ -195,7 +192,6 @@ public class ReviewDaoImpl implements ReviewDao {
                 review.setCreationDate(resultSet.getTimestamp(DB_REVIEW_CREATION_DATE_FIELD));
                 review.setMark(resultSet.getInt(DB_REVIEW_MARK_FIELD));
                 review.setMessage(resultSet.getString(DB_REVIEW_MESSAGE_FIELD));
-                logger.log(Level.INFO, "Found review: " + review);
                 reviewList.add(review);
             }
 
@@ -234,7 +230,6 @@ public class ReviewDaoImpl implements ReviewDao {
                 review.setCreationDate(resultSet.getTimestamp(DB_REVIEW_CREATION_DATE_FIELD));
                 review.setMark(resultSet.getInt(DB_REVIEW_MARK_FIELD));
                 review.setMessage(resultSet.getString(DB_REVIEW_MESSAGE_FIELD));
-                logger.log(Level.INFO, "Found review: " + review);
                 reviewList.add(review);
             }
 
@@ -262,7 +257,6 @@ public class ReviewDaoImpl implements ReviewDao {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
 
-            logger.log(Level.INFO, "Deleted review: " + id);
         } catch (SQLException e) {
             throw new DaoException("Failed to find review by user id" + e.getMessage(), e);
         } finally {

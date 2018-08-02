@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public class SessionInvalidationFilter implements Filter{
-    private static final Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger();
     @Override
     public void init(FilterConfig filterConfig) {
 

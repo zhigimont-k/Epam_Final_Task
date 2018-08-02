@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -60,9 +61,30 @@ public class UserDaoImpl implements UserDao {
     private static final String UPDATE_USER = "UPDATE user " +
             "SET password = SHA1(?), user_name = ? " +
             "WHERE user_id = ?";
-
     private static final String UPDATE_USER_NAME = "UPDATE user " +
             "SET user_name = ? " +
+            "WHERE user_id = ?";
+    private static final String ADD_MONEY_TO_CARD = "UPDATE card " +
+            "SET money = money + ?" +
+            "WHERE card_id = (" +
+            "SELECT card_id FROM user " +
+            "WHERE user_id = ?)";
+    private static final String PAY_FOR_ORDER = "UPDATE card " +
+            "SET money = money - " +
+            "(SELECT order_price " +
+            "FROM order_info " +
+            "WHERE order_id = ?) " +
+            "WHERE card_id = ( " +
+            "SELECT card_id " +
+            "FROM user " +
+            "WHERE user_id = ?) ";
+    private static final String ADD_CARD = "INSERT INTO card " +
+            "(card_number) " +
+            "VALUES (?)";
+    private static final String LINK_CARD_WITH_USER = "UPDATE user " +
+            "SET card_id = (" +
+            "SELECT card_id FROM card" +
+            "WHERE card_number = ?) " +
             "WHERE user_id = ?";
 
     @Override
@@ -101,11 +123,9 @@ public class UserDaoImpl implements UserDao {
                 throw new DaoException("Couldn't retrieve user's ID and status");
             }
 
-            logger.log(Level.INFO, "Registered user: " + user);
-
             return user;
         } catch (SQLException e) {
-            throw new DaoException("Failed to register user"+ e.getMessage(), e);
+            throw new DaoException("Failed to register user" + e.getMessage(), e);
         } finally {
             try {
                 closeStatement(preparedStatement);
@@ -180,7 +200,7 @@ public class UserDaoImpl implements UserDao {
 
             return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user by login and password"+ e.getMessage(), e);
+            throw new DaoException("Failed to find user by login and password: " + e.getMessage(), e);
         } finally {
             try {
                 closeStatement(preparedStatement);
@@ -219,7 +239,7 @@ public class UserDaoImpl implements UserDao {
 
             return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user by login"+ e.getMessage(), e);
+            throw new DaoException("Failed to find user by login: " + e.getMessage(), e);
         } finally {
             try {
                 closeStatement(preparedStatement);
@@ -258,7 +278,7 @@ public class UserDaoImpl implements UserDao {
 
             return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user by id"+ e.getMessage(), e);
+            throw new DaoException("Failed to find user by id: " + e.getMessage(), e);
         } finally {
             try {
                 closeStatement(preparedStatement);
@@ -291,12 +311,11 @@ public class UserDaoImpl implements UserDao {
                 user.setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD));
                 user.setUserName(resultSet.getString(DB_USER_NAME_FIELD));
                 user.setStatus(resultSet.getString(DB_USER_STATUS_FIELD));
-                logger.log(Level.INFO, "Found user: " + user);
                 userList.add(user);
             }
             return userList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find users"+ e.getMessage(), e);
+            throw new DaoException("Failed to find users" + e.getMessage(), e);
         } finally {
             try {
                 closeStatement(statement);
@@ -321,7 +340,6 @@ public class UserDaoImpl implements UserDao {
                 preparedStatement = connection.prepareStatement(UPDATE_USER_STATUS);
                 preparedStatement.setString(1, status);
                 preparedStatement.setString(2, login);
-                logger.log(Level.INFO, "Setting user's " + login + " status to " + status);
                 preparedStatement.executeUpdate();
             } else {
                 throw new DaoException("Couldn't find user by login: " + login);
@@ -329,7 +347,7 @@ public class UserDaoImpl implements UserDao {
 
             return user;
         } catch (SQLException e) {
-            throw new DaoException("Failed to change user status"+ e.getMessage(), e);
+            throw new DaoException("Failed to change user status: " + e.getMessage(), e);
         } finally {
             try {
                 closeStatement(preparedStatement);
@@ -358,7 +376,7 @@ public class UserDaoImpl implements UserDao {
 
             return user;
         } catch (SQLException e) {
-            throw new DaoException("Failed to update user "+ e.getMessage(), e);
+            throw new DaoException("Failed to update user: " + e.getMessage(), e);
         } finally {
             try {
                 closeStatement(preparedStatement);
@@ -386,7 +404,7 @@ public class UserDaoImpl implements UserDao {
 
             return user;
         } catch (SQLException e) {
-            throw new DaoException("Failed to change user name: "+ e.getMessage(), e);
+            throw new DaoException("Failed to change user name: " + e.getMessage(), e);
         } finally {
             try {
                 closeStatement(preparedStatement);
@@ -398,7 +416,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> findUserByEmail(String email) throws DaoException{
+    public Optional<User> findUserByEmail(String email) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -424,7 +442,61 @@ public class UserDaoImpl implements UserDao {
 
             return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user by email: "+ e.getMessage(), e);
+            throw new DaoException("Failed to find user by email: " + e.getMessage(), e);
+        } finally {
+            try {
+                closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
+            } catch (PoolException e) {
+                logger.log(Level.ERROR, e.getMessage(), e);
+            }
+        }
+    }
+
+    public Optional<User> addMoneyToCard(int userId, BigDecimal amount) throws DaoException {
+        ProxyConnection connection = null;
+        PreparedStatement preparedStatement = null;
+        Optional<User> user;
+        try {
+            connection = pool.getConnection();
+
+            preparedStatement = connection.prepareStatement(ADD_MONEY_TO_CARD);
+            preparedStatement.setBigDecimal(1, amount);
+            preparedStatement.setInt(2, userId);
+            preparedStatement.executeUpdate();
+
+            user = findUserById(userId);
+
+            return user;
+        } catch (SQLException e) {
+            throw new DaoException("Failed to add money to card: " + e.getMessage(), e);
+        } finally {
+            try {
+                closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
+            } catch (PoolException e) {
+                logger.log(Level.ERROR, e.getMessage(), e);
+            }
+        }
+    }
+
+    public Optional<User> payForOrder(int userId, int orderId) throws DaoException {
+        ProxyConnection connection = null;
+        PreparedStatement preparedStatement = null;
+        Optional<User> user;
+        try {
+            connection = pool.getConnection();
+
+            preparedStatement = connection.prepareStatement(PAY_FOR_ORDER);
+            preparedStatement.setInt(1, orderId);
+            preparedStatement.setInt(2, userId);
+            preparedStatement.executeUpdate();
+
+            user = findUserById(userId);
+
+            return user;
+        } catch (SQLException e) {
+            throw new DaoException("Failed to pay for order: " + e.getMessage(), e);
         } finally {
             try {
                 closeStatement(preparedStatement);

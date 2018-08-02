@@ -28,6 +28,7 @@ public class OrderDaoImpl implements OrderDao {
     private static final String DB_ORDER_SERVICE_ID_FIELD = "service_id";
     private static final String DB_ORDER_STATUS_FIELD = "order_status";
     private static final String DB_ORDER_TIME_FIELD = "order_time";
+    private static final String DB_ORDER_PRICE_FIELD = "order_price";
 
     private static final String DB_ACTIVITY_ID_FIELD = "service_id";
     private static final String DB_ACTIVITY_NAME_FIELD = "service_name";
@@ -48,37 +49,34 @@ public class OrderDaoImpl implements OrderDao {
     private static final String UPDATE_ORDER_STATUS = "UPDATE order_info " +
             "SET order_status = ?, order_time = order_time WHERE order_id = ?";
     private static final String FIND_ALL_ORDERS = "SELECT order_info.order_id, " +
-            "order_info.user_id, order_info.order_status, order_info.order_time " +
+            "order_info.user_id, order_info.order_status, order_info.order_time, order_info.order_price " +
             "FROM order_info ";
     private static final String FIND_ORDER_BY_ID = "SELECT order_info.order_id, " +
-            "order_info.user_id, order_info.order_status, order_info.order_time " +
+            "order_info.user_id, order_info.order_status, order_info.order_time, order_info.order_price " +
             "FROM order_info " +
             "WHERE order_info.order_id = ?";
     private static final String FIND_ORDERS_BY_USER_ID = "SELECT order_info.order_id, " +
-            "order_info.user_id, order_info.order_status, order_info.order_time " +
+            "order_info.user_id, order_info.order_status, order_info.order_time, order_info.order_price " +
             "FROM order_info " +
             "WHERE order_info.user_id = ?";
-    private static final String FIND_ORDERS_BY_USER_ID_AND_ORDER_STATUS =
-            "SELECT order_info.order_id, " +
-                    "order_info.user_id, order_info.order_status, order_info.order_time " +
-                    "FROM order_info " +
-                    "WHERE order_info.user_id = ? AND order_info.order_status = ?";
     private static final String FIND_ACTIVITIES_BY_ORDER_ID = "SELECT service.service_id, " +
             "service_name, service_description, service_status, service_price FROM service " +
             "JOIN order_link ON service.service_id = order_link.service_id " +
             "WHERE order_id = ?";
     private static final String FIND_EMAILS_FOR_UPCOMING_ORDERS =
             "SELECT DISTINCT user.user_email, order_info.order_id " +
-            "FROM user " +
-            "JOIN order_info " +
-            "ON order_info.user_id = user.user_id " +
-            "WHERE DATE(order_time) <= CURRENT_DATE + INTERVAL 1 DAY " +
-            "AND order_info.order_status = 'confirmed' AND order_info.reminded = 0";
+                    "FROM user " +
+                    "JOIN order_info " +
+                    "ON order_info.user_id = user.user_id " +
+                    "WHERE DATE(order_time) <= CURRENT_DATE + INTERVAL 1 DAY " +
+                    "AND order_info.order_status = 'confirmed' AND order_info.reminded = 0";
     private static final String SET_ORDER_REMINDED = "UPDATE order_info " +
             "SET reminded = 1, order_time = order_time WHERE order_id = ?";
+    private static final String SET_ORDER_PRICE = "UPDATE order_info " +
+            "SET order_price = ?, order_time = order_time WHERE order_id = ?";
 
     @Override
-    public Order addOrder(Order order) throws DaoException {
+    public void addOrder(Order order) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -104,7 +102,6 @@ public class OrderDaoImpl implements OrderDao {
             if (resultSet.next()) {
                 int orderId = resultSet.getInt(1);
                 order.setId(orderId);
-                logger.log(Level.INFO, "Added order info: " + order);
                 Optional<Order> added = findOrderById(orderId);
                 if (added.isPresent()) {
                     order.setStatus(added.get().getStatus());
@@ -122,13 +119,16 @@ public class OrderDaoImpl implements OrderDao {
                 preparedStatement.executeUpdate();
             }
 
-            order.setPrice(calculateOrderPrice(order.getId()));
+            preparedStatement = connection.prepareStatement(SET_ORDER_PRICE);
+            preparedStatement.setBigDecimal(1, calculateOrderPrice(order.getActivityList()));
+            preparedStatement.setInt(2, order.getId());
+            logger.log(Level.INFO, "Prepared statement: " + preparedStatement);
+            preparedStatement.executeUpdate();
+
             connection.commit();
             connection.setAutoCommit(true);
 
-            logger.log(Level.INFO, "Added order: " + order);
 
-            return order;
         } catch (SQLException e) {
             throw new DaoException("Failed to add order" + e.getMessage(), e);
         } finally {
@@ -156,7 +156,6 @@ public class OrderDaoImpl implements OrderDao {
                 preparedStatement.setString(1, status);
                 preparedStatement.setInt(2, id);
                 logger.log(Level.INFO, preparedStatement);
-                logger.log(Level.INFO, "Setting order's " + id + " status to " + status);
                 preparedStatement.executeUpdate();
             } else {
                 throw new DaoException("Couldn't find order by id: " + id);
@@ -188,8 +187,6 @@ public class OrderDaoImpl implements OrderDao {
             if (order.isPresent()) {
                 preparedStatement = connection.prepareStatement(CANCEL_ORDER);
                 preparedStatement.setInt(1, id);
-                logger.log(Level.INFO, preparedStatement);
-                logger.log(Level.INFO, "Cancelling order " + id);
                 preparedStatement.executeUpdate();
             } else {
                 throw new DaoException("Couldn't find order by id: " + id);
@@ -228,13 +225,11 @@ public class OrderDaoImpl implements OrderDao {
                 order.setUserId(resultSet.getInt(DB_ORDER_USER_ID_FIELD));
                 order.setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD));
                 order.setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD));
+                order.setPrice(resultSet.getBigDecimal(DB_ORDER_PRICE_FIELD));
                 List<Activity> activityList = findActivitiesByOrderId(currentOrderId);
                 for (Activity activity : activityList) {
                     order.addActivity(activity);
                 }
-
-                order.setPrice(calculateOrderPrice(order.getId()));
-                logger.log(Level.INFO, "Found order: " + order);
                 orderList.add(order);
             }
             return orderList;
@@ -271,13 +266,12 @@ public class OrderDaoImpl implements OrderDao {
                 order.setUserId(resultSet.getInt(DB_ORDER_USER_ID_FIELD));
                 order.setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD));
                 order.setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD));
+                order.setPrice(resultSet.getBigDecimal(DB_ORDER_PRICE_FIELD));
                 List<Activity> activityList = findActivitiesByOrderId(id);
                 for (Activity activity : activityList) {
                     order.addActivity(activity);
                 }
 
-                order.setPrice(calculateOrderPrice(order.getId()));
-                logger.log(Level.INFO, "Found order by id: " + order);
                 result = Optional.of(order);
             }
             return result;
@@ -316,13 +310,11 @@ public class OrderDaoImpl implements OrderDao {
                 order.setUserId(userId);
                 order.setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD));
                 order.setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD));
+                order.setPrice(resultSet.getBigDecimal(DB_ORDER_PRICE_FIELD));
                 List<Activity> activityList = findActivitiesByOrderId(currentOrderId);
                 for (Activity activity : activityList) {
                     order.addActivity(activity);
                 }
-
-                order.setPrice(calculateOrderPrice(order.getId()));
-                logger.log(Level.INFO, "Found order: " + order);
                 orderList.add(order);
             }
             return orderList;
@@ -362,13 +354,11 @@ public class OrderDaoImpl implements OrderDao {
                 order.setUserId(userId);
                 order.setStatus(status);
                 order.setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD));
+                order.setPrice(resultSet.getBigDecimal(DB_ORDER_PRICE_FIELD));
                 List<Activity> activityList = findActivitiesByOrderId(currentOrderId);
                 for (Activity activity : activityList) {
                     order.addActivity(activity);
                 }
-
-                order.setPrice(calculateOrderPrice(order.getId()));
-                logger.log(Level.INFO, "Found order: " + order);
                 orderList.add(order);
             }
             return orderList;
@@ -384,9 +374,7 @@ public class OrderDaoImpl implements OrderDao {
         }
     }
 
-    @Override
-    public BigDecimal calculateOrderPrice(int orderId) throws DaoException {
-        List<Activity> activityList = findActivitiesByOrderId(orderId);
+    private BigDecimal calculateOrderPrice(List<Activity> activityList) {
         BigDecimal totalPrice = BigDecimal.ZERO;
         for (Activity activity : activityList) {
             totalPrice = totalPrice.add(activity.getPrice());
@@ -450,18 +438,17 @@ public class OrderDaoImpl implements OrderDao {
             }
             preparedStatement = connection.prepareStatement(SET_ORDER_REMINDED);
 
-            for (int orderId : orderIdList){
+            for (int orderId : orderIdList) {
                 preparedStatement.setInt(1, orderId);
                 preparedStatement.executeUpdate();
             }
-
-            logger.log(Level.INFO, "List for email sending: "+emailList);
 
             return emailList;
         } catch (SQLException e) {
             throw new DaoException("Failed to find emails for upcoming orders" + e.getMessage(), e);
         } finally {
             try {
+                closeStatement(statement);
                 closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {

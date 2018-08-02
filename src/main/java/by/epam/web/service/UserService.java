@@ -108,4 +108,8 @@ public class UserService {
             throw new ServiceException(e);
         }
     }
+
+    public void findUserByIdAndCard(int id, int cardNumber){
+
+    }
 }

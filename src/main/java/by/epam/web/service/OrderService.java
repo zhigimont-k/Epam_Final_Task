@@ -17,7 +17,7 @@ public class OrderService {
     OrderService() {
     }
 
-    public Order addOrder(int userId, Timestamp time, List<Activity> activityList) throws ServiceException {
+    public void addOrder(int userId, Timestamp time, List<Activity> activityList) throws ServiceException {
         Order order;
         try {
             order = new Order();
@@ -26,7 +26,7 @@ public class OrderService {
             for (Activity activity : activityList) {
                 order.addActivity(activity);
             }
-            return orderDao.addOrder(order);
+            orderDao.addOrder(order);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

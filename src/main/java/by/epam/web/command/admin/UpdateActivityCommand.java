@@ -8,8 +8,8 @@ import by.epam.web.entity.Activity;
 import by.epam.web.service.ActivityService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
-import by.epam.web.util.sessionrequestcontent.NoSuchRequestParameterException;
-import by.epam.web.util.sessionrequestcontent.SessionRequestContent;
+import by.epam.web.util.request.NoSuchRequestParameterException;
+import by.epam.web.util.request.SessionRequestContent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 public class UpdateActivityCommand implements Command {
-    private static final Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger();
 
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {

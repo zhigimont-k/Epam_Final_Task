@@ -11,6 +11,9 @@ public class MailComposer {
     private static final String ORDER_REMINDER_MESSAGE = "Dear %s, you have an " +
             "upcoming order in CBB soon. Thank you for using our service. Have a nice day.";
 
+
+    private MailComposer(){}
+
     public static String getResetPasswordMessage(String newPassword){
         return String.format(PASSWORD_RESET_MESSAGE, newPassword);
     }
@@ -27,5 +30,4 @@ public class MailComposer {
         return ORDER_REMINDER_MESSAGE_THEME;
     }
 
-    private MailComposer(){}
 }

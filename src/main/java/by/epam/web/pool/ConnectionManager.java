@@ -23,9 +23,11 @@ class ConnectionManager {
     private static final String DATABASE_POOL_SIZE = BASE_NAME + ".poolSize";
     private static final String DATABASE_URL = BASE_NAME + ".url";
 
-    private static String url;
-    private static String user;
-    private static String password;
+    private String url;
+    private String user;
+    private String password;
+
+    private int poolSize;
 
     private ConnectionManager() {
     }
@@ -38,7 +40,7 @@ class ConnectionManager {
         register();
     }
 
-    private static void register() {
+    private void register() {
         ResourceBundle bundle = ResourceBundle.getBundle(BASE_NAME);
         if (bundle == null) {
             logger.fatal("Couldn't process DB property file");
@@ -55,9 +57,8 @@ class ConnectionManager {
         Pattern pattern = Pattern.compile(NUMERICAL_PATTERN);
         Matcher matcher = pattern.matcher(poolSizeString);
 
-        int poolSize = (matcher.matches() && Integer.parseInt(poolSizeString) <= MAX_POOL_SIZE)
+        poolSize = (matcher.matches() && Integer.parseInt(poolSizeString) <= MAX_POOL_SIZE)
                 ? Integer.parseInt(poolSizeString) : INITIAL_POOL_SIZE;
-        ConnectionPool.setPoolSize(poolSize);
 
         logger.log(Level.INFO, "Initial connection pool size: " + poolSize);
 
@@ -69,9 +70,11 @@ class ConnectionManager {
         }
     }
 
-    static ProxyConnection createConnection() throws SQLException {
+    ProxyConnection createConnection() throws SQLException {
         return new ProxyConnection(DriverManager.getConnection(url, user, password));
     }
 
-
+    int getPoolSize() {
+        return poolSize;
+    }
 }
