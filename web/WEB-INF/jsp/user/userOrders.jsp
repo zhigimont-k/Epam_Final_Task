@@ -45,6 +45,8 @@
                     <td>${order.id}</td>
                     <td>${order.dateTime}</td>
                     <td>${order.status}</td>
+
+                    <td>${order.paid}</td>
                     <td><c:forEach var="activity" items="${order.activityList}">
                         <a href="app?command=viewActivity&activityId=${activity.id}">${activity.name}</a>
                         <br/>
@@ -53,9 +55,13 @@
                     <td>${order.price}</td>
                     <c:if test="${order.status ne 'cancelled' && order.status ne 'finished'}">
                     <td>
-                        <input type="hidden" name="command" value="cancelOrder"/>
-                        <input type="submit" value="${cancelBtn}">
+                        <a href="app?command=cancelOrder&orderId=${order.id}">${cancelBtn}</a>
                     </td>
+                    </c:if>
+                    <c:if test="${order.paid eq false && order.status ne 'cancelled' && order.status ne 'finished'}">
+                        <td>
+                            <a href="app?command=payForOrder&orderId=${order.id}">pay</a>
+                        </td>
                     </c:if>
 
 

@@ -65,6 +65,12 @@
             <label>${userNameLabel}
                 <input type="text" name="userName" maxlength="20" minlength="3"/></label>
             <br/>
+            <label>Номер карты*
+                <input type="text" name="cardNumber" maxlength="16" minlength="16"/></label>
+            <c:if test="${cardNumberExists == true}">
+                <%--${phoneNumberWarning}--%>
+            </c:if>
+            <br/>
             <input type="submit" value="${button}"/>
         </form>
 

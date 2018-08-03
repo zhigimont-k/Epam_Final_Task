@@ -16,6 +16,7 @@ public final class PageAddress {
     public static final String EDIT_REVIEW_PAGE = "/editReview";
     public static final String VIEW_ORDER_PAGE = "/viewOrder";
     public static final String ADD_ORDER_PAGE = "/addOrder";
+    public static final String ADD_MONEY_PAGE = "/addMoney";
 
     public static final String VIEW_ACTIVITIES = "app?command=viewActivities";
     public static final String VIEW_ALL_ORDERS = "app?command=viewAllOrders";

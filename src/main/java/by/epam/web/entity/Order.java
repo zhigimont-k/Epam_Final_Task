@@ -25,6 +25,7 @@ public class Order extends Entity {
     private Status status;
     private Timestamp dateTime;
     private BigDecimal price;
+    private boolean paid;
 
     public int getId() {
         return id;
@@ -120,6 +121,14 @@ public class Order extends Entity {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public boolean getPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
     }
 
     @Override

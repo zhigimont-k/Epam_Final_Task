@@ -15,30 +15,21 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
-public class AddMoneyToCardCommand implements Command {
+public class ViewUserInfoCommand implements Command {
     private static Logger logger = LogManager.getLogger();
 
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
-
-            UserService service = ServiceFactory.getInstance().getUserService();
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
-            String cardNumber = requestContent.getParameter("cardNumber");
-            String moneyToAdd = requestContent.getParameter("money");
-            if (service.findUserByIdAndCard(user.getId(), cardNumber).isPresent()) {
-                service.addMoneyToCard(cardNumber,
-                        BigDecimal.valueOf(Double.parseDouble(moneyToAdd)));
-            } else {
-                requestContent.setAttribute(RequestParameter.AUTH_FAIL, true);
-                router.setTransitionType(PageRouter.TransitionType.FORWARD);
-                router.setPage(PageAddress.ADD_MONEY_PAGE);
-            }
-
-            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-            router.setPage(PageAddress.HOME_PAGE);
+            UserService service = ServiceFactory.getInstance().getUserService();
+            BigDecimal money = service.findMoneyByCardNumber(user.getCardNumber());
+            requestContent.setAttribute("money", money);
+            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setPage(PageAddress.ACCOUNT_PAGE);
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {

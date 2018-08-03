@@ -19,6 +19,8 @@ public enum CommandType {
     VIEW_USERS("viewUsers", new ViewUsersCommand(), CommandAccessLevel.ADMIN),
     CHANGE_USER_STATUS("changeUserStatus", new ChangeUserStatusCommand(), CommandAccessLevel.ADMIN),
     UPDATE_USER("updateUser", new UpdateUserCommand(), CommandAccessLevel.USER),
+    ADD_MONEY_TO_CARD("addMoneyToCard", new AddMoneyToCardCommand(), CommandAccessLevel.USER),
+    VIEW_USER_INFO("viewUserInfo", new ViewUserInfoCommand(), CommandAccessLevel.USER),
 
     ADD_ACTIVITY("addActivity", new AddActivityCommand(), CommandAccessLevel.ADMIN),
     EDIT_ACTIVITY("editActivity", new EditActivityCommand(), CommandAccessLevel.ADMIN),
@@ -29,6 +31,7 @@ public enum CommandType {
     CREATE_ORDER("createOrder", new CreateOrderCommand(), CommandAccessLevel.USER),
     VIEW_ORDER("viewOrder", new ViewOrderCommand(), CommandAccessLevel.USER),
     ADD_ORDER("addOrder", new AddOrderCommand(), CommandAccessLevel.USER),
+    PAY_FOR_ORDER("payForOrder", new PayForOrderCommand(), CommandAccessLevel.USER),
     CHANGE_ORDER_STATUS("changeOrderStatus", new ChangeOrderStatusCommand(), CommandAccessLevel.ADMIN),
     CANCEL_ORDER("cancelOrder", new CancelOrderCommand(), CommandAccessLevel.USER),
     VIEW_USER_ORDERS("viewUserOrders", new ViewUserOrdersCommand(), CommandAccessLevel.USER),

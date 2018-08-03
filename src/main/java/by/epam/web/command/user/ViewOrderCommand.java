@@ -56,7 +56,6 @@ public class ViewOrderCommand implements Command {
             for (Activity activity : activityList) {
                 order.addActivity(activity);
             }
-            logger.log(Level.INFO, "Viewing order: " + order);
             requestContent.setSessionAttribute(RequestParameter.ORDER, order);
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(PageAddress.VIEW_ORDER_PAGE);

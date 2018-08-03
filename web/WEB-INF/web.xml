@@ -158,6 +158,15 @@
         <url-pattern>/viewOrder</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Add money</servlet-name>
+        <jsp-file>/WEB-INF/jsp/user/addMoneyToCard.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Add money</servlet-name>
+        <url-pattern>/addMoney</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>encodingFilter</filter-name>
         <filter-class>by.epam.web.controller.filter.EncodingFilter</filter-class>

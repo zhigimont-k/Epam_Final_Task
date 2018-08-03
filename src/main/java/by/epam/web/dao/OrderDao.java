@@ -20,4 +20,6 @@ public interface OrderDao extends AbstractDao<Order> {
     List<Order> findOrdersByUserAndStatus(User user, String status) throws DaoException;
     List<Activity> findActivitiesByOrderId(int id) throws DaoException;
     List<String> findEmailsForUpcomingOrders() throws DaoException;
+    void returnMoneyFromOrder(int orderId) throws DaoException;
+    void payForOrder(int orderId) throws DaoException;
 }

@@ -27,12 +27,14 @@ public class RegisterCommand implements Command {
             String email = requestContent.getParameter(RequestParameter.EMAIL);
             String userName = requestContent.getParameter(RequestParameter.USER_NAME);
             String phoneNumber = requestContent.getParameter(RequestParameter.PHONE_NUMBER);
+            String cardNumber = requestContent.getParameter("cardNumber");
 
             UserService service = ServiceFactory.getInstance().getUserService();
 
             boolean loginExists = service.loginExists(login);
             boolean emailExists = service.emailExists(email);
             boolean phoneNumberExists = service.phoneNumberExists(phoneNumber);
+            boolean cardNumberExists = service.cardNumberExists(cardNumber);
             if (loginExists) {
                 logger.log(Level.INFO, "Login " + login + " exists");
                 requestContent.setAttribute(RequestParameter.LOGIN_EXISTS, true);

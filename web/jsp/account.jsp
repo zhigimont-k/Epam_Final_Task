@@ -59,6 +59,10 @@
         <br/>
         ${phoneNumberLabel}: ${sessionScope.user.phoneNumber}
         <br/>
+        Card number: ${sessionScope.user.cardNumber}
+        <br/>
+        Money on card: ${money}
+        <br/>
         <label>${userNameLabel}:
             <input type="text" name="userName" value="${sessionScope.user.userName}"
                    maxlength="20" minlength="3"/></label>

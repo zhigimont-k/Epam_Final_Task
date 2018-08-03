@@ -5,6 +5,7 @@ import by.epam.web.dao.UserDao;
 import by.epam.web.dao.impl.UserDaoImpl;
 import by.epam.web.entity.User;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,6 +62,14 @@ public class UserService {
         }
     }
 
+    public boolean cardNumberExists(String cardNumber) throws ServiceException {
+        try {
+            return userDao.propertyExists(UserDaoImpl.UniqueUserInfo.CARD_NUMBER, cardNumber);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
     public Optional<User> findUserByEmail(String email) throws ServiceException {
         try {
             return userDao.findUserByEmail(email);
@@ -109,7 +118,27 @@ public class UserService {
         }
     }
 
-    public void findUserByIdAndCard(int id, int cardNumber){
+    public Optional<User> findUserByIdAndCard(int userId, String cardNumber) throws ServiceException{
+        try {
+            return userDao.findUserByIdAndCardNumber(userId, cardNumber);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
 
+    public void addMoneyToCard(String cardNumber, BigDecimal money) throws ServiceException {
+        try {
+            userDao.addMoneyToCard(cardNumber, money);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public BigDecimal findMoneyByCardNumber(String cardNumber) throws ServiceException{
+        try{
+            return userDao.findMoneyByCardNumber(cardNumber);
+        } catch (DaoException e){
+            throw new ServiceException(e);
+        }
     }
 }

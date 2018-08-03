@@ -32,16 +32,20 @@ public class UserDaoImpl implements UserDao {
     private static final String DB_PHONE_NUMBER_FIELD = "phone_number";
     private static final String DB_USER_STATUS_FIELD = "user_status";
 
+    private static final String DB_CARD_NUMBER_FIELD = "card_number";
+
     private static final String INSERT_USER = "INSERT INTO user " +
             "(login, password, user_email, phone_number, user_name) " +
             "VALUES (?, SHA1(?), ?, ?, ?)";
     private static final String FIND_USER_BY_ID = "SELECT user.user_id, " +
-            "user.login, user.password, user.user_email, user.phone_number, user.user_name, user.user_status " +
-            "FROM user " +
-            "WHERE user.user_id = ?";
+            "user.login, user.password, user.user_email, user.phone_number, user.user_name, user.user_status, card.card_number " +
+            "FROM user, card " +
+            "WHERE user.user_id = ? AND card.user_id = user.user_id";
     private static final String FIND_USER_BY_LOGIN = "SELECT user.user_id, " +
-            "user.login, user.password, user.user_email, user.phone_number, user.user_name, user.user_status " +
+            "user.login, user.password, user.user_email, user.phone_number, user.user_name, user.user_status, card_number " +
             "FROM user " +
+            "JOIN card " +
+            "ON user.user_id = card.user_id " +
             "WHERE user.login = ?";
     private static final String FIND_USER_BY_EMAIL = "SELECT user.user_id, " +
             "user.login, user.password, user.user_email, user.phone_number, user.user_name, user.user_status " +
@@ -65,27 +69,21 @@ public class UserDaoImpl implements UserDao {
             "SET user_name = ? " +
             "WHERE user_id = ?";
     private static final String ADD_MONEY_TO_CARD = "UPDATE card " +
-            "SET money = money + ?" +
-            "WHERE card_id = (" +
-            "SELECT card_id FROM user " +
-            "WHERE user_id = ?)";
-    private static final String PAY_FOR_ORDER = "UPDATE card " +
-            "SET money = money - " +
-            "(SELECT order_price " +
-            "FROM order_info " +
-            "WHERE order_id = ?) " +
-            "WHERE card_id = ( " +
-            "SELECT card_id " +
-            "FROM user " +
-            "WHERE user_id = ?) ";
+            "SET money = money + ? " +
+            "WHERE card_number = ?";
     private static final String ADD_CARD = "INSERT INTO card " +
-            "(card_number) " +
-            "VALUES (?)";
-    private static final String LINK_CARD_WITH_USER = "UPDATE user " +
-            "SET card_id = (" +
-            "SELECT card_id FROM card" +
-            "WHERE card_number = ?) " +
-            "WHERE user_id = ?";
+            "(card_number, user_id) " +
+            "VALUES (?, ?)";
+    private static final String FIND_USER_BY_CARD_NUMBER = "SELECT card_number, money, user_id " +
+            "FROM card " +
+            "WHERE card_number = ?";
+    private static final String FIND_MONEY_ON_CARD_BY_CARD_NUMBER = "SELECT money " +
+            "FROM card " +
+            "WHERE card_number = ?";
+    private static final String FIND_USER_BY_ID_AND_CARD_NUMBER = "SELECT user.user_id, " +
+            "user.login, user.password, user.user_email, user.phone_number, user.user_name, user.user_status " +
+            "FROM user, card " +
+            "WHERE user.user_id = ? AND card.card_number = ?";
 
     @Override
     public User register(User user) throws DaoException {
@@ -99,6 +97,7 @@ public class UserDaoImpl implements UserDao {
             String email = user.getEmail();
             String phoneNumber = user.getPhoneNumber();
             String userName = user.getUserName();
+            String cardNumber = user.getCardNumber();
 
             preparedStatement = connection.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS);
 
@@ -122,6 +121,11 @@ public class UserDaoImpl implements UserDao {
             } else {
                 throw new DaoException("Couldn't retrieve user's ID and status");
             }
+
+            preparedStatement = connection.prepareStatement(ADD_CARD);
+            preparedStatement.setString(1, cardNumber);
+            preparedStatement.setInt(2, user.getId());
+            preparedStatement.executeUpdate();
 
             return user;
         } catch (SQLException e) {
@@ -153,6 +157,9 @@ public class UserDaoImpl implements UserDao {
                     break;
                 case PHONE_NUMBER:
                     preparedStatement = connection.prepareStatement(FIND_USER_BY_PHONE_NUMBER);
+                    break;
+                case CARD_NUMBER:
+                    preparedStatement = connection.prepareStatement(FIND_USER_BY_CARD_NUMBER);
                     break;
             }
 
@@ -195,6 +202,7 @@ public class UserDaoImpl implements UserDao {
                 user.setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD));
                 user.setUserName(resultSet.getString(DB_USER_NAME_FIELD));
                 user.setStatus(resultSet.getString(DB_USER_STATUS_FIELD));
+                user.setCardNumber(resultSet.getString(DB_CARD_NUMBER_FIELD));
                 result = Optional.of(user);
             }
 
@@ -453,21 +461,17 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    public Optional<User> addMoneyToCard(int userId, BigDecimal amount) throws DaoException {
+    public void addMoneyToCard(String cardNumber, BigDecimal amount) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
-        Optional<User> user;
         try {
             connection = pool.getConnection();
 
             preparedStatement = connection.prepareStatement(ADD_MONEY_TO_CARD);
             preparedStatement.setBigDecimal(1, amount);
-            preparedStatement.setInt(2, userId);
+            preparedStatement.setString(2, cardNumber);
             preparedStatement.executeUpdate();
 
-            user = findUserById(userId);
-
-            return user;
         } catch (SQLException e) {
             throw new DaoException("Failed to add money to card: " + e.getMessage(), e);
         } finally {
@@ -480,23 +484,65 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    public Optional<User> payForOrder(int userId, int orderId) throws DaoException {
+    @Override
+    public BigDecimal findMoneyByCardNumber(String cardNumber) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
-        Optional<User> user;
+        BigDecimal money = BigDecimal.ZERO;
         try {
             connection = pool.getConnection();
 
-            preparedStatement = connection.prepareStatement(PAY_FOR_ORDER);
-            preparedStatement.setInt(1, orderId);
-            preparedStatement.setInt(2, userId);
-            preparedStatement.executeUpdate();
+            preparedStatement = connection.prepareStatement(FIND_MONEY_ON_CARD_BY_CARD_NUMBER);
+            preparedStatement.setString(1, cardNumber);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-            user = findUserById(userId);
+            if (resultSet.next()) {
+                money = money.add(resultSet.getBigDecimal("money"));
+            }
+            return money;
 
-            return user;
         } catch (SQLException e) {
-            throw new DaoException("Failed to pay for order: " + e.getMessage(), e);
+            throw new DaoException("Failed to find money: " + e.getMessage(), e);
+        } finally {
+            try {
+                closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
+            } catch (PoolException e) {
+                logger.log(Level.ERROR, e.getMessage(), e);
+            }
+        }
+    }
+
+    @Override
+    public Optional<User> findUserByIdAndCardNumber(int userId, String cardNumber)
+            throws DaoException{
+        ProxyConnection connection = null;
+        ResultSet resultSet;
+        PreparedStatement preparedStatement = null;
+        Optional<User> result = Optional.empty();
+        try {
+            connection = pool.getConnection();
+
+            preparedStatement = connection.prepareStatement(FIND_USER_BY_ID_AND_CARD_NUMBER);
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setString(2, cardNumber);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getInt(DB_USER_ID_FIELD));
+                user.setLogin(resultSet.getString(DB_LOGIN_FIELD));
+                user.setPassword(DB_PASSWORD_FIELD);
+                user.setEmail(resultSet.getString(DB_USER_EMAIL_FIELD));
+                user.setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD));
+                user.setUserName(resultSet.getString(DB_USER_NAME_FIELD));
+                user.setStatus(resultSet.getString(DB_USER_STATUS_FIELD));
+                result = Optional.of(user);
+            }
+
+            return result;
+        } catch (SQLException e) {
+            throw new DaoException("Failed to find user by login and password: " + e.getMessage(), e);
         } finally {
             try {
                 closeStatement(preparedStatement);

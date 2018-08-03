@@ -21,6 +21,7 @@ public class User extends Entity {
     private String email;
     private String phoneNumber;
     private Status status;
+    private String cardNumber;
 
     public int getId() {
         return id;
@@ -90,6 +91,14 @@ public class User extends Entity {
         }
     }
 
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -99,6 +108,7 @@ public class User extends Entity {
                 ", userName='" + userName + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", cardNumber='" + cardNumber + '\'' +
                 '}';
     }
 
@@ -113,6 +123,7 @@ public class User extends Entity {
                 Objects.equals(userName, user.userName) &&
                 Objects.equals(email, user.email) &&
                 Objects.equals(phoneNumber, user.phoneNumber) &&
+                Objects.equals(cardNumber, user.cardNumber) &&
                 status == user.status;
     }
 

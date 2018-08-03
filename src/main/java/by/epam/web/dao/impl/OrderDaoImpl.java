@@ -29,6 +29,7 @@ public class OrderDaoImpl implements OrderDao {
     private static final String DB_ORDER_STATUS_FIELD = "order_status";
     private static final String DB_ORDER_TIME_FIELD = "order_time";
     private static final String DB_ORDER_PRICE_FIELD = "order_price";
+    private static final String DB_ORDER_PAID_FIELD = "paid";
 
     private static final String DB_ACTIVITY_ID_FIELD = "service_id";
     private static final String DB_ACTIVITY_NAME_FIELD = "service_name";
@@ -49,14 +50,14 @@ public class OrderDaoImpl implements OrderDao {
     private static final String UPDATE_ORDER_STATUS = "UPDATE order_info " +
             "SET order_status = ?, order_time = order_time WHERE order_id = ?";
     private static final String FIND_ALL_ORDERS = "SELECT order_info.order_id, " +
-            "order_info.user_id, order_info.order_status, order_info.order_time, order_info.order_price " +
+            "order_info.user_id, order_info.order_status, order_info.order_time, order_info.order_price, order_info.paid " +
             "FROM order_info ";
     private static final String FIND_ORDER_BY_ID = "SELECT order_info.order_id, " +
-            "order_info.user_id, order_info.order_status, order_info.order_time, order_info.order_price " +
+            "order_info.user_id, order_info.order_status, order_info.order_time, order_info.order_price, order_info.paid " +
             "FROM order_info " +
             "WHERE order_info.order_id = ?";
     private static final String FIND_ORDERS_BY_USER_ID = "SELECT order_info.order_id, " +
-            "order_info.user_id, order_info.order_status, order_info.order_time, order_info.order_price " +
+            "order_info.user_id, order_info.order_status, order_info.order_time, order_info.order_price, order_info.paid " +
             "FROM order_info " +
             "WHERE order_info.user_id = ?";
     private static final String FIND_ACTIVITIES_BY_ORDER_ID = "SELECT service.service_id, " +
@@ -74,6 +75,16 @@ public class OrderDaoImpl implements OrderDao {
             "SET reminded = 1, order_time = order_time WHERE order_id = ?";
     private static final String SET_ORDER_PRICE = "UPDATE order_info " +
             "SET order_price = ?, order_time = order_time WHERE order_id = ?";
+    private static final String RETURN_ORDER_MONEY = "UPDATE card " +
+            "JOIN order_info " +
+            "ON order_info.order_id = ? " +
+            "SET paid = 0, money = money + order_price " +
+            "WHERE card.user_id = order_info.user_id AND paid = 1";
+    private static final String PAY_FOR_ORDER = "UPDATE card " +
+            "JOIN order_info " +
+            "ON order_info.order_id = ? " +
+            "SET paid = 1, money = money - order_price " +
+            "WHERE card.user_id = order_info.user_id AND paid = 0";
 
     @Override
     public void addOrder(Order order) throws DaoException {
@@ -122,7 +133,6 @@ public class OrderDaoImpl implements OrderDao {
             preparedStatement = connection.prepareStatement(SET_ORDER_PRICE);
             preparedStatement.setBigDecimal(1, calculateOrderPrice(order.getActivityList()));
             preparedStatement.setInt(2, order.getId());
-            logger.log(Level.INFO, "Prepared statement: " + preparedStatement);
             preparedStatement.executeUpdate();
 
             connection.commit();
@@ -155,7 +165,6 @@ public class OrderDaoImpl implements OrderDao {
                 preparedStatement = connection.prepareStatement(UPDATE_ORDER_STATUS);
                 preparedStatement.setString(1, status);
                 preparedStatement.setInt(2, id);
-                logger.log(Level.INFO, preparedStatement);
                 preparedStatement.executeUpdate();
             } else {
                 throw new DaoException("Couldn't find order by id: " + id);
@@ -267,6 +276,7 @@ public class OrderDaoImpl implements OrderDao {
                 order.setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD));
                 order.setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD));
                 order.setPrice(resultSet.getBigDecimal(DB_ORDER_PRICE_FIELD));
+                order.setPaid(resultSet.getBoolean(DB_ORDER_PAID_FIELD));
                 List<Activity> activityList = findActivitiesByOrderId(id);
                 for (Activity activity : activityList) {
                     order.addActivity(activity);
@@ -311,6 +321,7 @@ public class OrderDaoImpl implements OrderDao {
                 order.setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD));
                 order.setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD));
                 order.setPrice(resultSet.getBigDecimal(DB_ORDER_PRICE_FIELD));
+                order.setPaid(resultSet.getBoolean(DB_ORDER_PAID_FIELD));
                 List<Activity> activityList = findActivitiesByOrderId(currentOrderId);
                 for (Activity activity : activityList) {
                     order.addActivity(activity);
@@ -355,6 +366,7 @@ public class OrderDaoImpl implements OrderDao {
                 order.setStatus(status);
                 order.setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD));
                 order.setPrice(resultSet.getBigDecimal(DB_ORDER_PRICE_FIELD));
+                order.setPaid(resultSet.getBoolean(DB_ORDER_PAID_FIELD));
                 List<Activity> activityList = findActivitiesByOrderId(currentOrderId);
                 for (Activity activity : activityList) {
                     order.addActivity(activity);
@@ -419,6 +431,7 @@ public class OrderDaoImpl implements OrderDao {
         }
     }
 
+    @Override
     public List<String> findEmailsForUpcomingOrders() throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
@@ -449,6 +462,51 @@ public class OrderDaoImpl implements OrderDao {
         } finally {
             try {
                 closeStatement(statement);
+                closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
+            } catch (PoolException e) {
+                logger.log(Level.ERROR, e.getMessage(), e);
+            }
+        }
+    }
+
+    @Override
+    public void returnMoneyFromOrder(int orderId) throws DaoException {
+        ProxyConnection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = pool.getConnection();
+
+            preparedStatement = connection.prepareStatement(RETURN_ORDER_MONEY);
+            preparedStatement.setInt(1, orderId);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DaoException("Failed to return money " + e.getMessage(), e);
+        } finally {
+            try {
+                closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
+            } catch (PoolException e) {
+                logger.log(Level.ERROR, e.getMessage(), e);
+            }
+        }
+    }
+
+    public void payForOrder(int orderId) throws DaoException {
+        ProxyConnection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = pool.getConnection();
+
+            preparedStatement = connection.prepareStatement(PAY_FOR_ORDER);
+            preparedStatement.setInt(1, orderId);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DaoException("Failed to pay for order: " + e.getMessage(), e);
+        } finally {
+            try {
                 closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
