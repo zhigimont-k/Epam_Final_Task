@@ -1,4 +1,4 @@
-<%@ page isELIgnored="false" contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page isErrorPage="true" isELIgnored="false" contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
@@ -14,9 +14,15 @@
 </head>
 <body>
 <div>
-    ${errorText}
+    Request from ${pageContext.errorData.requestURI} failed
     <br/>
-    ${errorMessage}
+    Servlet name: ${pageContext.errorData.servletName}
+    <br/>
+    Status code: ${pageContext.errorData.statusCode}
+    <br/>
+    Exception: ${pageContext.exception}
+    <br/>
+    Message from exception: ${pageContext.exception.message}
 </div>
 </body>
 </html>

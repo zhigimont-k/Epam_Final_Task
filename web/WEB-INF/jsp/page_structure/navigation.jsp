@@ -35,13 +35,13 @@
             <li><a href="${pageContext.request.contextPath}/login">${signIn}</a></li>
         </c:if>
         <c:if test="${sessionScope.user ne null}">
-            <li><a href="app?command=viewUserOrders">My orders</a></li>
+            <li><a href="app?command=viewUserOrders&pageNumber=1">My orders</a></li>
             <li><a href="app?command=viewUserInfo">${accountPage}</a></li>
             <li><a href="${pageContext.request.contextPath}/addMoney">Add money to card</a></li>
         </c:if>
         <c:if test="${sessionScope.user.status == 'admin'}">
             <li><a href="app?command=viewUsers">${usersPage}</a></li>
-            <li><a href="app?command=viewAllOrders">${ordersPage}</a></li>
+            <li><a href="app?command=viewAllOrders&pageNumber=1">${ordersPage}</a></li>
         </c:if>
         <c:if test="${sessionScope.user ne null && sessionScope.user.status ne 'banned'}">
             <li><a href="app?command=createOrder">Make an order</a></li>

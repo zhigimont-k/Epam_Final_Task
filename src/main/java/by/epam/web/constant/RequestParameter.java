@@ -52,5 +52,9 @@ public final class RequestParameter {
     public static final String REVIEW_MESSAGE = "reviewMessage";
     public static final String REVIEW_ID = "reviewId";
     public static final String REVIEW_LIST = "reviewList";
+
+    public static final String NUMBER_OF_PAGES = "numberOfPages";
+    public static final String CURRENT_TABLE_PAGE_NUMBER = "currentPage";
+    public static final String PAGE_NUMBER = "pageNumber";
     private RequestParameter(){}
 }

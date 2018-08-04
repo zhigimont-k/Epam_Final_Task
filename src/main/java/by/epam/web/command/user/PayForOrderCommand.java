@@ -29,7 +29,7 @@ public class PayForOrderCommand implements Command {
             OrderService service = ServiceFactory.getInstance().getOrderService();
             String id = requestContent.getParameter(RequestParameter.ORDER_ID);
             int orderId = Integer.parseInt(id);
-            List<Order> userOrders = service.findOrdersByUser(user);
+            List<Order> userOrders = service.findOrdersByUser(user.getId());
             boolean orderByUserExists = false;
             for (Order order : userOrders){
                 if (order.getId() == orderId){

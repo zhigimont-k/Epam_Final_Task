@@ -28,7 +28,7 @@
     <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
 
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
-    <script type="text/javascript" src="../js/inputScript.js"></script>
+    <script type="text/javascript" src="../../../js/inputScript.js"></script>
 
     <title>${pageTitle} | ${projectName}</title>
 </head>

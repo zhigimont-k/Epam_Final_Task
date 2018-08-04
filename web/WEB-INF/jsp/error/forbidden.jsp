@@ -1,4 +1,4 @@
-<%@ page isELIgnored="false" contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page isErrorPage="true" isELIgnored="false" contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
@@ -20,10 +20,10 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
-403 error<br/>
+<h2>403 error</h2><br/>
 You haven't seen anything.<br/>
 We did not, either.<br/>
 Let's just pretend you didn't try to do something without access, okay?<br/>
-<a href="${pageContext.request.contextPath}/home">Feeling like going back?</a>
+<a href="${pageContext.request.contextPath}/home">Feel like going back?</a>
 </body>
 </html>

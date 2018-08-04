@@ -46,10 +46,18 @@ public class OrderService {
         }
     }
 
-    public List<Order> findOrdersByUser(User user) throws ServiceException {
+    public List<Order> findOrdersByUser(int userId, int startPosition, int numberOfRecords) throws ServiceException {
         try {
-            return orderDao.findOrdersByUser(user);
+            return orderDao.findOrdersByUser(userId, startPosition, numberOfRecords);
         } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public List<Order> findOrdersByUser(int userId) throws ServiceException{
+        try{
+            return orderDao.findOrdersByUser(userId);
+        } catch (DaoException e){
             throw new ServiceException(e);
         }
     }
@@ -62,9 +70,9 @@ public class OrderService {
         }
     }
 
-    public List<Order> findAllOrders() throws ServiceException {
+    public List<Order> findAllOrders(int startPosition, int numberOfRecords) throws ServiceException {
         try {
-            return orderDao.findAllOrders();
+            return orderDao.findAllOrders(startPosition, numberOfRecords);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -85,6 +93,22 @@ public class OrderService {
         try {
             orderDao.payForOrder(orderId);
             orderDao.changeOrderStatus(orderId, Order.Status.CONFIRMED.getName());
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public int countOrders() throws ServiceException {
+        try {
+            return orderDao.countOrders();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public int countUserOrders(int userId) throws ServiceException {
+        try {
+            return orderDao.countUserOrders(userId);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

@@ -25,22 +25,18 @@
 
     <error-page>
         <error-code>404</error-code>
-        <location>/notFound</location>
+        <location>/WEB-INF/jsp/error/notFound.jsp</location>
     </error-page>
 
     <error-page>
         <error-code>403</error-code>
-        <location>/forbidden</location>
+        <location>/WEB-INF/jsp/error/forbidden.jsp</location>
     </error-page>
 
-    <servlet>
-        <servlet-name>Error</servlet-name>
-        <jsp-file>/jsp/error.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Error</servlet-name>
-        <url-pattern>/error</url-pattern>
-    </servlet-mapping>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/jsp/error/error.jsp</location>
+    </error-page>
 
     <servlet>
         <servlet-name>SignIn</servlet-name>
@@ -70,102 +66,12 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>Services</servlet-name>
-        <jsp-file>/jsp/services.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Services</servlet-name>
-        <url-pattern>/services</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>Edit service</servlet-name>
-        <jsp-file>/WEB-INF/jsp/admin/editService.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Edit service</servlet-name>
-        <url-pattern>/editService</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>View service</servlet-name>
-        <jsp-file>/jsp/service.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>View service</servlet-name>
-        <url-pattern>/viewService</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>Account</servlet-name>
-        <jsp-file>/jsp/account.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Account</servlet-name>
-        <url-pattern>/account</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>User orders</servlet-name>
-        <jsp-file>/WEB-INF/jsp/user/userOrders.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>User orders</servlet-name>
-        <url-pattern>/userOrders</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>All orders</servlet-name>
-        <jsp-file>/WEB-INF/jsp/admin/allOrders.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>All orders</servlet-name>
-        <url-pattern>/allOrders</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>Users</servlet-name>
-        <jsp-file>/WEB-INF/jsp/admin/users.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Users</servlet-name>
-        <url-pattern>/users</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>ResetPassword</servlet-name>
         <jsp-file>/jsp/resetPassword.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
         <servlet-name>ResetPassword</servlet-name>
         <url-pattern>/resetPassword</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>Edit review</servlet-name>
-        <jsp-file>/WEB-INF/jsp/user/editReview.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Edit review</servlet-name>
-        <url-pattern>/editReview</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>Add order</servlet-name>
-        <jsp-file>/WEB-INF/jsp/user/addOrder.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Add order</servlet-name>
-        <url-pattern>/addOrder</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>View order</servlet-name>
-        <jsp-file>/WEB-INF/jsp/user/orderCheck.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>View order</servlet-name>
-        <url-pattern>/viewOrder</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -177,52 +83,4 @@
         <url-pattern>/addMoney</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>Forbidden error</servlet-name>
-        <jsp-file>/WEB-INF/jsp/error/forbidden.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Forbidden error</servlet-name>
-        <url-pattern>/forbidden</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>Not found error</servlet-name>
-        <jsp-file>/WEB-INF/jsp/error/notFound.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Not found error</servlet-name>
-        <url-pattern>/notFound</url-pattern>
-    </servlet-mapping>
-
-    <filter>
-        <filter-name>encodingFilter</filter-name>
-        <filter-class>by.epam.web.controller.filter.EncodingFilter</filter-class>
-        <init-param>
-            <param-name>encoding</param-name>
-            <param-value>UTF-8</param-value>
-        </init-param>
-    </filter>
-    <filter-mapping>
-        <filter-name>encodingFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
-    <filter>
-        <filter-name>Access check filter</filter-name>
-        <filter-class>by.epam.web.controller.filter.AccessCheckFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>Access check filter</filter-name>
-        <url-pattern>/app</url-pattern>
-    </filter-mapping>
-
-    <filter>
-        <filter-name>Session invalidator</filter-name>
-        <filter-class>by.epam.web.controller.filter.SessionInvalidationFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>Session invalidator</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
 </web-app>

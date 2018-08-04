@@ -71,5 +71,28 @@
     </table>
 </div>
 
+
+
+<c:if test="${currentPage != 1}">
+    <a href="app?command=viewUserOrders&pageNumber=${currentPage - 1}">Previous</a>
+</c:if>
+
+<c:forEach begin="1" end="${numberOfPages}" var="i">
+    <c:choose>
+        <c:when test="${currentPage eq i}">
+            ${i}
+        </c:when>
+        <c:otherwise>
+            <a href="app?command=viewUserOrders&pageNumber=${i}">${i}</a>
+        </c:otherwise>
+    </c:choose>
+</c:forEach>
+
+<c:if test="${currentPage lt numberOfPages}">
+    <a href="app?command=viewUserOrders&pageNumber=${currentPage + 1}">Next</a>
+</c:if>
+
+
+
 </body>
 </html>

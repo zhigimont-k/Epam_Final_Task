@@ -15,11 +15,14 @@ public interface OrderDao extends AbstractDao<Order> {
     void cancelOrder(int orderId) throws DaoException;
     void changeOrderStatus(int orderId, String status) throws DaoException;
     Optional<Order> findOrderById(int id) throws DaoException;
-    List<Order> findAllOrders() throws DaoException;
-    List<Order> findOrdersByUser(User user) throws DaoException;
+    List<Order> findAllOrders(int startPosition, int numberOfRecords) throws DaoException;
+    List<Order> findOrdersByUser(int userId, int startPosition, int numberOfRecords) throws DaoException;
+    List<Order> findOrdersByUser(int userId) throws DaoException;
     List<Order> findOrdersByUserAndStatus(User user, String status) throws DaoException;
     List<Activity> findActivitiesByOrderId(int id) throws DaoException;
     List<String> findEmailsForUpcomingOrders() throws DaoException;
     void returnMoneyFromOrder(int orderId) throws DaoException;
     void payForOrder(int orderId) throws DaoException;
+    int countOrders() throws DaoException;
+    int countUserOrders(int userId) throws DaoException;
 }

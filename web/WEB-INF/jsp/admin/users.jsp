@@ -29,6 +29,7 @@
 <div>
     <table id="sorted-table">
         <tr>
+            <th>id</th>
             <th onclick="sortTable(0)">${login}</th>
             <th onclick="sortTable(1)">${userName}</th>
             <th onclick="sortTable(2)">${status}</th>

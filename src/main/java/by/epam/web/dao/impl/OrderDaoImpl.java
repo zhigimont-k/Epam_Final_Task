@@ -51,7 +51,8 @@ public class OrderDaoImpl implements OrderDao {
             "SET order_status = ?, order_time = order_time WHERE order_id = ?";
     private static final String FIND_ALL_ORDERS = "SELECT order_info.order_id, " +
             "order_info.user_id, order_info.order_status, order_info.order_time, order_info.order_price, order_info.paid " +
-            "FROM order_info ";
+            "FROM order_info " +
+            "LIMIT ?,?";
     private static final String FIND_ORDER_BY_ID = "SELECT order_info.order_id, " +
             "order_info.user_id, order_info.order_status, order_info.order_time, order_info.order_price, order_info.paid " +
             "FROM order_info " +
@@ -59,7 +60,9 @@ public class OrderDaoImpl implements OrderDao {
     private static final String FIND_ORDERS_BY_USER_ID = "SELECT order_info.order_id, " +
             "order_info.user_id, order_info.order_status, order_info.order_time, order_info.order_price, order_info.paid " +
             "FROM order_info " +
-            "WHERE order_info.user_id = ?";
+            "WHERE order_info.user_id = ? ";
+    private static final String FIND_ORDERS_BY_USER_ID_LIMITED = FIND_ORDERS_BY_USER_ID +
+            "LIMIT ?,? ";
     private static final String FIND_ACTIVITIES_BY_ORDER_ID = "SELECT service.service_id, " +
             "service_name, service_description, service_status, service_price FROM service " +
             "JOIN order_link ON service.service_id = order_link.service_id " +
@@ -85,6 +88,9 @@ public class OrderDaoImpl implements OrderDao {
             "ON order_info.order_id = ? " +
             "SET paid = 1, money = money - order_price, order_info.order_time = order_info.order_time  " +
             "WHERE card.user_id = order_info.user_id AND paid = 0";
+    private static final String COUNT_ORDERS = "SELECT DISTINCT COUNT(*) FROM order_info";
+    private static final String COUNT_USER_ORDERS = "SELECT DISTINCT COUNT(*) FROM order_info " +
+            "WHERE user_id = ?";
 
     @Override
     public void addOrder(Order order) throws DaoException {
@@ -189,16 +195,19 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public List<Order> findAllOrders() throws DaoException {
+    public List<Order> findAllOrders(int startPosition, int numberOfRecords) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
-        Statement statement = null;
+        PreparedStatement preparedStatement = null;
         List<Order> orderList = new ArrayList<>();
         try {
             connection = pool.takeConnection();
 
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(FIND_ALL_ORDERS);
+            preparedStatement = connection.prepareStatement(FIND_ALL_ORDERS);
+            preparedStatement.setInt(1, startPosition);
+            preparedStatement.setInt(2, numberOfRecords);
+            resultSet = preparedStatement.executeQuery();
+
 
             while (resultSet.next()) {
                 Order order = new Order();
@@ -220,7 +229,7 @@ public class OrderDaoImpl implements OrderDao {
             throw new DaoException("Failed to find orders" + e.getMessage(), e);
         } finally {
             try {
-                closeStatement(statement);
+                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
                 logger.log(Level.ERROR, e.getMessage(), e);
@@ -272,7 +281,52 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public List<Order> findOrdersByUser(User user) throws DaoException {
+    public List<Order> findOrdersByUser(int userId, int startPosition, int numberOfRecords) throws DaoException {
+        ProxyConnection connection = null;
+        ResultSet resultSet;
+        PreparedStatement preparedStatement = null;
+        List<Order> orderList = new ArrayList<>();
+        try {
+            connection = pool.takeConnection();
+
+            preparedStatement = connection.prepareStatement(FIND_ORDERS_BY_USER_ID_LIMITED);
+
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, startPosition);
+            preparedStatement.setInt(3, numberOfRecords);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Order order = new Order();
+                int currentOrderId = resultSet.getInt(DB_ORDER_ID_FIELD);
+
+                order.setId(currentOrderId);
+                order.setUserId(userId);
+                order.setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD));
+                order.setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD));
+                order.setPrice(resultSet.getBigDecimal(DB_ORDER_PRICE_FIELD));
+                order.setPaid(resultSet.getBoolean(DB_ORDER_PAID_FIELD));
+                List<Activity> activityList = findActivitiesByOrderId(currentOrderId);
+                for (Activity activity : activityList) {
+                    order.addActivity(activity);
+                }
+                orderList.add(order);
+            }
+            return orderList;
+        } catch (SQLException e) {
+            throw new DaoException("Failed to find orders by user" + e.getMessage(), e);
+        } finally {
+            try {
+                closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
+            } catch (PoolException e) {
+                logger.log(Level.ERROR, e.getMessage(), e);
+            }
+        }
+    }
+
+    @Override
+    public List<Order> findOrdersByUser(int userId) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -282,7 +336,6 @@ public class OrderDaoImpl implements OrderDao {
 
             preparedStatement = connection.prepareStatement(FIND_ORDERS_BY_USER_ID);
 
-            int userId = user.getId();
             preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
 
@@ -479,6 +532,67 @@ public class OrderDaoImpl implements OrderDao {
 
         } catch (SQLException e) {
             throw new DaoException("Failed to pay for order: " + e.getMessage(), e);
+        } finally {
+            try {
+                closeStatement(preparedStatement);
+                pool.releaseConnection(connection);
+            } catch (PoolException e) {
+                logger.log(Level.ERROR, e.getMessage(), e);
+            }
+        }
+    }
+
+    @Override
+    public int countOrders() throws DaoException {
+        ProxyConnection connection = null;
+        ResultSet resultSet;
+        Statement statement = null;
+        int result;
+        try {
+            connection = pool.takeConnection();
+
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(COUNT_ORDERS);
+
+            if (resultSet.next()) {
+                result = resultSet.getInt(1);
+            } else {
+                throw new DaoException("Couldn't count orders");
+            }
+            return result;
+        } catch (SQLException e) {
+            throw new DaoException("Failed to find orders" + e.getMessage(), e);
+        } finally {
+            try {
+                closeStatement(statement);
+                pool.releaseConnection(connection);
+            } catch (PoolException e) {
+                logger.log(Level.ERROR, e.getMessage(), e);
+            }
+        }
+    }
+
+    @Override
+    public int countUserOrders(int userId) throws DaoException {
+        ProxyConnection connection = null;
+        ResultSet resultSet;
+        PreparedStatement preparedStatement = null;
+        int result = 0;
+        try {
+            connection = pool.takeConnection();
+
+            preparedStatement = connection.prepareStatement(COUNT_USER_ORDERS);
+            preparedStatement.setInt(1, userId);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                result = resultSet.getInt(1);
+            } else {
+                throw new DaoException("Couldn't count user orders");
+            }
+            return result;
+        } catch (SQLException e) {
+            throw new DaoException("Failed to find orders" + e.getMessage(), e);
         } finally {
             try {
                 closeStatement(preparedStatement);

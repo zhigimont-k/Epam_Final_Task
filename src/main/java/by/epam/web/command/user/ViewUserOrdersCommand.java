@@ -19,18 +19,31 @@ import java.util.List;
 
 public class ViewUserOrdersCommand implements Command {
     private static Logger logger = LogManager.getLogger();
+    private static final int RECORDS_PER_PAGE = 10;
 
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
 
+            int pageNumber = 1;
+            if (requestContent.getParameter(RequestParameter.PAGE_NUMBER) != null)
+                pageNumber = Integer.parseInt(
+                        requestContent.getParameter(RequestParameter.PAGE_NUMBER));
+
             OrderService service = ServiceFactory.getInstance().getOrderService();
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
 
-            List<Order> orderList = service.findOrdersByUser(user);
+            List<Order> orderList = service.findOrdersByUser(user.getId(),
+                    (pageNumber - 1) * RECORDS_PER_PAGE,
+                    RECORDS_PER_PAGE);
+
+            int numberOfRecords = service.countUserOrders(user.getId());
+            int numberOfPages = (int) Math.ceil(numberOfRecords * 1.0 / RECORDS_PER_PAGE);
 
             requestContent.setAttribute(RequestParameter.ORDER_LIST, orderList);
+            requestContent.setAttribute(RequestParameter.NUMBER_OF_PAGES, numberOfPages);
+            requestContent.setAttribute(RequestParameter.CURRENT_TABLE_PAGE_NUMBER, pageNumber);
 
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(PageAddress.USER_ORDERS_PAGE);
