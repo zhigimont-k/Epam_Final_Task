@@ -33,7 +33,9 @@ public class ViewOrderCommand implements Command {
         try {
 
             int userId = ((User) requestContent.getSessionAttribute(RequestParameter.USER)).getId();
-            String orderTime = requestContent.getParameter(RequestParameter.ORDER_TIME);
+            String date = requestContent.getParameter("orderDate");
+            String time = requestContent.getParameter("orderTime");
+            String orderTime = date + " " + time;
             if (StringUtils.countMatches(orderTime, ":") == 1) {
                 orderTime += ":00";
             }

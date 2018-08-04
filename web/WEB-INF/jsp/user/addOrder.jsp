@@ -16,6 +16,8 @@
     <fmt:message bundle="${locale}" key="locale.user.warning.email" var="emailWarning"/>
     <fmt:message bundle="${locale}" key="locale.user.warning.phonenumber" var="phoneNumberWarning"/>
 
+    <jsp:useBean id="now" class="java.util.Date"/>
+
 </head>
 <body>
 
@@ -30,21 +32,25 @@
 
     <br/>
     <label>Choose date and time for your order:
-        <br/>
-        <input type="datetime-local" name="orderTime" required/>
+        <br/>Date:
+        <input type="date" min="<fmt:formatDate value="${now}" pattern="yyyy-MM-dd" />" name="orderDate" required/>
+        <br/>Time:
+        <input type="time" name="orderTime"
+               min="09:00" max="18:00" required />
     </label>
     <br/>
     Choose services to be included in your order:
     <br/>
     <c:forEach var="activity" items="${activityList}">
-        <input type="checkbox" name="activityId" value="${activity.id}">${activity.name}<br>
+        <label><input type="checkbox" name="activityId" value="${activity.id}">
+                ${activity.name}<br></label>
         <br/>
     </c:forEach>
 
     <br/>
     <input type="submit" value="Go to check"/>
-    <c:if test="${activityExists == true}">
-        Please make sure that service list is not empty and date is valid.
+    <c:if test="${emptyActivityList == true}">
+        Please make sure that service list is not empty.
     </c:if>
 </form>
 </body>

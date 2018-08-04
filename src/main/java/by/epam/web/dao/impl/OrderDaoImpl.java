@@ -78,12 +78,12 @@ public class OrderDaoImpl implements OrderDao {
     private static final String RETURN_ORDER_MONEY = "UPDATE card " +
             "JOIN order_info " +
             "ON order_info.order_id = ? " +
-            "SET paid = 0, money = money + order_price " +
+            "SET paid = 0, money = money + order_price, order_info.order_time = order_info.order_time " +
             "WHERE card.user_id = order_info.user_id AND paid = 1";
     private static final String PAY_FOR_ORDER = "UPDATE card " +
             "JOIN order_info " +
             "ON order_info.order_id = ? " +
-            "SET paid = 1, money = money - order_price " +
+            "SET paid = 1, money = money - order_price, order_info.order_time = order_info.order_time  " +
             "WHERE card.user_id = order_info.user_id AND paid = 0";
 
     @Override
