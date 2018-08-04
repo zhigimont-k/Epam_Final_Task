@@ -70,12 +70,12 @@ public class OrderService {
         }
     }
 
-    public Optional<Order> changeOrderStatus(int id, String status) throws ServiceException {
+    public void changeOrderStatus(int id, String status) throws ServiceException {
         try {
             if (Order.Status.CANCELLED.getName().equalsIgnoreCase(status)) {
                 orderDao.returnMoneyFromOrder(id);
             }
-            return orderDao.changeOrderStatus(id, status);
+            orderDao.changeOrderStatus(id, status);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

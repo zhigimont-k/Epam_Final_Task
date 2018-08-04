@@ -13,6 +13,8 @@ public final class RequestParameter {
     public static final String PHONE_NUMBER_EXISTS = "phoneNumberExists";
     public static final String AUTH_FAIL = "authFail";
     public static final String USER_LIST = "userList";
+    public static final String CARD_NUMBER = "cardNumber";
+    public static final String MONEY = "money";
 
     public static final String ACTIVITY_EXISTS = "activityExists";
 
@@ -20,6 +22,7 @@ public final class RequestParameter {
 
     public static final String ERROR_MESSAGE = "errorMessage";
 
+    public static final String USER_ID = "userId";
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
     public static final String NEW_PASSWORD = "newPassword";

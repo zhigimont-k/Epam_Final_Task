@@ -40,7 +40,8 @@
         <tr>
             <form name="loginForm" method="POST" action="app">
                 <input type="hidden" name="command" value="changeUserStatus"/>
-                <input type="hidden" name="login" value="${user.login}"/>
+                <input type="hidden" name="userId" value="${user.id}"/>
+                <td>${user.id}</td>
                 <td>${user.login}</td>
                 <td>${user.userName}</td>
                 <td>

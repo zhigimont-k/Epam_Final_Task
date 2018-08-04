@@ -27,7 +27,7 @@ public class ViewUserInfoCommand implements Command {
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             UserService service = ServiceFactory.getInstance().getUserService();
             BigDecimal money = service.findMoneyByCardNumber(user.getCardNumber());
-            requestContent.setAttribute("money", money);
+            requestContent.setAttribute(RequestParameter.MONEY, money);
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(PageAddress.ACCOUNT_PAGE);
         } catch (NoSuchRequestParameterException e) {

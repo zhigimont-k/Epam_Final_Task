@@ -20,9 +20,9 @@ public interface UserDao extends AbstractDao<User> {
     Optional<User> findUserById(int id) throws DaoException;
     Optional<User> findUserByEmail(String email) throws DaoException;
     List<User> findAllUsers() throws DaoException;
-    Optional<User> changeUserStatus(String login, String status) throws DaoException;
-    Optional<User> updateUser(int id, String password, String userName) throws DaoException;
-    Optional<User> updateUserName(int id, String userName) throws DaoException;
+    void changeUserStatus(int userId, String status) throws DaoException;
+    void updateUser(int id, String password, String userName) throws DaoException;
+    void updateUserName(int id, String userName) throws DaoException;
     void addMoneyToCard(String cardNumber, BigDecimal amount) throws DaoException;
     BigDecimal findMoneyByCardNumber(String cardNumber) throws DaoException;
 }

@@ -27,7 +27,7 @@ public class RegisterCommand implements Command {
             String email = requestContent.getParameter(RequestParameter.EMAIL);
             String userName = requestContent.getParameter(RequestParameter.USER_NAME);
             String phoneNumber = requestContent.getParameter(RequestParameter.PHONE_NUMBER);
-            String cardNumber = requestContent.getParameter("cardNumber");
+            String cardNumber = requestContent.getParameter(RequestParameter.CARD_NUMBER);
 
             UserService service = ServiceFactory.getInstance().getUserService();
 
@@ -54,7 +54,8 @@ public class RegisterCommand implements Command {
                 router.setPage(PageAddress.REGISTER_PAGE);
             }
             if (!loginExists && !emailExists && !phoneNumberExists) {
-                User user = service.registerUser(login, password, email, phoneNumber, userName);
+                User user = service.registerUser(login, password, email, phoneNumber, userName,
+                        cardNumber);
                 requestContent.setSessionAttribute(RequestParameter.USER, user);
                 router.setTransitionType(PageRouter.TransitionType.REDIRECT);
                 router.setPage(PageAddress.HOME_PAGE);

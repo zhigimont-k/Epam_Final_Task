@@ -15,7 +15,8 @@ public class UserService {
     UserService() {
     }
 
-    public User registerUser(String login, String password, String email, String phoneNumber, String userName) throws ServiceException {
+    public User registerUser(String login, String password, String email,
+                             String phoneNumber, String userName, String cardNumber) throws ServiceException {
         User newUser;
         try {
             newUser = new User();
@@ -24,6 +25,7 @@ public class UserService {
             newUser.setEmail(email);
             newUser.setUserName(userName);
             newUser.setPhoneNumber(phoneNumber);
+            newUser.setCardNumber(cardNumber);
             return userDao.register(newUser);
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -94,25 +96,25 @@ public class UserService {
         }
     }
 
-    public Optional<User> changeUserStatus(String login, String status) throws ServiceException {
+    public void changeUserStatus(int userId, String status) throws ServiceException {
         try {
-            return userDao.changeUserStatus(login, status);
+            userDao.changeUserStatus(userId, status);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    public Optional<User> updateUser(int id, String newPassword, String newUserName) throws ServiceException {
+    public void updateUser(int id, String newPassword, String newUserName) throws ServiceException {
         try {
-            return userDao.updateUser(id, newPassword, newUserName);
+            userDao.updateUser(id, newPassword, newUserName);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    public Optional<User> updateUserName(int id, String newUserName) throws ServiceException {
+    public void updateUserName(int id, String newUserName) throws ServiceException {
         try {
-            return userDao.updateUserName(id, newUserName);
+            userDao.updateUserName(id, newUserName);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

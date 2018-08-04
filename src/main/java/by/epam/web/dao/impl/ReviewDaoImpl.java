@@ -51,16 +51,11 @@ public class ReviewDaoImpl implements ReviewDao {
 
 
     @Override
-    public Review addReview(Review review) throws DaoException {
+    public void addReview(int userId, int activityId, int mark, String message) throws DaoException {
         ProxyConnection connection = null;
-        ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         try {
-            connection = pool.getConnection();
-            int userId = review.getUserId();
-            int activityId = review.getActivityId();
-            int mark = review.getMark();
-            String message = review.getMessage();
+            connection = pool.takeConnection();
 
             preparedStatement = connection.prepareStatement(INSERT_REVIEW,
                     Statement.RETURN_GENERATED_KEYS);
@@ -72,20 +67,6 @@ public class ReviewDaoImpl implements ReviewDao {
 
             preparedStatement.executeUpdate();
 
-            resultSet = preparedStatement.getGeneratedKeys();
-
-            if (resultSet.next()) {
-                int reviewId = resultSet.getInt(1);
-                review.setId(reviewId);
-                Optional<Review> added = findReviewById(reviewId);
-                if (added.isPresent()) {
-                    review.setCreationDate(added.get().getCreationDate());
-                }
-            } else {
-                throw new DaoException("Couldn't retrieve review's ID and creation date");
-            }
-
-            return review;
         } catch (SQLException e) {
             throw new DaoException("Failed to add review" + e.getMessage(), e);
         } finally {
@@ -99,26 +80,18 @@ public class ReviewDaoImpl implements ReviewDao {
     }
 
     @Override
-    public Optional<Review> updateReview(int id, int mark, String message) throws DaoException {
+    public void updateReview(int id, int mark, String message) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
-        Optional<Review> review;
         try {
-            connection = pool.getConnection();
+            connection = pool.takeConnection();
 
-            review = findReviewById(id);
+            preparedStatement = connection.prepareStatement(UPDATE_REVIEW);
+            preparedStatement.setInt(1, mark);
+            preparedStatement.setString(2, message);
+            preparedStatement.setInt(3, id);
+            preparedStatement.executeUpdate();
 
-            if (review.isPresent()) {
-                preparedStatement = connection.prepareStatement(UPDATE_REVIEW);
-                preparedStatement.setInt(1, mark);
-                preparedStatement.setString(2, message);
-                preparedStatement.setInt(3, id);
-                preparedStatement.executeUpdate();
-            } else {
-                throw new DaoException("Couldn't find review by id: " + id);
-            }
-
-            return review;
         } catch (SQLException e) {
             throw new DaoException("Failed to update review" + e.getMessage(), e);
         } finally {
@@ -138,7 +111,7 @@ public class ReviewDaoImpl implements ReviewDao {
         PreparedStatement preparedStatement = null;
         Optional<Review> result = Optional.empty();
         try {
-            connection = pool.getConnection();
+            connection = pool.takeConnection();
 
             preparedStatement = connection.prepareStatement(FIND_REVIEW_BY_ID);
             preparedStatement.setInt(1, id);
@@ -177,7 +150,7 @@ public class ReviewDaoImpl implements ReviewDao {
 
         List<Review> reviewList = new ArrayList<>();
         try {
-            connection = pool.getConnection();
+            connection = pool.takeConnection();
 
             preparedStatement = connection.prepareStatement(FIND_REVIEW_BY_ACTIVITY_ID);
             preparedStatement.setInt(1, activityId);
@@ -215,7 +188,7 @@ public class ReviewDaoImpl implements ReviewDao {
         PreparedStatement preparedStatement = null;
         List<Review> reviewList = new ArrayList<>();
         try {
-            connection = pool.getConnection();
+            connection = pool.takeConnection();
 
             preparedStatement = connection.prepareStatement(FIND_REVIEW_BY_USER_ID);
             preparedStatement.setInt(1, userId);
@@ -251,7 +224,7 @@ public class ReviewDaoImpl implements ReviewDao {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
-            connection = pool.getConnection();
+            connection = pool.takeConnection();
 
             preparedStatement = connection.prepareStatement(DELETE_REVIEW_BY_ID);
             preparedStatement.setInt(1, id);

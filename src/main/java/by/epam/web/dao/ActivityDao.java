@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ActivityDao extends AbstractDao<Activity> {
-    Activity addActivity(Activity activity) throws DaoException;
-    Optional<Activity> updateActivity(int id, String name, String description,
+    void addActivity(Activity activity) throws DaoException;
+    void updateActivity(int id, String name, String description,
                                       BigDecimal price, String status) throws DaoException;
     Optional<Activity> findActivityById(int id) throws DaoException;
     Optional<Activity> findActivityByName(String name) throws DaoException;
     List<Activity> findAllActivities() throws DaoException;
     List<Activity> findAvailableActivities() throws DaoException;
-    Optional<Activity> changeActivityStatus(int id, String status) throws DaoException;
+    void changeActivityStatus(int id, String status) throws DaoException;
 }

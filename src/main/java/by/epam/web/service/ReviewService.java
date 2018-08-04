@@ -13,15 +13,9 @@ public class ReviewService {
 
     ReviewService(){}
 
-    public Review addReview(int userId, int activityId, int mark, String message) throws ServiceException {
-        Review review;
+    public void addReview(int userId, int activityId, int mark, String message) throws ServiceException {
         try {
-            review = new Review();
-            review.setUserId(userId);
-            review.setActivityId(activityId);
-            review.setMark(mark);
-            review.setMessage(message);
-            return reviewDao.addReview(review);
+            reviewDao.addReview(userId, activityId, mark, message);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -51,9 +45,9 @@ public class ReviewService {
         }
     }
 
-    public Optional<Review> updateReview(int id, int mark, String message) throws ServiceException {
+    public void updateReview(int id, int mark, String message) throws ServiceException {
         try {
-            return reviewDao.updateReview(id, mark, message);
+            reviewDao.updateReview(id, mark, message);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

@@ -53,10 +53,7 @@ public class ConnectionPool {
             }
         }
 
-        if (availableConnections.isEmpty()) {
-            logger.fatal("Couldn't create any connections");
-            throw new RuntimeException("Couldn't create any connections");
-        } else if (availableConnections.size() < ConnectionManager.INITIAL_POOL_SIZE) {
+        if (availableConnections.size() < ConnectionManager.INITIAL_POOL_SIZE) {
             for (int i = availableConnections.size() - 1;
                  i < ConnectionManager.getInstance().getPoolSize(); i++) {
                 try {
@@ -67,16 +64,20 @@ public class ConnectionPool {
             }
         }
 
-        if (availableConnections.size() == ConnectionManager.INITIAL_POOL_SIZE) {
+        if (availableConnections.isEmpty()) {
+            logger.fatal("Couldn't create any connections");
+            throw new RuntimeException("Couldn't create any connections");
+        } else if (availableConnections.size() == ConnectionManager.INITIAL_POOL_SIZE) {
             logger.log(Level.INFO, "Successfully initialized connection pool");
         }
 
     }
 
-    public ProxyConnection getConnection() throws PoolException {
+    public ProxyConnection takeConnection() throws PoolException {
         ProxyConnection connection = null;
-        if (availableConnections.size() >= ConnectionManager.INITIAL_POOL_SIZE &&
-                availableConnections.size() < ConnectionManager.MAX_POOL_SIZE) {
+        if (availableConnections.isEmpty() &&
+                unavailableConnections.size() >= ConnectionManager.INITIAL_POOL_SIZE &&
+                unavailableConnections.size() < ConnectionManager.MAX_POOL_SIZE) {
             createConnection();
         }
         try {

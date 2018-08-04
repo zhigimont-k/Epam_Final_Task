@@ -12,8 +12,8 @@ import java.util.Optional;
 
 public interface OrderDao extends AbstractDao<Order> {
     void addOrder(Order order) throws DaoException;
-    Optional<Order> cancelOrder(int orderId) throws DaoException;
-    Optional<Order> changeOrderStatus(int orderId, String status) throws DaoException;
+    void cancelOrder(int orderId) throws DaoException;
+    void changeOrderStatus(int orderId, String status) throws DaoException;
     Optional<Order> findOrderById(int id) throws DaoException;
     List<Order> findAllOrders() throws DaoException;
     List<Order> findOrdersByUser(User user) throws DaoException;

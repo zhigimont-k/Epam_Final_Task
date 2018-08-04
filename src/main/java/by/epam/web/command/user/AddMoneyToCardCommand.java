@@ -26,8 +26,8 @@ public class AddMoneyToCardCommand implements Command {
 
             UserService service = ServiceFactory.getInstance().getUserService();
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
-            String cardNumber = requestContent.getParameter("cardNumber");
-            String moneyToAdd = requestContent.getParameter("money");
+            String cardNumber = requestContent.getParameter(RequestParameter.CARD_NUMBER);
+            String moneyToAdd = requestContent.getParameter(RequestParameter.MONEY);
             if (service.findUserByIdAndCard(user.getId(), cardNumber).isPresent()) {
                 service.addMoneyToCard(cardNumber,
                         BigDecimal.valueOf(Double.parseDouble(moneyToAdd)));

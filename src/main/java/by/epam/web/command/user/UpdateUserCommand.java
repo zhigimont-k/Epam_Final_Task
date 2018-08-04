@@ -14,6 +14,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Optional;
+
 public class UpdateUserCommand implements Command {
     private static Logger logger = LogManager.getLogger();
 
@@ -29,18 +31,19 @@ public class UpdateUserCommand implements Command {
             String newPassword = requestContent.getParameter(RequestParameter.NEW_PASSWORD);
             if (!oldPassword.isEmpty() && !newPassword.isEmpty()){
                 if (service.findUserByLoginAndPassword(user.getLogin(), oldPassword).isPresent()){
-                    user = service.updateUser(user.getId(), newPassword, newName).get();
-                    logger.log(Level.INFO, "Updated user: "+user.getLogin()+" "+newPassword);
+                    service.updateUser(user.getId(), newPassword, newName);
                 } else {
                     requestContent.setAttribute(RequestParameter.AUTH_FAIL, true);
                     router.setTransitionType(PageRouter.TransitionType.FORWARD);
                     router.setPage(PageAddress.ACCOUNT_PAGE);
                 }
             } else {
-                user = service.updateUserName(user.getId(), newName).get();
+                service.updateUserName(user.getId(), newName);
             }
-
-            requestContent.setSessionAttribute(RequestParameter.USER, user);
+            Optional<User> found = service.findUserById(user.getId());
+            if (found.isPresent()){
+                requestContent.setSessionAttribute(RequestParameter.USER, found.get());
+            }
 
             router.setTransitionType(PageRouter.TransitionType.REDIRECT);
             router.setPage(PageAddress.ACCOUNT_PAGE);

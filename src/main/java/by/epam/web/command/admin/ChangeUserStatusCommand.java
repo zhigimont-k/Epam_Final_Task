@@ -22,9 +22,9 @@ public class ChangeUserStatusCommand implements Command {
         try {
 
             UserService service = ServiceFactory.getInstance().getUserService();
-            String login = requestContent.getParameter(RequestParameter.LOGIN);
+            int id = Integer.parseInt(requestContent.getParameter(RequestParameter.USER_ID));
             String status = requestContent.getParameter(RequestParameter.USER_STATUS);
-            service.changeUserStatus(login, status);
+            service.changeUserStatus(id, status);
 
             router.setTransitionType(PageRouter.TransitionType.REDIRECT);
             router.setPage(PageAddress.VIEW_USERS);

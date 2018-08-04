@@ -28,13 +28,15 @@ public class ViewActivityCommand implements Command {
             ActivityService service = ServiceFactory.getInstance().getActivityService();
             int activityId = Integer.parseInt(requestContent.getParameter(RequestParameter.ACTIVITY_ID));
             Optional<Activity> found = service.findActivityById(activityId);
-            if (found.isPresent()){
+            if (found.isPresent()) {
                 ReviewService reviewService = ServiceFactory.getInstance().getReviewService();
                 List<Review> reviewList = reviewService.findReviewByActivityId(activityId);
                 UserService userService = ServiceFactory.getInstance().getUserService();
-                for (Review review : reviewList){
+                for (Review review : reviewList) {
                     Optional<User> foundUser = userService.findUserById(review.getUserId());
-                    foundUser.ifPresent(user -> review.setUserLogin(user.getLogin()));
+                    if (foundUser.isPresent()) {
+                        review.setUserLogin(foundUser.get().getLogin());
+                    }
                 }
                 requestContent.setAttribute(RequestParameter.ACTIVITY, found.get());
                 requestContent.setAttribute(RequestParameter.REVIEW_LIST, reviewList);

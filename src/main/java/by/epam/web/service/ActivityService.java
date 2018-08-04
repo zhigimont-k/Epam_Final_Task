@@ -15,14 +15,14 @@ public class ActivityService {
     ActivityService() {
     }
 
-    public Activity addActivity(String name, String description, BigDecimal price) throws ServiceException {
+    public void addActivity(String name, String description, BigDecimal price) throws ServiceException {
         Activity activity;
         try {
             activity = new Activity();
             activity.setName(name);
             activity.setDescription(description);
             activity.setPrice(price);
-            return activityDao.addActivity(activity);
+            activityDao.addActivity(activity);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -61,30 +61,17 @@ public class ActivityService {
         }
     }
 
-    public Optional<Activity> changeActivityStatus(int id, String status) throws ServiceException {
+    public void changeActivityStatus(int id, String status) throws ServiceException {
         try {
-            return activityDao.changeActivityStatus(id, status);
+            activityDao.changeActivityStatus(id, status);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    public Optional<Activity> changeActivityStatus(String name, String status) throws ServiceException {
+    public void updateActivity(Activity activity) throws ServiceException {
         try {
-            Optional<Activity> found = activityDao.findActivityByName(name);
-            if (found.isPresent()) {
-                int id = found.get().getId();
-                return activityDao.changeActivityStatus(id, status);
-            }
-            return found;
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public Optional<Activity> updateActivity(Activity activity) throws ServiceException {
-        try {
-            return activityDao.updateActivity(activity.getId(), activity.getName(),
+            activityDao.updateActivity(activity.getId(), activity.getName(),
                     activity.getDescription(), activity.getPrice(), activity.getStatus());
         } catch (DaoException e) {
             throw new ServiceException(e);

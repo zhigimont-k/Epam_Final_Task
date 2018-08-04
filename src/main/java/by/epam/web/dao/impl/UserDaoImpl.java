@@ -61,7 +61,7 @@ public class UserDaoImpl implements UserDao {
             "user.login, user.password, user.user_email, user.phone_number, user.user_name, user.user_status " +
             "FROM user ";
     private static final String UPDATE_USER_STATUS = "UPDATE user " +
-            "SET user_status = ? WHERE login = ?";
+            "SET user_status = ? WHERE user_id = ?";
     private static final String UPDATE_USER = "UPDATE user " +
             "SET password = SHA1(?), user_name = ? " +
             "WHERE user_id = ?";
@@ -91,7 +91,7 @@ public class UserDaoImpl implements UserDao {
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         try {
-            connection = pool.getConnection();
+            connection = pool.takeConnection();
             String login = user.getLogin();
             String password = user.getPassword();
             String email = user.getEmail();
@@ -147,7 +147,7 @@ public class UserDaoImpl implements UserDao {
         ResultSet resultSet;
 
         try {
-            connection = pool.getConnection();
+            connection = pool.takeConnection();
             switch (property) {
                 case LOGIN:
                     preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN);
@@ -186,7 +186,7 @@ public class UserDaoImpl implements UserDao {
         PreparedStatement preparedStatement = null;
         Optional<User> result = Optional.empty();
         try {
-            connection = pool.getConnection();
+            connection = pool.takeConnection();
 
             preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN_AND_PASSWORD);
             preparedStatement.setString(1, login);
@@ -226,7 +226,7 @@ public class UserDaoImpl implements UserDao {
         PreparedStatement preparedStatement = null;
         Optional<User> result = Optional.empty();
         try {
-            connection = pool.getConnection();
+            connection = pool.takeConnection();
 
             preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN);
             preparedStatement.setString(1, login);
@@ -265,7 +265,7 @@ public class UserDaoImpl implements UserDao {
         PreparedStatement preparedStatement = null;
         Optional<User> result = Optional.empty();
         try {
-            connection = pool.getConnection();
+            connection = pool.takeConnection();
 
             preparedStatement = connection.prepareStatement(FIND_USER_BY_ID);
             preparedStatement.setInt(1, id);
@@ -304,7 +304,7 @@ public class UserDaoImpl implements UserDao {
         Statement statement = null;
         List<User> userList = new ArrayList<>();
         try {
-            connection = pool.getConnection();
+            connection = pool.takeConnection();
 
             statement = connection.createStatement();
             resultSet = statement.executeQuery(FIND_ALL_USERS);
@@ -335,25 +335,17 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> changeUserStatus(String login, String status) throws DaoException {
+    public void changeUserStatus(int userId, String status) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
-        Optional<User> user;
         try {
-            connection = pool.getConnection();
+            connection = pool.takeConnection();
 
-            user = findUserByLogin(login);
+            preparedStatement = connection.prepareStatement(UPDATE_USER_STATUS);
+            preparedStatement.setString(1, status);
+            preparedStatement.setInt(2, userId);
+            preparedStatement.executeUpdate();
 
-            if (user.isPresent()) {
-                preparedStatement = connection.prepareStatement(UPDATE_USER_STATUS);
-                preparedStatement.setString(1, status);
-                preparedStatement.setString(2, login);
-                preparedStatement.executeUpdate();
-            } else {
-                throw new DaoException("Couldn't find user by login: " + login);
-            }
-
-            return user;
         } catch (SQLException e) {
             throw new DaoException("Failed to change user status: " + e.getMessage(), e);
         } finally {
@@ -367,12 +359,11 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> updateUser(int id, String password, String userName) throws DaoException {
+    public void updateUser(int id, String password, String userName) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
-        Optional<User> user;
         try {
-            connection = pool.getConnection();
+            connection = pool.takeConnection();
 
             preparedStatement = connection.prepareStatement(UPDATE_USER);
             preparedStatement.setString(1, password);
@@ -380,9 +371,6 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setInt(3, id);
             preparedStatement.executeUpdate();
 
-            user = findUserById(id);
-
-            return user;
         } catch (SQLException e) {
             throw new DaoException("Failed to update user: " + e.getMessage(), e);
         } finally {
@@ -396,21 +384,17 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> updateUserName(int id, String userName) throws DaoException {
+    public void updateUserName(int id, String userName) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
-        Optional<User> user;
         try {
-            connection = pool.getConnection();
+            connection = pool.takeConnection();
 
             preparedStatement = connection.prepareStatement(UPDATE_USER_NAME);
             preparedStatement.setString(1, userName);
             preparedStatement.setInt(2, id);
             preparedStatement.executeUpdate();
 
-            user = findUserById(id);
-
-            return user;
         } catch (SQLException e) {
             throw new DaoException("Failed to change user name: " + e.getMessage(), e);
         } finally {
@@ -430,7 +414,7 @@ public class UserDaoImpl implements UserDao {
         PreparedStatement preparedStatement = null;
         Optional<User> result = Optional.empty();
         try {
-            connection = pool.getConnection();
+            connection = pool.takeConnection();
 
             preparedStatement = connection.prepareStatement(FIND_USER_BY_EMAIL);
             preparedStatement.setString(1, email);
@@ -465,7 +449,7 @@ public class UserDaoImpl implements UserDao {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
-            connection = pool.getConnection();
+            connection = pool.takeConnection();
 
             preparedStatement = connection.prepareStatement(ADD_MONEY_TO_CARD);
             preparedStatement.setBigDecimal(1, amount);
@@ -490,7 +474,7 @@ public class UserDaoImpl implements UserDao {
         PreparedStatement preparedStatement = null;
         BigDecimal money = BigDecimal.ZERO;
         try {
-            connection = pool.getConnection();
+            connection = pool.takeConnection();
 
             preparedStatement = connection.prepareStatement(FIND_MONEY_ON_CARD_BY_CARD_NUMBER);
             preparedStatement.setString(1, cardNumber);
@@ -521,7 +505,7 @@ public class UserDaoImpl implements UserDao {
         PreparedStatement preparedStatement = null;
         Optional<User> result = Optional.empty();
         try {
-            connection = pool.getConnection();
+            connection = pool.takeConnection();
 
             preparedStatement = connection.prepareStatement(FIND_USER_BY_ID_AND_CARD_NUMBER);
             preparedStatement.setInt(1, userId);
