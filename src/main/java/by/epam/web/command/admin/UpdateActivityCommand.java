@@ -46,9 +46,8 @@ public class UpdateActivityCommand implements Command {
                 router.setPage(PageAddress.VIEW_ACTIVITIES);
 
             } else {
-                requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, "Error while updating activity");
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);
-                router.setPage(PageAddress.ERROR_PAGE);
+                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
 

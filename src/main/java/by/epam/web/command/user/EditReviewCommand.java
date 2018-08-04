@@ -5,6 +5,7 @@ import by.epam.web.controller.PageRouter;
 import by.epam.web.constant.PageAddress;
 import by.epam.web.constant.RequestParameter;
 import by.epam.web.entity.Review;
+import by.epam.web.entity.User;
 import by.epam.web.service.ReviewService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
@@ -24,14 +25,24 @@ public class EditReviewCommand implements Command {
         PageRouter router = new PageRouter();
         try {
 
+            User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             ReviewService service = ServiceFactory.getInstance().getReviewService();
             int reviewId = Integer.parseInt(requestContent.getParameter(RequestParameter.REVIEW_ID));
             Optional<Review> found = service.findReviewById(reviewId);
             if (found.isPresent()){
-                requestContent.setAttribute(RequestParameter.REVIEW, found.get());
+                if (user.getId() == found.get().getUserId()){
+                    requestContent.setAttribute(RequestParameter.REVIEW, found.get());
 
-                router.setTransitionType(PageRouter.TransitionType.FORWARD);
-                router.setPage(PageAddress.EDIT_REVIEW_PAGE);
+                    router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                    router.setPage(PageAddress.EDIT_REVIEW_PAGE);
+
+                } else {
+                    router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                    router.setPage(PageAddress.FORBIDDEN_ERROR_PAGE);
+                }
+            } else {
+                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
 
         } catch (NoSuchRequestParameterException e) {

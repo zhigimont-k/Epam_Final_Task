@@ -31,12 +31,13 @@ public class DeleteReviewCommand implements Command {
             if (found.isPresent()) {
                 activityId = found.get().getActivityId();
                 service.deleteReview(Integer.parseInt(id));
+                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
+            } else {
+                router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
 
-            requestContent.setAttribute(RequestParameter.OPERATION_RESULT, true);
-
-            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-            router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {

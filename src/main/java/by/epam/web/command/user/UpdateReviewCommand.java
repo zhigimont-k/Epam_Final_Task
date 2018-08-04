@@ -5,6 +5,7 @@ import by.epam.web.controller.PageRouter;
 import by.epam.web.constant.PageAddress;
 import by.epam.web.constant.RequestParameter;
 import by.epam.web.entity.Review;
+import by.epam.web.entity.User;
 import by.epam.web.service.ReviewService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
@@ -23,6 +24,7 @@ public class UpdateReviewCommand implements Command {
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
+            User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
 
             ReviewService service = ServiceFactory.getInstance().getReviewService();
             int id = Integer.parseInt(requestContent.getParameter
@@ -30,19 +32,23 @@ public class UpdateReviewCommand implements Command {
             int newMark = Integer.parseInt(requestContent.getParameter
                     (RequestParameter.REVIEW_MARK));
             String newMessage = requestContent.getParameter(RequestParameter.REVIEW_MESSAGE);
-            int activityId = 0;
 
             Optional<Review> found = service.findReviewById(id);
             if (found.isPresent()) {
-                service.updateReview(id, newMark, newMessage);
-                activityId = found.get().getActivityId();
-                requestContent.setAttribute(RequestParameter.OPERATION_RESULT, true);
+                if (user.getId() == found.get().getUserId()){
+                    service.updateReview(id, newMark, newMessage);
+                    int activityId = found.get().getActivityId();
+                    router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                    router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
+                } else {
+                    router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                    router.setPage(PageAddress.FORBIDDEN_ERROR_PAGE);
+                }
 
             } else {
-                requestContent.setAttribute(RequestParameter.OPERATION_RESULT, false);
+                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
-            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-            router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
 
 
         } catch (NoSuchRequestParameterException e) {

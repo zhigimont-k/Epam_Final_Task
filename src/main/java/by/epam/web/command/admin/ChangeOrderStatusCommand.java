@@ -4,6 +4,7 @@ import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
 import by.epam.web.constant.PageAddress;
 import by.epam.web.constant.RequestParameter;
+import by.epam.web.entity.Order;
 import by.epam.web.service.OrderService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
@@ -12,6 +13,8 @@ import by.epam.web.util.request.SessionRequestContent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Optional;
 
 public class ChangeOrderStatusCommand implements Command {
     private static Logger logger = LogManager.getLogger();
@@ -24,10 +27,16 @@ public class ChangeOrderStatusCommand implements Command {
             OrderService service = ServiceFactory.getInstance().getOrderService();
             String id = requestContent.getParameter(RequestParameter.ORDER_ID);
             String status = requestContent.getParameter(RequestParameter.ORDER_STATUS);
-            service.changeOrderStatus(Integer.parseInt(id), status);
+            Optional<Order> found = service.findOrderById(Integer.parseInt(id));
+            if (found.isPresent()){
+                service.changeOrderStatus(Integer.parseInt(id), status);
 
-            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-            router.setPage(PageAddress.VIEW_ALL_ORDERS);
+                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setPage(PageAddress.VIEW_ALL_ORDERS);
+            } else {
+                router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
+            }
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {

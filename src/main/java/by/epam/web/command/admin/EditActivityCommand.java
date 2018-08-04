@@ -32,6 +32,9 @@ public class EditActivityCommand implements Command {
 
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);
                 router.setPage(PageAddress.EDIT_ACTIVITY_PAGE);
+            } else {
+                router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);

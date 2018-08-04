@@ -5,6 +5,7 @@ import by.epam.web.controller.PageRouter;
 import by.epam.web.constant.PageAddress;
 import by.epam.web.constant.RequestParameter;
 import by.epam.web.entity.Order;
+import by.epam.web.entity.User;
 import by.epam.web.service.OrderService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
@@ -14,6 +15,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Optional;
+
 public class CancelOrderCommand implements Command {
     private static Logger logger = LogManager.getLogger();
 
@@ -22,12 +25,25 @@ public class CancelOrderCommand implements Command {
         PageRouter router = new PageRouter();
         try {
 
+            User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             OrderService service = ServiceFactory.getInstance().getOrderService();
             String id = requestContent.getParameter(RequestParameter.ORDER_ID);
-            service.changeOrderStatus(Integer.parseInt(id), Order.Status.CANCELLED.getName());
+            Optional<Order> found = service.findOrderById(Integer.parseInt(id));
+            if (found.isPresent()) {
+                if (user.getId() == found.get().getUserId()) {
+                    service.changeOrderStatus(Integer.parseInt(id), Order.Status.CANCELLED.getName());
+                    router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                    router.setPage(PageAddress.VIEW_USER_ORDERS);
+                } else {
+                    router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                    router.setPage(PageAddress.FORBIDDEN_ERROR_PAGE);
+                }
+            } else {
+                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
+            }
 
-            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-            router.setPage(PageAddress.VIEW_USER_ORDERS);
+
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {

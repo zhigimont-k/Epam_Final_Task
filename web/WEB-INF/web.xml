@@ -23,6 +23,16 @@
         </jsp-property-group>
     </jsp-config>
 
+    <error-page>
+        <error-code>404</error-code>
+        <location>/notFound</location>
+    </error-page>
+
+    <error-page>
+        <error-code>403</error-code>
+        <location>/forbidden</location>
+    </error-page>
+
     <servlet>
         <servlet-name>Error</servlet-name>
         <jsp-file>/jsp/error.jsp</jsp-file>
@@ -165,6 +175,24 @@
     <servlet-mapping>
         <servlet-name>Add money</servlet-name>
         <url-pattern>/addMoney</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Forbidden error</servlet-name>
+        <jsp-file>/WEB-INF/jsp/error/forbidden.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Forbidden error</servlet-name>
+        <url-pattern>/forbidden</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Not found error</servlet-name>
+        <jsp-file>/WEB-INF/jsp/error/notFound.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Not found error</servlet-name>
+        <url-pattern>/notFound</url-pattern>
     </servlet-mapping>
 
     <filter>

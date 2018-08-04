@@ -38,10 +38,13 @@ public class PayForOrderCommand implements Command {
             }
             if (orderByUserExists){
                 service.payForOrder(Integer.parseInt(id));
+                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setPage(PageAddress.VIEW_USER_ORDERS);
+            } else {
+                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setPage(PageAddress.FORBIDDEN_ERROR_PAGE);
             }
 
-            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-            router.setPage(PageAddress.VIEW_USER_ORDERS);
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
         } catch (ServiceException e) {
