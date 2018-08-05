@@ -62,6 +62,8 @@ public class RegisterCommand implements Command {
             }
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
+            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());
@@ -69,5 +71,9 @@ public class RegisterCommand implements Command {
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
+    }
+
+    private void checkUniqueness(PageRouter router, String login, String email, String phoneNumber, String cardNumber){
+
     }
 }

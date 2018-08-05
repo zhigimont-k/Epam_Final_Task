@@ -41,18 +41,20 @@ public class UpdateReviewCommand implements Command {
                     router.setTransitionType(PageRouter.TransitionType.REDIRECT);
                     router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
                 } else {
-                    router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                    router.setTransitionType(PageRouter.TransitionType.FORWARD);
                     router.setPage(PageAddress.FORBIDDEN_ERROR_PAGE);
                 }
 
             } else {
-                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setTransitionType(PageRouter.TransitionType.FORWARD);
                 router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
 
 
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
+            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             logger.log(Level.ERROR, e);

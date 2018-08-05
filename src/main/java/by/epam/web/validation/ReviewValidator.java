@@ -3,25 +3,34 @@ package by.epam.web.validation;
 import by.epam.web.entity.Review;
 import by.epam.web.entity.User;
 
-public class ReviewValidator implements AbstractValidator<Review> {
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class ReviewValidator {
+    private static ReviewValidator instance = new ReviewValidator();
+    private static final String MESSAGE_FORMAT = "[\\p{N}\\p{L}\\p{P}\\p{S}]{1,280}";
+    private static final String MARK_FORMAT = "\\d{1,2}";
     private static final int MAX_MARK = 10;
     private static final int MIN_MARK = 1;
-    private static final int MAX_COMMENT_LENGTH = 280;
-    @Override
-    public boolean validate(Review review) {
-        return validateMark(review.getMark())&&
-                validateMessage(review.getMessage());
+
+    private ReviewValidator(){}
+
+    public static ReviewValidator getInstance(){
+        return instance;
     }
 
-    public boolean checkAccess(User user, Review review) {
-        return user.getId() == review.getUserId();
+    public boolean validateMark(String mark) {
+        Matcher matcher = Pattern.compile(MARK_FORMAT).matcher(mark);
+        if (!matcher.matches()){
+            return false;
+        }
+        int intMark = Integer.parseInt(mark);
+        return intMark >= MIN_MARK && intMark <= MAX_MARK;
     }
 
-    private boolean validateMark(int mark){
-        return mark >= MIN_MARK && mark <= MAX_MARK;
+    public boolean validateMessage(String message) {
+        Matcher matcher = Pattern.compile(MESSAGE_FORMAT).matcher(message);
+        return matcher.matches();
     }
 
-    private boolean validateMessage(String message){
-        return message.isEmpty() || message.length() <= MAX_COMMENT_LENGTH;
-    }
 }

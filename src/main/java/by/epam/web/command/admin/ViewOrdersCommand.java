@@ -35,6 +35,9 @@ public class ViewOrdersCommand implements Command {
                     RECORDS_PER_PAGE);
             int numberOfRecords = service.countOrders();
             int numberOfPages = (int) Math.ceil(numberOfRecords * 1.0 / RECORDS_PER_PAGE);
+            if (pageNumber > numberOfPages){
+                pageNumber = numberOfPages;
+            }
 
             requestContent.setAttribute(RequestParameter.ORDER_LIST, orderList);
             requestContent.setAttribute(RequestParameter.NUMBER_OF_PAGES, numberOfPages);
@@ -44,6 +47,8 @@ public class ViewOrdersCommand implements Command {
             router.setPage(PageAddress.ALL_ORDERS_PAGE);
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
+            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());

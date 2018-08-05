@@ -577,7 +577,7 @@ public class OrderDaoImpl implements OrderDao {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
-        int result = 0;
+        int result;
         try {
             connection = pool.takeConnection();
 

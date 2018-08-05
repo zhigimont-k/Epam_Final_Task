@@ -5,10 +5,6 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
 import java.io.IOException;
 
-@WebFilter(filterName = "EncodingFilter",
-        urlPatterns = {"/*"},
-        initParams = {
-                @WebInitParam(name = "encoding", value = "UTF-8")})
 public class EncodingFilter implements Filter {
     private static final String HTML_CONTENT_TYPE = "text/html";
     private String code;

@@ -29,10 +29,10 @@ public final class PageAddress {
 
 
     public static final String VIEW_ACTIVITIES = "app?command=viewActivities";
-    public static final String VIEW_ALL_ORDERS = "app?command=viewAllOrders";
+    public static final String VIEW_ALL_ORDERS = "app?command=viewAllOrders&pageNumber=1";
     public static final String VIEW_USERS = "app?command=viewUsers";
     public static final String VIEW_ACTIVITY = "app?command=viewActivity&activityId=";
-    public static final String VIEW_USER_ORDERS = "app?command=viewUserOrders";
+    public static final String VIEW_USER_ORDERS = "app?command=viewUserOrders&pageNumber=1";
     public static final String VIEW_USER_INFO = "app?command=viewUserInfo";
 
 

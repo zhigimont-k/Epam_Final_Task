@@ -33,8 +33,8 @@ public class ViewOrderCommand implements Command {
         try {
 
             int userId = ((User) requestContent.getSessionAttribute(RequestParameter.USER)).getId();
-            String date = requestContent.getParameter("orderDate");
-            String time = requestContent.getParameter("orderTime");
+            String date = requestContent.getParameter(RequestParameter.ORDER_DATE);
+            String time = requestContent.getParameter(RequestParameter.ORDER_TIME);
             String orderTime = date + " " + time;
             if (StringUtils.countMatches(orderTime, ":") == 1) {
                 orderTime += ":00";
@@ -64,6 +64,8 @@ public class ViewOrderCommand implements Command {
 
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
+            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());

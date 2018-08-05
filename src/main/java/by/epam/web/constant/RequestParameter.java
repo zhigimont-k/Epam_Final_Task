@@ -41,11 +41,12 @@ public final class RequestParameter {
 
     public static final String ORDER = "order";
     public static final String ORDER_ID = "orderId";
-    public static final String ORDER_TIME = "orderTime";
     public static final String ORDER_STATUS = "orderStatus";
     public static final String ORDER_ACTIVITY_LIST = "orderActivityList";
     public static final String ORDER_PRICE = "orderPrice";
     public static final String ORDER_LIST = "orderList";
+    public static final String ORDER_DATE = "orderDate";
+    public static final String ORDER_TIME = "orderTime";
 
     public static final String REVIEW = "review";
     public static final String REVIEW_MARK = "reviewMark";
