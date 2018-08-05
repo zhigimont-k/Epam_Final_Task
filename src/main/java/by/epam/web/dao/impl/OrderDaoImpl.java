@@ -68,7 +68,7 @@ public class OrderDaoImpl implements OrderDao {
             "JOIN order_link ON service.service_id = order_link.service_id " +
             "WHERE order_id = ?";
     private static final String FIND_EMAILS_FOR_UPCOMING_ORDERS =
-            "SELECT DISTINCT user.user_email, order_info.order_id " +
+            "SELECT DISTINCT user.user_email " +
                     "FROM user " +
                     "JOIN order_info " +
                     "ON order_info.user_id = user.user_id " +

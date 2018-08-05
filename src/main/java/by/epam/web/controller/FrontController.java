@@ -4,6 +4,9 @@ import by.epam.web.command.Command;
 import by.epam.web.command.CommandFactory;
 import by.epam.web.constant.RequestParameter;
 import by.epam.web.util.request.SessionRequestContent;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

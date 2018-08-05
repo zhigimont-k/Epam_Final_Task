@@ -19,13 +19,11 @@ import java.util.Optional;
 
 class OrderReminderThread implements Runnable {
     private static Logger logger = LogManager.getLogger();
-    private static final ConnectionPool pool = ConnectionPool.getInstance();
+    private static final OrderDao orderDao = new OrderDaoImpl();
+    private static final UserDao userDao = new UserDaoImpl();
 
     @Override
     public void run() {
-        logger.log(Level.INFO, "Started order reminder thread...");
-        OrderDao orderDao = new OrderDaoImpl();
-        UserDao userDao = new UserDaoImpl();
         try {
             List<String> emailList = orderDao.findEmailsForUpcomingOrders();
             List<String> userLoginList = new ArrayList<>();
@@ -38,7 +36,6 @@ class OrderReminderThread implements Runnable {
                             user.getUserName() : user.getLogin());
                 }
             }
-            logger.log(Level.INFO, "User email list for order reminder: ");
             for (int i = 0; i < emailList.size(); i++) {
                 new MailSenderThread(emailList.get(i), MailComposer.getOrderReminderMessageTheme(),
                         MailComposer.getOrderReminderMessage(userLoginList.get(i))).start();

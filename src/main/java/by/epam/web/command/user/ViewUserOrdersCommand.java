@@ -34,12 +34,18 @@ public class ViewUserOrdersCommand implements Command {
             OrderService service = ServiceFactory.getInstance().getOrderService();
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
 
+            int numberOfRecords = service.countUserOrders(user.getId());
+            int numberOfPages = (int) Math.ceil(numberOfRecords * 1.0 / RECORDS_PER_PAGE);
+            if (pageNumber < 1){
+                pageNumber = 1;
+            } else if (pageNumber > numberOfPages){
+                pageNumber = numberOfPages;
+            }
+
             List<Order> orderList = service.findOrdersByUser(user.getId(),
                     (pageNumber - 1) * RECORDS_PER_PAGE,
                     RECORDS_PER_PAGE);
 
-            int numberOfRecords = service.countUserOrders(user.getId());
-            int numberOfPages = (int) Math.ceil(numberOfRecords * 1.0 / RECORDS_PER_PAGE);
 
             requestContent.setAttribute(RequestParameter.ORDER_LIST, orderList);
             requestContent.setAttribute(RequestParameter.NUMBER_OF_PAGES, numberOfPages);

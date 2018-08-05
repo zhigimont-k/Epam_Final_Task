@@ -21,7 +21,7 @@ public final class PageAddress {
 
 
     public static final String ADD_ORDER_PAGE = "/WEB-INF/jsp/user/addOrder.jsp";
-    public static final String VIEW_ORDER_PAGE = "/WEB-INF/jsp/user/orderCheck.jsp";
+    public static final String VIEW_ORDER_PAGE = "/viewOrder";
     public static final String USER_ORDERS_PAGE = "/WEB-INF/jsp/user/userOrders.jsp";
     public static final String ALL_ORDERS_PAGE = "/WEB-INF/jsp/admin/allOrders.jsp";
 

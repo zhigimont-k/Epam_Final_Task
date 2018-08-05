@@ -59,7 +59,8 @@ public class ViewOrderCommand implements Command {
                 order.addActivity(activity);
             }
             requestContent.setSessionAttribute(RequestParameter.ORDER, order);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            logger.log(Level.INFO, order);
+            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
             router.setPage(PageAddress.VIEW_ORDER_PAGE);
 
         } catch (NoSuchRequestParameterException e) {

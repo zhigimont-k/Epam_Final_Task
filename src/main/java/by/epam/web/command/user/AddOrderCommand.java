@@ -22,6 +22,7 @@ public class AddOrderCommand implements Command {
         PageRouter router = new PageRouter();
         try {
             Order order = (Order)requestContent.getSessionAttribute(RequestParameter.ORDER);
+            logger.log(Level.INFO, order);
 
             OrderService service = ServiceFactory.getInstance().getOrderService();
 

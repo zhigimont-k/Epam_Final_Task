@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebFilter(filterName = "PageAccessCheckFilter",
-        urlPatterns = {"/addMoney"})
+        urlPatterns = {"/addMoney", "/viewOrder"})
 public class PageAccessCheckFilter implements Filter {
     private static Logger logger = LogManager.getLogger();
 

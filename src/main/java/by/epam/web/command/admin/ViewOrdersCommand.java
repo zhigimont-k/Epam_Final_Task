@@ -30,11 +30,18 @@ public class ViewOrdersCommand implements Command {
                         requestContent.getParameter(RequestParameter.PAGE_NUMBER));
 
             OrderService service = ServiceFactory.getInstance().getOrderService();
+
+            int numberOfRecords = service.countOrders();
+            int numberOfPages = (int) Math.ceil(numberOfRecords * 1.0 / RECORDS_PER_PAGE);
+
+            if (pageNumber < 1){
+                pageNumber = 1;
+            } else if (pageNumber > numberOfPages){
+                pageNumber = numberOfPages;
+            }
             List<Order> orderList = service.findAllOrders(
                     (pageNumber - 1) * RECORDS_PER_PAGE,
                     RECORDS_PER_PAGE);
-            int numberOfRecords = service.countOrders();
-            int numberOfPages = (int) Math.ceil(numberOfRecords * 1.0 / RECORDS_PER_PAGE);
             if (pageNumber > numberOfPages){
                 pageNumber = numberOfPages;
             }
