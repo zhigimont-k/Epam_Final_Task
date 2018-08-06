@@ -8,7 +8,6 @@ import by.epam.web.entity.User;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.service.UserService;
-import by.epam.web.util.request.NoSuchRequestParameterException;
 import by.epam.web.util.request.SessionRequestContent;
 import by.epam.web.validation.NumberValidator;
 import by.epam.web.validation.UserValidator;
@@ -42,13 +41,8 @@ public class ChangeUserStatusCommand implements Command {
                     router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
                 }
             }
-        } catch (NoSuchRequestParameterException e) {
-            logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(PageAddress.ERROR_PAGE);
         }

@@ -47,18 +47,15 @@
                 <br/>
                 <input type="password" name="password" id="passwordField" maxlength="32"
                        pattern="[\w^_]{6,32}" required/></label>
-            <label><input type="checkbox" onclick="togglePasswordVisibility(passwordField)">${showPassword}</label>
+            <label><input type="checkbox" onclick="togglePasswordVisibility()">${showPassword}</label>
             <br/>
 
             <label>${newPasswordLabel}:
                 <br/>
                 <input type="password" name="newPassword" id="newPasswordField" maxlength="32"
                        pattern="[\w^_]{6,32}"/></label>
-            <label><input type="checkbox" onclick="togglePasswordVisibility(newPasswordField)">${showPassword}</label>
+            <label><input type="checkbox" onclick="toggleNewPasswordVisibility()">${showPassword}</label>
             <br/>
-            <c:if test="${illegalPassword == true}">
-                Password should consist of 6-32 latin characters or numbers.
-            </c:if>
             <br/>
             ${emailLabel}: ${sessionScope.user.email}
             <br/>
@@ -73,14 +70,14 @@
                        value="${sessionScope.user.userName}"
                        pattern="[\p{L}\s]{2,40}"/></label>
             <br/>
-            <c:if test="${illegalUserName == true}">
-                Username should consist of 2-40 symbols or left empty.
-            </c:if>
             <br/>
             <input type="submit" value="${button}"/>
             <br/>
             <c:if test="${authFail == true}">
                 ${authFailMessage}
+            </c:if>
+            <c:if test="${illegalInput == true}">
+                Please check f your input is correct
             </c:if>
         </form>
     </div>

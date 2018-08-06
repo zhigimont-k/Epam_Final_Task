@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SessionRequestContent {
+    private static final String EMPTY = "";
     private Map<String, Object> requestAttributes = new HashMap<>();
     private Map<String, String[]> requestParameters = new HashMap<>();
     private Map<String, Object> sessionAttributes = new HashMap<>();
@@ -14,20 +15,14 @@ public class SessionRequestContent {
         extractValues(request);
     }
 
-    public String getParameter(String parameterName) throws NoSuchRequestParameterException {
-        if (requestParameters.get(parameterName) != null) {
-            return requestParameters.get(parameterName)[0];
-        } else {
-            return "";
-        }
+    public String getParameter(String parameterName){
+        return (requestParameters.get(parameterName) != null) ?
+                requestParameters.get(parameterName)[0] : EMPTY;
     }
 
-    public String[] getParameters(String parameterName) throws NoSuchRequestParameterException {
-        if (requestParameters.get(parameterName) != null) {
-            return requestParameters.get(parameterName);
-        } else {
-            return new String[0];
-        }
+    public String[] getParameters(String parameterName) {
+        return (requestParameters.get(parameterName) != null) ?
+                requestParameters.get(parameterName) : new String[0];
     }
 
     public void setAttribute(String attributeName, Object attributeValue) {
@@ -38,20 +33,14 @@ public class SessionRequestContent {
         sessionAttributes.put(attributeName, attributeValue);
     }
 
-    public Object getSessionAttribute(String attributeName) throws NoSuchRequestParameterException {
-        if (sessionAttributes.get(attributeName) != null) {
-            return sessionAttributes.get(attributeName);
-        } else {
-            return "";
-        }
+    public Object getSessionAttribute(String attributeName) {
+        return (sessionAttributes.get(attributeName) != null) ?
+             sessionAttributes.get(attributeName) : EMPTY;
     }
 
-    public Object getRequestAttribute(String attributeName) throws NoSuchRequestParameterException {
-        if (requestAttributes.get(attributeName) != null) {
-            return requestAttributes.get(attributeName);
-        } else {
-            return new Object();
-        }
+    public Object getRequestAttribute(String attributeName) {
+        return (requestAttributes.get(attributeName) != null) ?
+        requestAttributes.get(attributeName) : new Object();
     }
 
     public void insertValues(HttpServletRequest request) {

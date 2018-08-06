@@ -8,10 +8,6 @@ public final class RequestParameter {
 
     public static final String USER = "user";
     public static final String LOCAL = "local";
-    public static final String LOGIN_EXISTS = "loginExists";
-    public static final String EMAIL_EXISTS = "emailExists";
-    public static final String PHONE_NUMBER_EXISTS = "phoneNumberExists";
-    public static final String CARD_NUMBER_EXISTS = "cardNumberExists";
     public static final String NO_CARD_FOUND = "noCardFound";
     public static final String NO_EMAIL_FOUND = "noEmailFound";
     public static final String AUTH_FAIL = "authFail";
@@ -19,27 +15,8 @@ public final class RequestParameter {
     public static final String CARD_NUMBER = "cardNumber";
     public static final String MONEY = "money";
 
-    public static final String ILLEGAL_USER_NAME = "illegalUserName";
-    public static final String ILLEGAL_PASSWORD = "illegalPassword";
-    public static final String ILLEGAL_LOGIN = "illegalLogin";
-    public static final String ILLEGAL_EMAIL = "illegalEmail";
-    public static final String ILLEGAL_PHONE_NUMBER = "illegalPhoneNumber";
-    public static final String ILLEGAL_CARD_NUMBER = "illegalCardNumber";
-    public static final String ILLEGAL_MONEY = "illegalMoney";
-
-    public static final String ACTIVITY_EXISTS = "activityExists";
-    public static final String ILLEGAL_ACTIVITY_NAME = "illegalServiceName";
-    public static final String ILLEGAL_ACTIVITY_DESCRIPTION = "illegalServiceDescription";
-    public static final String ILLEGAL_ACTIVITY_PRICE = "illegalServicePrice";
-
-    public static final String ILLEGAL_ORDER_DATE = "illegalOrderDate";
-    public static final String ILLEGAL_ORDER_TIME = "illegalOrderTime";
-    public static final String ILLEGAL_ORDER_ACTIVITY_LIST = "illegalServiceList";
-
-    public static final String ILLEGAL_REVIEW_MARK = "illegalReviewMark";
-    public static final String ILLEGAL_REVIEW_MESSAGE = "illegalReviewMessage";
-
-    public static final String ERROR_MESSAGE = "errorMessage";
+    public static final String ILLEGAL_INPUT = "illegalInput";
+    public static final String DATA_EXISTS = "dataExists";
 
     public static final String USER_ID = "userId";
     public static final String LOGIN = "login";

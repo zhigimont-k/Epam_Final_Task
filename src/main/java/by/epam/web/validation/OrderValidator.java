@@ -16,7 +16,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class OrderValidator {
-    private static Logger logger = LogManager.getLogger();
     private static OrderValidator instance = new OrderValidator();
     private static final String DATE_FORMAT_REGEX = "\\d{4}-\\d{2}-\\d{2}";
     private static final String DATE_FORMAT = "yyyy-MM-dd";

@@ -10,7 +10,6 @@ import by.epam.web.entity.User;
 import by.epam.web.service.ActivityService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
-import by.epam.web.util.request.NoSuchRequestParameterException;
 import by.epam.web.util.request.SessionRequestContent;
 import by.epam.web.validation.OrderValidator;
 import org.apache.commons.lang3.StringUtils;
@@ -37,9 +36,7 @@ public class ViewOrderCommand implements Command {
             String date = requestContent.getParameter(RequestParameter.ORDER_DATE);
             String time = requestContent.getParameter(RequestParameter.ORDER_TIME);
             String[] activityIdList = requestContent.getParameters(RequestParameter.ACTIVITY_ID);
-            if (validateOrder(requestContent, date, time, activityIdList)){
-                logger.log(Level.INFO, "date: "+date);
-                logger.log(Level.INFO, "time: "+time);
+            if (validateOrder(date, time, activityIdList)) {
 
                 BigDecimal orderPrice = new BigDecimal(BigInteger.ZERO);
                 List<Activity> activityList = new ArrayList<>();
@@ -60,16 +57,12 @@ public class ViewOrderCommand implements Command {
                     order.addActivity(activity);
                 }
                 requestContent.setSessionAttribute(RequestParameter.ORDER, order);
-                router.setTransitionType(PageRouter.TransitionType.REDIRECT); //// чекнуть!!!
+                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
                 router.setPage(PageAddress.VIEW_ORDER_PAGE);
             } else {
                 router.setTransitionType(PageRouter.TransitionType.REDIRECT);
                 router.setPage(PageAddress.ADD_ORDER);
             }
-        } catch (NoSuchRequestParameterException e) {
-            logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
@@ -78,25 +71,14 @@ public class ViewOrderCommand implements Command {
         return router;
     }
 
-    private boolean validateOrder(SessionRequestContent requestContent, String date, String time,
-                                  String[] activityList){
-        boolean flag = true;
-        if (!OrderValidator.getInstance().validateDate(date)) {
-            flag = false;
-            requestContent.setSessionAttribute(RequestParameter.ILLEGAL_ORDER_DATE, true);
-        }
-        if (!OrderValidator.getInstance().validateTime(time, date)) {
-            flag = false;
-            requestContent.setSessionAttribute(RequestParameter.ILLEGAL_ORDER_TIME, true);
-        }
-        if (activityList.length == 0) {
-            flag = false;
-            requestContent.setSessionAttribute(RequestParameter.ILLEGAL_ORDER_ACTIVITY_LIST, true);
-        }
-        return flag;
+    private boolean validateOrder(String date, String time,
+                                  String[] activityList) {
+        return OrderValidator.getInstance().validateDate(date) &&
+                OrderValidator.getInstance().validateTime(time, date) &&
+                activityList.length != 0;
     }
 
-    private Timestamp buildTimestamp(String date, String time){
+    private Timestamp buildTimestamp(String date, String time) {
         String orderTime = date + " " + time;
         if (StringUtils.countMatches(orderTime, ":") == 1) {
             orderTime += ":00";

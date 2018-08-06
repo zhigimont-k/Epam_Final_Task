@@ -32,7 +32,6 @@ public class ViewActivitiesCommand implements Command {
             router.setPage(PageAddress.ACTIVITIES_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(PageAddress.ERROR_PAGE);
         }

@@ -8,7 +8,6 @@ import by.epam.web.entity.User;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.service.UserService;
-import by.epam.web.util.request.NoSuchRequestParameterException;
 import by.epam.web.util.request.SessionRequestContent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -30,13 +29,8 @@ public class ViewUserInfoCommand implements Command {
             requestContent.setAttribute(RequestParameter.MONEY, money);
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(PageAddress.ACCOUNT_PAGE);
-        } catch (NoSuchRequestParameterException e) {
-            logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(PageAddress.ERROR_PAGE);
         }

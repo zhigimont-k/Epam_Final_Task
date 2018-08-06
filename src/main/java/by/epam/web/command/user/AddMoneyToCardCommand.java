@@ -8,7 +8,6 @@ import by.epam.web.entity.User;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.service.UserService;
-import by.epam.web.util.request.NoSuchRequestParameterException;
 import by.epam.web.util.request.SessionRequestContent;
 import by.epam.web.validation.NumberValidator;
 import by.epam.web.validation.UserValidator;
@@ -30,7 +29,7 @@ public class AddMoneyToCardCommand implements Command {
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             String cardNumber = requestContent.getParameter(RequestParameter.CARD_NUMBER);
             String moneyToAdd = requestContent.getParameter(RequestParameter.MONEY);
-            if (validateParameters(requestContent, cardNumber, moneyToAdd)){
+            if (validateParameters(cardNumber, moneyToAdd)){
                 if (service.findUserByIdAndCard(user.getId(), cardNumber).isPresent()) {
                     service.addMoneyToCard(cardNumber,
                             BigDecimal.valueOf(Double.parseDouble(moneyToAdd)));
@@ -45,10 +44,6 @@ public class AddMoneyToCardCommand implements Command {
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);
                 router.setPage(PageAddress.ADD_MONEY_PAGE);
             }
-        } catch (NoSuchRequestParameterException e) {
-            logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
@@ -57,17 +52,9 @@ public class AddMoneyToCardCommand implements Command {
         return router;
     }
 
-    private boolean validateParameters(SessionRequestContent requestContent, String cardNumber,
+    private boolean validateParameters(String cardNumber,
                                        String moneyToAdd){
-        boolean flag = true;
-        if (!UserValidator.getInstance().validateCardNumber(cardNumber)){
-            flag = false;
-            requestContent.setAttribute(RequestParameter.ILLEGAL_CARD_NUMBER, true);
-        }
-        if (!NumberValidator.getInstance().validateMoney(moneyToAdd)){
-            flag = false;
-            requestContent.setAttribute(RequestParameter.ILLEGAL_MONEY, true);
-        }
-        return flag;
+        return UserValidator.getInstance().validateCardNumber(cardNumber) &&
+                NumberValidator.getInstance().validateMoney(moneyToAdd);
     }
 }

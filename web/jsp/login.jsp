@@ -40,7 +40,7 @@
                 <br/>
                 <input type="password" name="password" id="passwordField" maxlength="32" required/></label>
             <br/>
-            <label><input type="checkbox" onclick="togglePasswordVisibility(passwordField)">${showPassword}</label>
+            <label><input type="checkbox" onclick="togglePasswordVisibility()">${showPassword}</label>
             <br/>
             <input type="submit" value="${button}"/>
             <br/>

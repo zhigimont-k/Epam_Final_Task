@@ -68,9 +68,9 @@ public class OrderDaoImpl implements OrderDao {
             "JOIN order_link ON service.service_id = order_link.service_id " +
             "WHERE order_id = ?";
     private static final String FIND_EMAILS_FOR_UPCOMING_ORDERS =
-            "SELECT DISTINCT user.user_email " +
+            "SELECT DISTINCT user.user_email, order_info.order_id " +
                     "FROM user " +
-                    "JOIN order_info " +
+                    "LEFT JOIN order_info " +
                     "ON order_info.user_id = user.user_id " +
                     "WHERE DATE(order_time) <= CURRENT_DATE + INTERVAL 1 DAY " +
                     "AND order_info.order_status = 'confirmed' AND order_info.reminded = 0";

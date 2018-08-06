@@ -30,7 +30,6 @@ public class CreateOrderCommand implements Command {
             router.setPage(PageAddress.ADD_ORDER_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(PageAddress.ERROR_PAGE);
         }

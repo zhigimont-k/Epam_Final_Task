@@ -8,9 +8,7 @@ import by.epam.web.entity.Activity;
 import by.epam.web.service.ActivityService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
-import by.epam.web.util.request.NoSuchRequestParameterException;
 import by.epam.web.util.request.SessionRequestContent;
-import by.epam.web.validation.ActivityValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,21 +27,16 @@ public class EditActivityCommand implements Command {
             int activityId = Integer.parseInt(requestContent.getParameter(RequestParameter.ACTIVITY_ID));
             Optional<Activity> found = service.findActivityById(activityId);
             if (found.isPresent()){
-                requestContent.setAttribute(RequestParameter.ACTIVITY, found.get());
+                requestContent.setSessionAttribute(RequestParameter.ACTIVITY, found.get());
 
-                router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
                 router.setPage(PageAddress.EDIT_ACTIVITY_PAGE);
             } else {
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);
                 router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
-        } catch (NoSuchRequestParameterException e) {
-            logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(PageAddress.ERROR_PAGE);
         }

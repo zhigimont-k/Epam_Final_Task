@@ -41,7 +41,7 @@ class OrderReminderThread implements Runnable {
                         MailComposer.getOrderReminderMessage(userLoginList.get(i))).start();
             }
         } catch (DaoException e) {
-            logger.log(Level.ERROR, "Couldn't retrieve email list for upcoming orders");
+            logger.log(Level.ERROR, "Couldn't retrieve email list for upcoming orders: " + e);
         }
     }
 }

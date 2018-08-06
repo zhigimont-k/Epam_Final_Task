@@ -10,7 +10,6 @@ import by.epam.web.service.ActivityService;
 import by.epam.web.service.ReviewService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
-import by.epam.web.util.request.NoSuchRequestParameterException;
 import by.epam.web.util.request.SessionRequestContent;
 import by.epam.web.validation.NumberValidator;
 import by.epam.web.validation.ReviewValidator;
@@ -35,7 +34,7 @@ public class AddReviewCommand implements Command {
             String message = requestContent.getParameter(RequestParameter.REVIEW_MESSAGE).trim();
 
             if (NumberValidator.getInstance().validateId(activityId)){
-                if (validateReview(requestContent, mark, message)){
+                if (validateReview(mark, message)){
                     Optional<Activity> found = activityService.findActivityById(
                             Integer.parseInt(activityId));
                     if (found.isPresent()){
@@ -53,13 +52,8 @@ public class AddReviewCommand implements Command {
                     router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
                 }
             }
-        } catch (NoSuchRequestParameterException e) {
-            logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(PageAddress.ERROR_PAGE);
         }
@@ -67,16 +61,8 @@ public class AddReviewCommand implements Command {
 
     }
 
-    private boolean validateReview(SessionRequestContent requestContent, String mark, String message){
-        boolean flag = true;
-        if (!ReviewValidator.getInstance().validateMark(mark)){
-            flag = false;
-            requestContent.setAttribute(RequestParameter.ILLEGAL_REVIEW_MARK, true);
-        }
-        if (!ReviewValidator.getInstance().validateMessage(message)){
-            flag = false;
-            requestContent.setAttribute(RequestParameter.ILLEGAL_REVIEW_MESSAGE, true);
-        }
-        return flag;
+    private boolean validateReview(String mark, String message){
+        return ReviewValidator.getInstance().validateMark(mark) &&
+                ReviewValidator.getInstance().validateMessage(message);
     }
 }
