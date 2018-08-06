@@ -8,24 +8,24 @@ import java.util.regex.Pattern;
 
 public class ActivityValidator {
     private static ActivityValidator instance = new ActivityValidator();
-    private static final String NAME_FORMAT = "\\p{L}{2,40}";
-    private static final String DESCRIPTION_FORMAT = "[\\p{N}\\p{L}\\p{P}\\p{S}]{1,280}";
+    private static final String NAME_FORMAT = "[\\p{L}\\s]{2,40}";
+    private static final String DESCRIPTION_FORMAT = "[\\p{N}\\p{L}\\p{P}\\s]{1,280}";
     private static final String PRICE_FORMAT = "\\d{1,10}";
 
     private ActivityValidator(){}
 
-    public ActivityValidator getInstance(){
+    public static ActivityValidator getInstance(){
         return instance;
     }
 
     public boolean validateName(String name) {
         Matcher matcher = Pattern.compile(NAME_FORMAT).matcher(name);
-        return matcher.matches();
+        return matcher.matches() && !name.trim().isEmpty();
     }
 
     public boolean validateDescription(String description){
         Matcher matcher = Pattern.compile(DESCRIPTION_FORMAT).matcher(description);
-        return matcher.matches();
+        return matcher.matches() && !description.trim().isEmpty();
     }
 
     public boolean validateStatus(String status){

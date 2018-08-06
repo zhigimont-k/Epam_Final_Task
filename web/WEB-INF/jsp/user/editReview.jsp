@@ -24,16 +24,16 @@
 <div>
     <form name="reviewEditForm" method="POST" action="app">
         <input type="hidden" name="command" value="updateReview"/>
-        <input type="hidden" name="reviewId" value="${review.id}"/>
+        <input type="hidden" name="reviewId" value="${sessionScope.review.id}"/>
         <label>Mark:
             <br/>
-            <input type="number" name="reviewMark" max="10" min="1" required/>
+            <input type="number" value="${sessionScope.review.mark}" name="reviewMark" max="10" min="1" required/>
         </label>
 
         <br/>
         <label>Comment:
             <br/>
-            <textarea name="reviewMessage" maxlength="280" cols="30" rows="10">${review.message}</textarea>
+            <textarea name="reviewMessage" maxlength="280" cols="30" rows="10">${sessionScope.review.message}</textarea>
         </label>
         <br/>
         <input type="submit" value="${button}"/>

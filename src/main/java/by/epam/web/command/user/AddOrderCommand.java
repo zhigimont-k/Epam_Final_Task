@@ -16,16 +16,13 @@ import org.apache.logging.log4j.Logger;
 
 public class AddOrderCommand implements Command {
     private static Logger logger = LogManager.getLogger();
+    private static OrderService service = ServiceFactory.getInstance().getOrderService();
 
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
             Order order = (Order)requestContent.getSessionAttribute(RequestParameter.ORDER);
-            logger.log(Level.INFO, order);
-
-            OrderService service = ServiceFactory.getInstance().getOrderService();
-
             service.addOrder(order.getUserId(), order.getDateTime(), order.getActivityList());
             requestContent.removeSessionAttribute(RequestParameter.ORDER);
 

@@ -18,7 +18,7 @@ public class SessionRequestContent {
         if (requestParameters.get(parameterName) != null) {
             return requestParameters.get(parameterName)[0];
         } else {
-            throw new NoSuchRequestParameterException("Couldn't find parameter: " + parameterName);
+            return "";
         }
     }
 
@@ -26,7 +26,7 @@ public class SessionRequestContent {
         if (requestParameters.get(parameterName) != null) {
             return requestParameters.get(parameterName);
         } else {
-            throw new NoSuchRequestParameterException("Couldn't find parameter: " + parameterName);
+            return new String[0];
         }
     }
 
@@ -42,7 +42,7 @@ public class SessionRequestContent {
         if (sessionAttributes.get(attributeName) != null) {
             return sessionAttributes.get(attributeName);
         } else {
-            throw new NoSuchRequestParameterException("Couldn't find attribute: " + attributeName);
+            return "";
         }
     }
 
@@ -50,7 +50,7 @@ public class SessionRequestContent {
         if (requestAttributes.get(attributeName) != null) {
             return requestAttributes.get(attributeName);
         } else {
-            throw new NoSuchRequestParameterException("Couldn't find attribute: " + attributeName);
+            return new Object();
         }
     }
 

@@ -20,7 +20,6 @@
     <fmt:message bundle="${locale}" key="locale.user.role.user" var="user"/>
     <fmt:message bundle="${locale}" key="locale.user.role.banned" var="banned"/>
 
-
     <fmt:message bundle="${locale}" key="locale.user.warning.auth.fail" var="authFailMessage"/>
 
     <fmt:message bundle="${locale}" key="locale.common.button.update" var="button"/>
@@ -39,40 +38,52 @@
     <jsp:forward page="${pageContext.request.contextPath}/login"/>
 </c:if>
 <div id="custom-form">
-    <form name="updateUserForm" method="POST" action="app">
-        <input type="hidden" name="command" value="updateUser"/>
-        ${loginLabel}: ${sessionScope.user.login}
-        <br/>
-        <label>${oldPasswordLabel}:
-            <input type="password" name="password" id="passwordField" minlength="10"
-                   maxlength="32" required/></label>
-        <br/>
-        <input type="checkbox" onclick="togglePasswordVisibility()">${showPassword}
-        <br/>
-        <label>${newPasswordLabel}:
-        <input type="password" name="newPassword" id="passwordField" minlength="10"
-               maxlength="32" required/></label>
-        <br/>
-        <input type="checkbox" onclick="togglePasswordVisibility()">${showPassword}
-        <br/>
-        ${emailLabel}: ${sessionScope.user.email}
-        <br/>
-        ${phoneNumberLabel}: ${sessionScope.user.phoneNumber}
-        <br/>
-        Card number: ${sessionScope.user.cardNumber}
-        <br/>
-        Money on card: ${money}
-        <br/>
-        <label>${userNameLabel}:
-            <input type="text" name="userName" value="${sessionScope.user.userName}"
-                   maxlength="20" minlength="3"/></label>
-        <br/>
-        <input type="submit" value="${button}"/>
-        <br/>
-        <c:if test="${authFail == true}">
-            ${authFailMessage}
-        </c:if>
-    </form>
+    <div>
+        <form name="updateUserForm" method="POST" action="app">
+            <input type="hidden" name="command" value="updateUser"/>
+            ${loginLabel}: ${sessionScope.user.login}
+            <br/>
+            <label>${passwordLabel}
+                <br/>
+                <input type="password" name="password" id="passwordField" maxlength="32"
+                       pattern="[\w^_]{6,32}" required/></label>
+            <label><input type="checkbox" onclick="togglePasswordVisibility(passwordField)">${showPassword}</label>
+            <br/>
+
+            <label>${newPasswordLabel}:
+                <br/>
+                <input type="password" name="newPassword" id="newPasswordField" maxlength="32"
+                       pattern="[\w^_]{6,32}"/></label>
+            <label><input type="checkbox" onclick="togglePasswordVisibility(newPasswordField)">${showPassword}</label>
+            <br/>
+            <c:if test="${illegalPassword == true}">
+                Password should consist of 6-32 latin characters or numbers.
+            </c:if>
+            <br/>
+            ${emailLabel}: ${sessionScope.user.email}
+            <br/>
+            ${phoneNumberLabel}: ${sessionScope.user.phoneNumber}
+            <br/>
+            Card number: ${sessionScope.user.cardNumber}
+            <br/>
+            Money on card: ${money}
+            <br/>
+            <label>${userNameLabel}
+                <input type="text" name="userName" minlength="2" maxlength="40"
+                       value="${sessionScope.user.userName}"
+                       pattern="[\p{L}\s]{2,40}"/></label>
+            <br/>
+            <c:if test="${illegalUserName == true}">
+                Username should consist of 2-40 symbols or left empty.
+            </c:if>
+            <br/>
+            <input type="submit" value="${button}"/>
+            <br/>
+            <c:if test="${authFail == true}">
+                ${authFailMessage}
+            </c:if>
+        </form>
+    </div>
 </div>
 </body>
 </html>

@@ -12,6 +12,7 @@ import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.util.request.NoSuchRequestParameterException;
 import by.epam.web.util.request.SessionRequestContent;
+import by.epam.web.validation.OrderValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -35,44 +36,71 @@ public class ViewOrderCommand implements Command {
             int userId = ((User) requestContent.getSessionAttribute(RequestParameter.USER)).getId();
             String date = requestContent.getParameter(RequestParameter.ORDER_DATE);
             String time = requestContent.getParameter(RequestParameter.ORDER_TIME);
-            String orderTime = date + " " + time;
-            if (StringUtils.countMatches(orderTime, ":") == 1) {
-                orderTime += ":00";
-            }
             String[] activityIdList = requestContent.getParameters(RequestParameter.ACTIVITY_ID);
-            BigDecimal orderPrice = new BigDecimal(BigInteger.ZERO);
-            List<Activity> activityList = new ArrayList<>();
-            ActivityService activityService = ServiceFactory.getInstance().getActivityService();
-            for (String activityId : activityIdList) {
-                int id = Integer.parseInt(activityId);
-                Optional<Activity> found = activityService.findActivityById(id);
-                if (found.isPresent()) {
-                    activityList.add(found.get());
-                    orderPrice = orderPrice.add(found.get().getPrice());
-                }
-            }
-            Order order = new Order();
-            order.setUserId(userId);
-            order.setDateTime(Timestamp.valueOf(orderTime.replace("T", " ")));
-            order.setPrice(orderPrice);
-            for (Activity activity : activityList) {
-                order.addActivity(activity);
-            }
-            requestContent.setSessionAttribute(RequestParameter.ORDER, order);
-            logger.log(Level.INFO, order);
-            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-            router.setPage(PageAddress.VIEW_ORDER_PAGE);
+            if (validateOrder(requestContent, date, time, activityIdList)){
+                logger.log(Level.INFO, "date: "+date);
+                logger.log(Level.INFO, "time: "+time);
 
+                BigDecimal orderPrice = new BigDecimal(BigInteger.ZERO);
+                List<Activity> activityList = new ArrayList<>();
+                ActivityService activityService = ServiceFactory.getInstance().getActivityService();
+                for (String activityId : activityIdList) {
+                    int id = Integer.parseInt(activityId);
+                    Optional<Activity> found = activityService.findActivityById(id);
+                    if (found.isPresent()) {
+                        activityList.add(found.get());
+                        orderPrice = orderPrice.add(found.get().getPrice());
+                    }
+                }
+                Order order = new Order();
+                order.setUserId(userId);
+                order.setDateTime(buildTimestamp(date, time));
+                order.setPrice(orderPrice);
+                for (Activity activity : activityList) {
+                    order.addActivity(activity);
+                }
+                requestContent.setSessionAttribute(RequestParameter.ORDER, order);
+                router.setTransitionType(PageRouter.TransitionType.REDIRECT); //// чекнуть!!!
+                router.setPage(PageAddress.VIEW_ORDER_PAGE);
+            } else {
+                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setPage(PageAddress.ADD_ORDER);
+            }
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            requestContent.setAttribute(RequestParameter.ERROR_MESSAGE, e.getMessage());
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
+    }
+
+    private boolean validateOrder(SessionRequestContent requestContent, String date, String time,
+                                  String[] activityList){
+        boolean flag = true;
+        if (!OrderValidator.getInstance().validateDate(date)) {
+            flag = false;
+            requestContent.setSessionAttribute(RequestParameter.ILLEGAL_ORDER_DATE, true);
+        }
+        if (!OrderValidator.getInstance().validateTime(time, date)) {
+            flag = false;
+            requestContent.setSessionAttribute(RequestParameter.ILLEGAL_ORDER_TIME, true);
+        }
+        if (activityList.length == 0) {
+            flag = false;
+            requestContent.setSessionAttribute(RequestParameter.ILLEGAL_ORDER_ACTIVITY_LIST, true);
+        }
+        return flag;
+    }
+
+    private Timestamp buildTimestamp(String date, String time){
+        String orderTime = date + " " + time;
+        if (StringUtils.countMatches(orderTime, ":") == 1) {
+            orderTime += ":00";
+        }
+        return Timestamp.valueOf(orderTime.replace("T", " "));
     }
 }

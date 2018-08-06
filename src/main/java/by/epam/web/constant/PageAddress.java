@@ -8,6 +8,7 @@ public final class PageAddress {
     public static final String LOGIN_PAGE = "/login";
 
     public static final String ACCOUNT_PAGE = "/WEB-INF/jsp/user/account.jsp";
+    public static final String ADD_MONEY_PAGE = "/addMoney";
 
     public static final String ERROR_PAGE = "/WEB-INF/jsp/error/error.jsp";
     public static final String NOT_FOUND_ERROR_PAGE = "/WEB-INF/jsp/error/notFound.jsp";
@@ -34,6 +35,7 @@ public final class PageAddress {
     public static final String VIEW_ACTIVITY = "app?command=viewActivity&activityId=";
     public static final String VIEW_USER_ORDERS = "app?command=viewUserOrders&pageNumber=1";
     public static final String VIEW_USER_INFO = "app?command=viewUserInfo";
+    public static final String ADD_ORDER = "app?command=createOrder";
 
 
     private PageAddress(){}

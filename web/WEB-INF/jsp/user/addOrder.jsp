@@ -38,6 +38,12 @@
         <input type="time" name="orderTime"
                min="09:00" max="18:00" required />
     </label>
+    <c:if test="${sessionScope.illegalOrderDate}">
+        Please input legal date.<br/>
+    </c:if>
+    <c:if test="${sessionScope.illegalOrderTime}">
+        Please input legal time.<br/>
+    </c:if>
     <br/>
     Choose services to be included in your order:
     <br/>
@@ -46,6 +52,9 @@
                 ${activity.name}<br></label>
         <br/>
     </c:forEach>
+    <c:if test="${sessionScope.illegalServiceList}">
+        Please choose at least one service.
+    </c:if>
 
     <br/>
     <input type="submit" value="Go to check"/>

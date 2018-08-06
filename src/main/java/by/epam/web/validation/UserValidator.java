@@ -13,7 +13,7 @@ public class UserValidator {
             "([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})";
     private static final int MAX_EMAIL_LENGTH = 50;
     private static final String PHONE_NUMBER_FORMAT = "\\+(\\d{12})";
-    private static final String USER_NAME_FORMAT = "\\p{L}{2,40}";
+    private static final String USER_NAME_FORMAT = "[\\p{L}\\s]{2,40}";
     private static final String CARD_NUMBER_FORMAT = "\\d{16}";
 
     private UserValidator(){}
@@ -44,7 +44,7 @@ public class UserValidator {
 
     public boolean validateUserName(String userName){
         Matcher matcher = Pattern.compile(USER_NAME_FORMAT).matcher(userName);
-        return matcher.matches();
+        return userName.isEmpty() || (matcher.matches() && !userName.trim().isEmpty());
     }
 
     public boolean validateCardNumber(String cardNumber){

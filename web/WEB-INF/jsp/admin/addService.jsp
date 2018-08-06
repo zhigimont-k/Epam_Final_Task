@@ -24,33 +24,43 @@
 <c:if test="${sessionScope.user.status ne 'admin'}">
     <jsp:forward page="${pageContext.request.contextPath}/home"/>
 </c:if>
-
-<jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
 <div id="custom-form">
     <div>
         <form name="addServiceForm" method="POST" action="app">
             <input type="hidden" name="command" value="addActivity"/>
-            Add a service:
+            Add a service:<br/>
             <label>${serviceNameLabel}
                 <br/>
-                <input type="text" name="activityName" maxlength="20" minlength="4" required/>
+                <input type="text" name="activityName" maxlength="40" minlength="2"
+                       pattern="[\p{L}\s]{2,40}" required/>
             </label>
+            <c:if test="${illegalServiceName == true}">
+                Service name should contain only letters and whitespaces, length >= 2 and <= 40.
+            </c:if>
 
             <br/>
             <label>${serviceDescriptionLabel}
                 <br/>
-                <textarea name="activityDescription" cols="30" rows="10" required></textarea>
+                <textarea name="activityDescription" maxlength="280" cols="30"
+                          rows="10" required></textarea>
             </label>
+            <c:if test="${illegalServiceDescription == true}">
+                Service description should be not longer than 280 characters and contain only letters and whitespaces.
+            </c:if>
             <br/>
             <label>${servicePriceLabel}
                 <br/>
-                <input type="text" name="activityPrice" maxlength="5" minlength="1" required/>
+                <input type="text" name="activityPrice" maxlength="10" minlength="1"
+                       pattern="\d{1,10}" required/>
             </label>
+            <c:if test="${illegalServicePrice == true}">
+                Service price should be a number with a length between 1 and 10.
+            </c:if>
 
             <br/>
             <input type="submit" value="${button}"/>
             <c:if test="${activityExists == true}">
-                Activity with this name already exists.
+                Service with this name already exists.
             </c:if>
         </form>
     </div>

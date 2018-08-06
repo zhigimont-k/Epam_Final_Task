@@ -11,6 +11,7 @@ import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.util.request.NoSuchRequestParameterException;
 import by.epam.web.util.request.SessionRequestContent;
+import by.epam.web.validation.NumberValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,27 +20,31 @@ import java.util.Optional;
 
 public class CancelOrderCommand implements Command {
     private static Logger logger = LogManager.getLogger();
+    private static OrderService service = ServiceFactory.getInstance().getOrderService();
 
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
-
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
-            OrderService service = ServiceFactory.getInstance().getOrderService();
             String id = requestContent.getParameter(RequestParameter.ORDER_ID);
-            Optional<Order> found = service.findOrderById(Integer.parseInt(id));
-            if (found.isPresent()) {
-                if (user.getId() == found.get().getUserId()) {
-                    service.changeOrderStatus(Integer.parseInt(id), Order.Status.CANCELLED.getName());
-                    router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-                    router.setPage(PageAddress.VIEW_USER_ORDERS);
+            if (NumberValidator.getInstance().validateId(id)){
+                Optional<Order> found = service.findOrderById(Integer.parseInt(id));
+                if (found.isPresent()) {
+                    if (user.getId() == found.get().getUserId()) {
+                        service.changeOrderStatus(Integer.parseInt(id), Order.Status.CANCELLED.getName());
+                        router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                        router.setPage(PageAddress.VIEW_USER_ORDERS);
+                    } else {
+                        router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                        router.setPage(PageAddress.FORBIDDEN_ERROR_PAGE);
+                    }
                 } else {
-                    router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-                    router.setPage(PageAddress.FORBIDDEN_ERROR_PAGE);
+                    router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                    router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
                 }
             } else {
-                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setTransitionType(PageRouter.TransitionType.FORWARD);
                 router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
         } catch (NoSuchRequestParameterException e) {

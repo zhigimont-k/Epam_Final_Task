@@ -10,6 +10,8 @@ import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.util.request.NoSuchRequestParameterException;
 import by.epam.web.util.request.SessionRequestContent;
+import by.epam.web.validation.ActivityValidator;
+import by.epam.web.validation.NumberValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,31 +29,43 @@ public class UpdateActivityCommand implements Command {
         try {
 
             ActivityService service = ServiceFactory.getInstance().getActivityService();
-            int id = Integer.parseInt(requestContent.getParameter
-                    (RequestParameter.ACTIVITY_ID));
-            String newName = requestContent.getParameter(RequestParameter.ACTIVITY_NAME);
-            String newDescription = requestContent.getParameter(RequestParameter.ACTIVITY_DESCRIPTION);
-            BigDecimal newPrice =
-                    new BigDecimal(requestContent.getParameter(RequestParameter.ACTIVITY_PRICE));
-            String newStatus = requestContent.getParameter(RequestParameter.ACTIVITY_STATUS);
+            String id = requestContent.getParameter(RequestParameter.ACTIVITY_ID);
+            if (NumberValidator.getInstance().validateId(id)) {
+                String newName = requestContent.getParameter(RequestParameter.ACTIVITY_NAME);
+                String newDescription = requestContent.getParameter(RequestParameter.ACTIVITY_DESCRIPTION);
+                String newPrice = requestContent.getParameter(RequestParameter.ACTIVITY_PRICE);
+                String newStatus = requestContent.getParameter(RequestParameter.ACTIVITY_STATUS);
 
-            Optional<Activity> found = service.findActivityById(id);
-            if (found.isPresent()) {
-                found.get().setName(newName);
-                found.get().setDescription(newDescription);
-                found.get().setPrice(newPrice);
-                found.get().setStatus(newStatus);
-                service.updateActivity(found.get());
-                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-                router.setPage(PageAddress.VIEW_ACTIVITIES);
+                if (validateActivity(requestContent, newName, newDescription, newPrice, newStatus)) {
+                    boolean nameExists = service.nameExists(newName);
+                    if (nameExists) {
+                        requestContent.setAttribute(RequestParameter.ACTIVITY_EXISTS, true);
+                        router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                        router.setPage(PageAddress.VIEW_ACTIVITIES);
+                    } else {
+                        Optional<Activity> found = service.findActivityById(Integer.parseInt(id));
+                        if (found.isPresent()) {
+                            found.get().setName(newName);
+                            found.get().setDescription(newDescription);
+                            found.get().setPrice(new BigDecimal(newPrice));
+                            found.get().setStatus(newStatus);
+                            service.updateActivity(found.get());
+                            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                            router.setPage(PageAddress.VIEW_ACTIVITIES);
 
+                        } else {
+                            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                            router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
+                        }
+                    }
+                } else {
+                    router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                    router.setPage(PageAddress.EDIT_ACTIVITY_PAGE);
+                }
             } else {
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);
                 router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
-
-
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
@@ -63,5 +77,23 @@ public class UpdateActivityCommand implements Command {
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
+    }
+
+    private boolean validateActivity(SessionRequestContent requestContent,
+                                     String name, String description, String price, String status) {
+        boolean flag = true;
+        if (!ActivityValidator.getInstance().validateName(name)) {
+            flag = false;
+            requestContent.setAttribute(RequestParameter.ILLEGAL_ACTIVITY_NAME, true);
+        }
+        if (!ActivityValidator.getInstance().validateDescription(description)) {
+            flag = false;
+            requestContent.setAttribute(RequestParameter.ILLEGAL_ACTIVITY_DESCRIPTION, true);
+        }
+        if (!ActivityValidator.getInstance().validatePrice(price)) {
+            flag = false;
+            requestContent.setAttribute(RequestParameter.ILLEGAL_ACTIVITY_PRICE, true);
+        }
+        return flag && ActivityValidator.getInstance().validateStatus(status);
     }
 }

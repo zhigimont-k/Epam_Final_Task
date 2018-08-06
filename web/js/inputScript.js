@@ -1,5 +1,5 @@
-function togglePasswordVisibility() {
-    var x = document.getElementById("passwordField");
+function togglePasswordVisibility(fieldName) {
+    var x = document.getElementById(fieldName);
     if (x.type === "password") {
         x.type = "text";
     } else {

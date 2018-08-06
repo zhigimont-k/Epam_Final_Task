@@ -114,18 +114,17 @@ public class UserDaoImpl implements UserDao {
             if (resultSet.next()) {
                 int userId = resultSet.getInt(1);
                 user.setId(userId);
-                Optional<User> added = findUserById(userId);
-                if (added.isPresent()) {
-                    user.setStatus(added.get().getStatus());
-                }
+                user.setStatus(User.Status.USER);
             } else {
-                throw new DaoException("Couldn't retrieve user's ID and status");
+                throw new DaoException("Couldn't retrieve new user's ID");
             }
 
             preparedStatement = connection.prepareStatement(ADD_CARD);
             preparedStatement.setString(1, cardNumber);
             preparedStatement.setInt(2, user.getId());
             preparedStatement.executeUpdate();
+
+            logger.log(Level.INFO, user);
 
             return user;
         } catch (SQLException e) {
@@ -499,7 +498,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findUserByIdAndCardNumber(int userId, String cardNumber)
-            throws DaoException{
+            throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;

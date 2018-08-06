@@ -12,16 +12,22 @@ import org.apache.logging.log4j.Logger;
 
 public class ChangeLocaleCommand implements Command {
     private static Logger logger = LogManager.getLogger();
+    private static final String RUSSIAN_LANGUAGE = "ru";
+    private static final String ENGLISH_LANGUAGE = "en";
 
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
             String lang = requestContent.getParameter(RequestParameter.LANGUAGE);
-
-            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-            router.setPage(constructRedirectAddress(requestContent));
-            requestContent.setSessionAttribute(RequestParameter.LOCAL, lang);
+            if (validateLanguage(lang)){
+                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setPage(constructRedirectAddress(requestContent));
+                requestContent.setSessionAttribute(RequestParameter.LOCAL, lang);
+            } else {
+                router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
+            }
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);
             router.setTransitionType(PageRouter.TransitionType.FORWARD);
@@ -35,5 +41,10 @@ public class ChangeLocaleCommand implements Command {
         String page = requestContent.getParameter(RequestParameter.PAGE);
         String query = requestContent.getParameter(RequestParameter.QUERY);
         return (query.isEmpty()) ? page : PageAddress.SERVLET_NAME + "?" + query;
+    }
+
+    private boolean validateLanguage(String language){
+        return RUSSIAN_LANGUAGE.equalsIgnoreCase(language) ||
+                ENGLISH_LANGUAGE.equalsIgnoreCase(language);
     }
 }

@@ -18,6 +18,7 @@ import java.util.Optional;
 
 public class LoginCommand implements Command {
     private static Logger logger = LogManager.getLogger();
+    private static UserService service = ServiceFactory.getInstance().getUserService();
 
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
@@ -25,7 +26,6 @@ public class LoginCommand implements Command {
         try {
             String login = requestContent.getParameter(RequestParameter.LOGIN);
             String password = requestContent.getParameter(RequestParameter.PASSWORD);
-            UserService service = ServiceFactory.getInstance().getUserService();
             Optional<User> found = service.findUserByLoginAndPassword(login, password);
             if (found.isPresent()) {
                 User user = found.get();

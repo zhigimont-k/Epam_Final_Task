@@ -19,13 +19,13 @@ import java.util.Optional;
 
 public class ViewUserInfoCommand implements Command {
     private static Logger logger = LogManager.getLogger();
+    private static UserService service = ServiceFactory.getInstance().getUserService();
 
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
-            UserService service = ServiceFactory.getInstance().getUserService();
             BigDecimal money = service.findMoneyByCardNumber(user.getCardNumber());
             requestContent.setAttribute(RequestParameter.MONEY, money);
             router.setTransitionType(PageRouter.TransitionType.FORWARD);

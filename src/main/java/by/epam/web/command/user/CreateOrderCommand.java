@@ -17,13 +17,12 @@ import java.util.List;
 
 public class CreateOrderCommand implements Command {
     private static Logger logger = LogManager.getLogger();
+    private static ActivityService service = ServiceFactory.getInstance().getActivityService();
 
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
-
-            ActivityService service = ServiceFactory.getInstance().getActivityService();
             List<Activity> activityList = service.findAvailableActivities();
 
             requestContent.setAttribute(RequestParameter.ACTIVITY_LIST, activityList);

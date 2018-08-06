@@ -13,6 +13,7 @@ import by.epam.web.util.mail.MailSenderThread;
 import by.epam.web.util.password.PasswordGenerator;
 import by.epam.web.util.request.NoSuchRequestParameterException;
 import by.epam.web.util.request.SessionRequestContent;
+import by.epam.web.validation.UserValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,32 +23,33 @@ import java.util.Optional;
 
 public class ResetPasswordCommand implements Command {
     private static Logger logger = LogManager.getLogger();
+    private static UserService service = ServiceFactory.getInstance().getUserService();
 
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
             String email = requestContent.getParameter(RequestParameter.EMAIL);
-            UserService service = ServiceFactory.getInstance().getUserService();
-            Optional<User> found = service.findUserByEmail(email);
-            if (found.isPresent()) {
+            if (UserValidator.getInstance().validateEmail(email)){
+                Optional<User> found = service.findUserByEmail(email);
+                if (found.isPresent()) {
+                    String newPassword = PasswordGenerator.generatePassword();
+                    service.updateUser(found.get().getId(), newPassword, found.get().getUserName());
+                    found.get().setPassword(newPassword);
 
-                String newPassword = PasswordGenerator.generatePassword();
+                    new MailSenderThread(email, MailComposer.getResetPasswordMessageTheme(),
+                            MailComposer.getResetPasswordMessage(newPassword)).start();
 
-                logger.log(Level.INFO, "Resetting password for: "+found.get());
-                service.updateUser(found.get().getId(), newPassword, found.get().getUserName());
-                found.get().setPassword(newPassword);
-
-                new MailSenderThread(email, MailComposer.getResetPasswordMessageTheme(),
-                        MailComposer.getResetPasswordMessage(newPassword)).start();
-
-
-                router.setTransitionType(PageRouter.TransitionType.FORWARD);
-                router.setPage(PageAddress.HOME_PAGE);
+                    router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                    router.setPage(PageAddress.HOME_PAGE);
+                } else {
+                    requestContent.setAttribute(RequestParameter.NO_EMAIL_FOUND, true);
+                    router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                    router.setPage(PageAddress.LOGIN_PAGE);
+                }
             } else {
-                requestContent.setAttribute(RequestParameter.AUTH_FAIL, true);
                 router.setTransitionType(PageRouter.TransitionType.FORWARD);
-                router.setPage(PageAddress.LOGIN_PAGE);
+                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
         } catch (NoSuchRequestParameterException e) {
             logger.log(Level.ERROR, e);

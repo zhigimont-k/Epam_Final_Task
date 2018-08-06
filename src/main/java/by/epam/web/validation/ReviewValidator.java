@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class ReviewValidator {
     private static ReviewValidator instance = new ReviewValidator();
-    private static final String MESSAGE_FORMAT = "[\\p{N}\\p{L}\\p{P}\\p{S}]{1,280}";
+    private static final String MESSAGE_FORMAT = "[\\p{N}\\p{L}\\p{P}\\s]{1,280}";
     private static final String MARK_FORMAT = "\\d{1,2}";
     private static final int MAX_MARK = 10;
     private static final int MIN_MARK = 1;
@@ -30,7 +30,7 @@ public class ReviewValidator {
 
     public boolean validateMessage(String message) {
         Matcher matcher = Pattern.compile(MESSAGE_FORMAT).matcher(message);
-        return matcher.matches();
+        return matcher.matches() || message.isEmpty();
     }
 
 }
