@@ -80,9 +80,6 @@ public class OrderService {
 
     public void changeOrderStatus(int id, String status) throws ServiceException {
         try {
-            if (Order.Status.CANCELLED.getName().equalsIgnoreCase(status)) {
-                orderDao.returnMoneyFromOrder(id);
-            }
             orderDao.changeOrderStatus(id, status);
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -92,7 +89,6 @@ public class OrderService {
     public void payForOrder(int orderId) throws ServiceException {
         try {
             orderDao.payForOrder(orderId);
-            orderDao.changeOrderStatus(orderId, Order.Status.CONFIRMED.getName());
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

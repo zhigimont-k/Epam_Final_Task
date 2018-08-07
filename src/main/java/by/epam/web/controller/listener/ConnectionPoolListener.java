@@ -12,7 +12,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 @WebListener
-public class ConnectionPoolCleanupListener implements ServletContextListener {
+public class ConnectionPoolListener implements ServletContextListener {
     private static Logger logger = LogManager.getLogger();
 
     @Override

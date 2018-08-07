@@ -11,7 +11,7 @@ import by.epam.web.service.UserService;
 import by.epam.web.util.mail.MailComposer;
 import by.epam.web.util.mail.MailSenderThread;
 import by.epam.web.util.password.PasswordGenerator;
-import by.epam.web.util.request.SessionRequestContent;
+import by.epam.web.util.content.SessionRequestContent;
 import by.epam.web.validation.UserValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -39,15 +39,12 @@ public class ResetPasswordCommand implements Command {
                     new MailSenderThread(email, MailComposer.getResetPasswordMessageTheme(),
                             MailComposer.getResetPasswordMessage(newPassword)).start();
 
-                    router.setRedirect(false);
                     router.setPage(PageAddress.HOME_PAGE);
                 } else {
                     requestContent.setAttribute(RequestParameter.NO_EMAIL_FOUND, true);
-                    router.setRedirect(false);
-                    router.setPage(PageAddress.LOGIN_PAGE);
+                    router.setPage(PageAddress.RESET_PASSWORD_PAGE);
                 }
             } else {
-                router.setRedirect(false);
                 router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
             }
         } catch (ServiceException e) {

@@ -22,7 +22,7 @@
 <body>
 <img src="${pageContext.request.contextPath}/images/cat403.png" alt="" height="150"><h2>403 error</h2><br/>
 You haven't seen anything.<br/>
-We did not, either.<br/>
+We have not, either.<br/>
 Let's just pretend you didn't try to do something without access, okay?<br/>
 <a href="${pageContext.request.contextPath}/home">Feel like going back?</a>
 </body>

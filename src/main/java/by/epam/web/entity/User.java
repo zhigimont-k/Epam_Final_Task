@@ -108,6 +108,7 @@ public class User extends Entity {
                 ", userName='" + userName + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", status='" + status + '\'' +
                 ", cardNumber='" + cardNumber + '\'' +
                 '}';
     }

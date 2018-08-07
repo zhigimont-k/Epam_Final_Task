@@ -8,7 +8,7 @@ import by.epam.web.entity.Order;
 import by.epam.web.service.OrderService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
-import by.epam.web.util.request.SessionRequestContent;
+import by.epam.web.util.content.SessionRequestContent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,7 +29,6 @@ public class AddOrderCommand implements Command {
             router.setPage(PageAddress.VIEW_USER_ORDERS);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

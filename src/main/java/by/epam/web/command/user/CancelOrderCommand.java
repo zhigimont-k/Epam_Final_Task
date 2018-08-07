@@ -9,7 +9,7 @@ import by.epam.web.entity.User;
 import by.epam.web.service.OrderService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
-import by.epam.web.util.request.SessionRequestContent;
+import by.epam.web.util.content.SessionRequestContent;
 import by.epam.web.validation.NumberValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -35,20 +35,16 @@ public class CancelOrderCommand implements Command {
                         router.setRedirect(true);
                         router.setPage(PageAddress.VIEW_USER_ORDERS);
                     } else {
-                        router.setRedirect(false);
                         router.setPage(PageAddress.FORBIDDEN_ERROR_PAGE);
                     }
                 } else {
-                    router.setRedirect(false);
                     router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
                 }
             } else {
-                router.setRedirect(false);
                 router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

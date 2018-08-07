@@ -11,10 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -92,6 +89,8 @@ public class UserDaoImpl implements UserDao {
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.takeConnection();
+            connection.setAutoCommit(false);
+
             String login = user.getLogin();
             String password = user.getPassword();
             String email = user.getEmail();
@@ -124,8 +123,19 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setInt(2, user.getId());
             preparedStatement.executeUpdate();
 
+            connection.commit();
+            connection.setAutoCommit(true);
+
             return user;
         } catch (SQLException e) {
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                    logger.log(Level.INFO, "Encountered an error, made a rollback");
+                }
+            } catch (SQLException ex) {
+                logger.log(Level.ERROR, "Couldn't rollback connection: " + e.getMessage(), e);
+            }
             throw new DaoException("Failed to register user" + e.getMessage(), e);
         } finally {
             try {

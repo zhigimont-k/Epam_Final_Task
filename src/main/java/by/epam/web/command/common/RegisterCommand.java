@@ -8,7 +8,7 @@ import by.epam.web.entity.User;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.service.UserService;
-import by.epam.web.util.request.SessionRequestContent;
+import by.epam.web.util.content.SessionRequestContent;
 import by.epam.web.validation.UserValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -42,19 +42,16 @@ public class RegisterCommand implements Command {
                     router.setPage(PageAddress.HOME_PAGE);
                 } else {
                     requestContent.setAttribute(RequestParameter.ILLEGAL_INPUT, true);
-                    router.setRedirect(false);
                     router.setPage(PageAddress.REGISTER_PAGE);
                 }
 
             } else {
                 requestContent.setAttribute(RequestParameter.DATA_EXISTS, true);
-                router.setRedirect(false);
                 router.setPage(PageAddress.REGISTER_PAGE);
             }
 
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

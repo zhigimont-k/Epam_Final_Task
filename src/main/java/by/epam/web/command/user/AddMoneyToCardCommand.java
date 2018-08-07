@@ -8,7 +8,7 @@ import by.epam.web.entity.User;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.service.UserService;
-import by.epam.web.util.request.SessionRequestContent;
+import by.epam.web.util.content.SessionRequestContent;
 import by.epam.web.validation.NumberValidator;
 import by.epam.web.validation.UserValidator;
 import org.apache.logging.log4j.Level;
@@ -37,16 +37,13 @@ public class AddMoneyToCardCommand implements Command {
                     router.setPage(PageAddress.VIEW_USER_INFO);
                 } else {
                     requestContent.setAttribute(RequestParameter.NO_CARD_FOUND, true);
-                    router.setRedirect(false);
                     router.setPage(PageAddress.ADD_MONEY_PAGE);
                 }
             } else {
-                router.setRedirect(false);
                 router.setPage(PageAddress.ADD_MONEY_PAGE);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

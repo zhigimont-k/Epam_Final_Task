@@ -8,7 +8,7 @@ import by.epam.web.entity.Activity;
 import by.epam.web.entity.Review;
 import by.epam.web.entity.User;
 import by.epam.web.service.*;
-import by.epam.web.util.request.SessionRequestContent;
+import by.epam.web.util.content.SessionRequestContent;
 import by.epam.web.validation.NumberValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -44,20 +44,16 @@ public class ViewActivityCommand implements Command {
                     requestContent.setAttribute(RequestParameter.ACTIVITY, found.get());
                     requestContent.setAttribute(RequestParameter.REVIEW_LIST, reviewList);
 
-                    router.setRedirect(false);
                     router.setPage(PageAddress.VIEW_ACTIVITY_PAGE);
                 } else {
-                    router.setRedirect(false);
                     router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
                 }
             } else {
-                router.setRedirect(false);
                 router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
             }
 
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

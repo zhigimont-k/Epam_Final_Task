@@ -36,7 +36,7 @@
         </c:if>
         <c:if test="${sessionScope.user ne null}">
             <li><a href="app?command=viewUserOrders&pageNumber=1">My orders</a></li>
-            <li><a href="app?command=viewUserInfo">account</a></li>
+            <li><a href="app?command=viewUserInfo">${accountPage}</a></li>
             <li><a href="${pageContext.request.contextPath}/addMoney">Add money to card</a></li>
         </c:if>
         <c:if test="${sessionScope.user ne null && sessionScope.user.status == 'admin'}">

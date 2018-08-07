@@ -9,7 +9,7 @@ import by.epam.web.entity.User;
 import by.epam.web.service.ReviewService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
-import by.epam.web.util.request.SessionRequestContent;
+import by.epam.web.util.content.SessionRequestContent;
 import by.epam.web.validation.NumberValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -32,23 +32,18 @@ public class EditReviewCommand implements Command {
                 if (found.isPresent()){
                     if (user.getId() == found.get().getUserId()){
                         requestContent.setSessionAttribute(RequestParameter.REVIEW, found.get());
-                        router.setRedirect(false);
                         router.setPage(PageAddress.EDIT_REVIEW_PAGE);
                     } else {
-                        router.setRedirect(false);
                         router.setPage(PageAddress.FORBIDDEN_ERROR_PAGE);
                     }
                 } else {
-                    router.setRedirect(false);
                     router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
                 }
             } else {
-                router.setRedirect(false);
                 router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

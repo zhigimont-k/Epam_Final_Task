@@ -3,7 +3,7 @@ package by.epam.web.controller;
 import by.epam.web.command.Command;
 import by.epam.web.command.CommandFactory;
 import by.epam.web.constant.RequestParameter;
-import by.epam.web.util.request.SessionRequestContent;
+import by.epam.web.util.content.SessionRequestContent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +19,8 @@ import java.util.Optional;
 
 @WebServlet(name = "FrontController", urlPatterns = {"/app"})
 public class FrontController extends HttpServlet {
+    private static Logger logger = LogManager.getLogger();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
@@ -40,13 +42,16 @@ public class FrontController extends HttpServlet {
             PageRouter router = command.execute(requestContent);
             requestContent.insertValues(request);
             if (router != null) {
-                if(router.getRedirect()) {
+                if (router.getRedirect()) {
                     response.sendRedirect(router.getPage());
                 } else {
                     RequestDispatcher dispatcher = request.getRequestDispatcher(router.getPage());
                     dispatcher.forward(request, response);
                 }
             }
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            logger.log(Level.ERROR, "No such command: " + commandName);
         }
     }
 }

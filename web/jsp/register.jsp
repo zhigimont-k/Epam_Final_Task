@@ -71,7 +71,7 @@
             <br/>
             <label>${phoneNumberLabel}*
                 <input type="text" name="phoneNumber" maxlength="13" minlength="13"
-                pattern="\+(\d{12})" required/></label>
+                       pattern="\+(\d{12})" required/></label>
             <c:if test="${sessionScope.phoneNumberExists == true}">
                 User with this phone number already exists.
             </c:if>
@@ -81,14 +81,14 @@
             <br/>
             <label>${userNameLabel}
                 <input type="text" name="userName" maxlength="40" minlength="2"
-                pattern="[\p{L}\s]{2,40}"/></label>
+                       pattern="[\p{L}\s]{2,40}"/></label>
             <br/>
             <c:if test="${sessionScope.illegalUserName == true}">
                 Username should consist of 2-40 symbols or left empty.
             </c:if>
             <label>Номер карты*
                 <input type="text" name="cardNumber" maxlength="16" minlength="16"
-                pattern="\d{16}" required/></label>
+                       pattern="\d{16}" required/></label>
 
             <br/>
             <input type="submit" value="${button}"/>

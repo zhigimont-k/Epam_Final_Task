@@ -21,7 +21,7 @@
 </head>
 <body>
 <img src="${pageContext.request.contextPath}/images/cat500.png" alt="" height="150"><h2>400 error</h2><br/>
-Your request looks suspicious.<br/>
+Sorry friend, but your request looks suspicious.<br/>
 <a href="${pageContext.request.contextPath}/home">Better go back.</a>
 </body>
 </html>

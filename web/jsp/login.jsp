@@ -35,7 +35,7 @@
         <form name="loginForm" method="POST" action="app">
             <input type="hidden" name="command" value="login"/>
             <label>${loginLabel}
-                <input type="text" name="login" maxlength="40"  pattern="\w+{4, 40}" required/></label>
+                <input type="text" name="login" maxlength="40" pattern="\w+{4, 40}" required/></label>
             <label>${passwordLabel}
                 <br/>
                 <input type="password" name="password" id="passwordField" maxlength="32" required/></label>
@@ -48,11 +48,11 @@
                 ${authFailMessage}
             </c:if>
             <br/>
-    </form>
+        </form>
 
-    ${toRegister} <a href="${pageContext.request.contextPath}/register">${signUp}</a>
-    <br/>
-    <a href="${pageContext.request.contextPath}/resetPassword">Forgot your password?</a>
+        ${toRegister} <a href="${pageContext.request.contextPath}/register">${signUp}</a>
+        <br/>
+        <a href="${pageContext.request.contextPath}/resetPassword">Forgot your password?</a>
 
     </div>
 </div>

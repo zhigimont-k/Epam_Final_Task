@@ -12,7 +12,6 @@ import java.util.Optional;
 
 public interface OrderDao extends AbstractDao<Order> {
     void addOrder(Order order) throws DaoException;
-    void cancelOrder(int orderId) throws DaoException;
     void changeOrderStatus(int orderId, String status) throws DaoException;
     Optional<Order> findOrderById(int id) throws DaoException;
     List<Order> findAllOrders(int startPosition, int numberOfRecords) throws DaoException;
@@ -21,7 +20,6 @@ public interface OrderDao extends AbstractDao<Order> {
     List<Order> findOrdersByUserAndStatus(User user, String status) throws DaoException;
     List<Activity> findActivitiesByOrderId(int id) throws DaoException;
     List<String> findEmailsForUpcomingOrders() throws DaoException;
-    void returnMoneyFromOrder(int orderId) throws DaoException;
     void payForOrder(int orderId) throws DaoException;
     int countOrders() throws DaoException;
     int countUserOrders(int userId) throws DaoException;

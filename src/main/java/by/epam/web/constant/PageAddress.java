@@ -7,6 +7,8 @@ public final class PageAddress {
     public static final String REGISTER_PAGE = "/register";
     public static final String LOGIN_PAGE = "/login";
 
+    public static final String RESET_PASSWORD_PAGE = "/resetPassword";
+
     public static final String ACCOUNT_PAGE = "/WEB-INF/jsp/user/account.jsp";
     public static final String ADD_MONEY_PAGE = "/addMoney";
 

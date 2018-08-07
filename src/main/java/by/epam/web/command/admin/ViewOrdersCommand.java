@@ -8,7 +8,7 @@ import by.epam.web.entity.Order;
 import by.epam.web.service.OrderService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
-import by.epam.web.util.request.SessionRequestContent;
+import by.epam.web.util.content.SessionRequestContent;
 import by.epam.web.validation.NumberValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -44,16 +44,13 @@ public class ViewOrdersCommand implements Command {
                 requestContent.setAttribute(RequestParameter.NUMBER_OF_PAGES, numberOfPages);
                 requestContent.setAttribute(RequestParameter.CURRENT_TABLE_PAGE_NUMBER, pageNumber);
 
-                router.setRedirect(false);
                 router.setPage(PageAddress.ALL_ORDERS_PAGE);
             } else {
-                router.setRedirect(false);
                 router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
             }
 
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

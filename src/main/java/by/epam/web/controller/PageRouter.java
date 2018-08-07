@@ -1,7 +1,7 @@
 package by.epam.web.controller;
 
 public class PageRouter {
-    private boolean redirect = false;
+    private boolean redirect;
     private String page;
 
     public String getPage() {

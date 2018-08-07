@@ -4,7 +4,7 @@ import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
 import by.epam.web.constant.PageAddress;
 import by.epam.web.constant.RequestParameter;
-import by.epam.web.util.request.SessionRequestContent;
+import by.epam.web.util.content.SessionRequestContent;
 
 public class ChangeLocaleCommand implements Command {
     private static final String RUSSIAN_LANGUAGE = "ru";
@@ -19,7 +19,6 @@ public class ChangeLocaleCommand implements Command {
             router.setPage(constructRedirectAddress(requestContent));
             requestContent.setSessionAttribute(RequestParameter.LOCAL, lang);
         } else {
-            router.setRedirect(false);
             router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
         }
         return router;

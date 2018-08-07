@@ -99,6 +99,8 @@ public class OrderDaoImpl implements OrderDao {
         ResultSet resultSet;
         try {
             connection = pool.takeConnection();
+            connection.setAutoCommit(false);
+
             int userId = order.getUserId();
             Timestamp time = order.getDateTime();
             List<Activity> activityList = new ArrayList<>();
@@ -135,7 +137,18 @@ public class OrderDaoImpl implements OrderDao {
             preparedStatement.setInt(2, order.getId());
             preparedStatement.executeUpdate();
 
+            connection.commit();
+            connection.setAutoCommit(true);
+
         } catch (SQLException e) {
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                    logger.log(Level.INFO, "Encountered an error, made a rollback");
+                }
+            } catch (SQLException ex) {
+                logger.log(Level.ERROR, "Couldn't rollback connection: " + e.getMessage(), e);
+            }
             throw new DaoException("Failed to add order" + e.getMessage(), e);
         } finally {
             try {
@@ -153,37 +166,32 @@ public class OrderDaoImpl implements OrderDao {
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.takeConnection();
+            connection.setAutoCommit(false);
 
             preparedStatement = connection.prepareStatement(UPDATE_ORDER_STATUS);
             preparedStatement.setString(1, status);
             preparedStatement.setInt(2, id);
             preparedStatement.executeUpdate();
 
-        } catch (SQLException e) {
-            throw new DaoException("Failed to change order status" + e.getMessage(), e);
-        } finally {
-            try {
-                closeStatement(preparedStatement);
-                pool.releaseConnection(connection);
-            } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+            if (Order.Status.CANCELLED.getName().equalsIgnoreCase(status)){
+                preparedStatement = connection.prepareStatement(RETURN_ORDER_MONEY);
+                preparedStatement.setInt(1, id);
+                preparedStatement.executeUpdate();
             }
-        }
-    }
 
-    @Override
-    public void cancelOrder(int id) throws DaoException {
-        ProxyConnection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = pool.takeConnection();
-
-            preparedStatement = connection.prepareStatement(CANCEL_ORDER);
-            preparedStatement.setInt(1, id);
-            preparedStatement.executeUpdate();
+            connection.commit();
+            connection.setAutoCommit(true);
 
         } catch (SQLException e) {
-            throw new DaoException("Failed to cancel order" + e.getMessage(), e);
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                    logger.log(Level.INFO, "Encountered an error, made a rollback");
+                }
+            } catch (SQLException ex) {
+                logger.log(Level.ERROR, "Couldn't rollback connection: " + e.getMessage(), e);
+            }
+            throw new DaoException("Failed to change order status" + e.getMessage(), e);
         } finally {
             try {
                 closeStatement(preparedStatement);
@@ -236,7 +244,6 @@ public class OrderDaoImpl implements OrderDao {
             }
         }
     }
-
 
     @Override
     public Optional<Order> findOrderById(int id) throws DaoException {
@@ -497,40 +504,34 @@ public class OrderDaoImpl implements OrderDao {
         }
     }
 
-    @Override
-    public void returnMoneyFromOrder(int orderId) throws DaoException {
-        ProxyConnection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = pool.takeConnection();
-
-            preparedStatement = connection.prepareStatement(RETURN_ORDER_MONEY);
-            preparedStatement.setInt(1, orderId);
-            preparedStatement.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new DaoException("Failed to return money " + e.getMessage(), e);
-        } finally {
-            try {
-                closeStatement(preparedStatement);
-                pool.releaseConnection(connection);
-            } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
-            }
-        }
-    }
 
     public void payForOrder(int orderId) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.takeConnection();
+            connection.setAutoCommit(false);
 
             preparedStatement = connection.prepareStatement(PAY_FOR_ORDER);
             preparedStatement.setInt(1, orderId);
             preparedStatement.executeUpdate();
 
+            preparedStatement = connection.prepareStatement(UPDATE_ORDER_STATUS);
+            preparedStatement.setString(1, Order.Status.CONFIRMED.getName());
+            preparedStatement.setInt(2, orderId);
+
+            connection.commit();
+            connection.setAutoCommit(true);
+
         } catch (SQLException e) {
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                    logger.log(Level.INFO, "Encountered an error, made a rollback");
+                }
+            } catch (SQLException ex) {
+                logger.log(Level.ERROR, "Couldn't rollback connection: " + e.getMessage(), e);
+            }
             throw new DaoException("Failed to pay for order: " + e.getMessage(), e);
         } finally {
             try {

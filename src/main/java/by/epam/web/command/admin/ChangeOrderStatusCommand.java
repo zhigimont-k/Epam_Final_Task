@@ -8,7 +8,7 @@ import by.epam.web.entity.Order;
 import by.epam.web.service.OrderService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
-import by.epam.web.util.request.SessionRequestContent;
+import by.epam.web.util.content.SessionRequestContent;
 import by.epam.web.validation.NumberValidator;
 import by.epam.web.validation.OrderValidator;
 import org.apache.logging.log4j.Level;
@@ -37,17 +37,14 @@ public class ChangeOrderStatusCommand implements Command {
                     router.setRedirect(true);
                     router.setPage(PageAddress.VIEW_ALL_ORDERS);
                 } else {
-                    router.setRedirect(false);
                     router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
                 }
             } else {
-                router.setRedirect(false);
                 router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
             }
 
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

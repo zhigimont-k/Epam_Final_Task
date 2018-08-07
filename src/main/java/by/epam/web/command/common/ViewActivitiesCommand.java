@@ -8,7 +8,7 @@ import by.epam.web.entity.Activity;
 import by.epam.web.service.ActivityService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
-import by.epam.web.util.request.SessionRequestContent;
+import by.epam.web.util.content.SessionRequestContent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,11 +28,9 @@ public class ViewActivitiesCommand implements Command {
 
             requestContent.setAttribute(RequestParameter.ACTIVITY_LIST, activityList);
 
-            router.setRedirect(false);
             router.setPage(PageAddress.ACTIVITIES_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

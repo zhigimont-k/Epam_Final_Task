@@ -10,7 +10,7 @@ import by.epam.web.service.ActivityService;
 import by.epam.web.service.ReviewService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
-import by.epam.web.util.request.SessionRequestContent;
+import by.epam.web.util.content.SessionRequestContent;
 import by.epam.web.validation.NumberValidator;
 import by.epam.web.validation.ReviewValidator;
 import org.apache.logging.log4j.Level;
@@ -44,17 +44,14 @@ public class AddReviewCommand implements Command {
                         router.setRedirect(true);
                         router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
                     } else {
-                        router.setRedirect(false);
                         router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
                     }
                 } else {
-                    router.setRedirect(false);
                     router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
                 }
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

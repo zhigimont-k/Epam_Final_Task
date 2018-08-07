@@ -8,7 +8,7 @@ import by.epam.web.entity.Activity;
 import by.epam.web.service.ActivityService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
-import by.epam.web.util.request.SessionRequestContent;
+import by.epam.web.util.content.SessionRequestContent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,12 +32,10 @@ public class EditActivityCommand implements Command {
                 router.setRedirect(true);
                 router.setPage(PageAddress.EDIT_ACTIVITY_PAGE);
             } else {
-                router.setRedirect(false);
                 router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
