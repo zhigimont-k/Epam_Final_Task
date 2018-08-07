@@ -41,20 +41,20 @@ public class AddReviewCommand implements Command {
                         service.addReview(userId, Integer.parseInt(activityId),
                                 Integer.parseInt(mark), message);
 
-                        router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                        router.setRedirect(true);
                         router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
                     } else {
-                        router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                        router.setRedirect(false);
                         router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
                     }
                 } else {
-                    router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                    router.setRedirect(false);
                     router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
                 }
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

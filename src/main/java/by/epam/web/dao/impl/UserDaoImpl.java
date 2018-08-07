@@ -317,7 +317,6 @@ public class UserDaoImpl implements UserDao {
                 user.setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD));
                 user.setUserName(resultSet.getString(DB_USER_NAME_FIELD));
                 user.setStatus(resultSet.getString(DB_USER_STATUS_FIELD));
-                user.setCardNumber(resultSet.getString(DB_CARD_NUMBER_FIELD));
                 userList.add(user);
             }
             return userList;

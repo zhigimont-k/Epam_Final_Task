@@ -24,6 +24,11 @@
     </jsp-config>
 
     <error-page>
+        <error-code>400</error-code>
+        <location>/WEB-INF/jsp/error/badRequest.jsp</location>
+    </error-page>
+
+    <error-page>
         <error-code>404</error-code>
         <location>/WEB-INF/jsp/error/notFound.jsp</location>
     </error-page>

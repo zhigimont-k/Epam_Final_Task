@@ -33,20 +33,20 @@ public class AddMoneyToCardCommand implements Command {
                 if (service.findUserByIdAndCard(user.getId(), cardNumber).isPresent()) {
                     service.addMoneyToCard(cardNumber,
                             BigDecimal.valueOf(Double.parseDouble(moneyToAdd)));
-                    router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                    router.setRedirect(true);
                     router.setPage(PageAddress.VIEW_USER_INFO);
                 } else {
                     requestContent.setAttribute(RequestParameter.NO_CARD_FOUND, true);
-                    router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                    router.setRedirect(false);
                     router.setPage(PageAddress.ADD_MONEY_PAGE);
                 }
             } else {
-                router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                router.setRedirect(false);
                 router.setPage(PageAddress.ADD_MONEY_PAGE);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

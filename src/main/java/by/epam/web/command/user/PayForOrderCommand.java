@@ -38,19 +38,19 @@ public class PayForOrderCommand implements Command {
                 }
                 if (orderByUserExists){
                     service.payForOrder(Integer.parseInt(id));
-                    router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                    router.setRedirect(true);
                     router.setPage(PageAddress.VIEW_USER_ORDERS);
                 } else {
-                    router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                    router.setRedirect(false);
                     router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
                 }
             } else {
-                router.setTransitionType(PageRouter.TransitionType.FORWARD);
-                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
+                router.setRedirect(false);
+                router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

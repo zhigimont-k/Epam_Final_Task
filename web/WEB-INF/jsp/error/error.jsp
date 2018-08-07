@@ -11,9 +11,13 @@
 
     <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
     <title>${pageTitle} | ${projectName}</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
 <div>
+    <img src="${pageContext.request.contextPath}/images/cat500.png" alt="" height="150"><h2>Error 500</h2>
+    Something went awfully wrong, oops.<br/>
+    Here's the report:<br/>
     Request from ${pageContext.errorData.requestURI} failed
     <br/>
     Servlet name: ${pageContext.errorData.servletName}
@@ -23,6 +27,7 @@
     Exception: ${pageContext.exception}
     <br/>
     Message from exception: ${pageContext.exception.message}
+    <a href="${pageContext.request.contextPath}/home">What in the world is this? I'm going home</a>
 </div>
 </body>
 </html>

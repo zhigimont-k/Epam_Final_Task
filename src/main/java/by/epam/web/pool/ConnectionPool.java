@@ -142,4 +142,12 @@ public class ConnectionPool {
             }
         });
     }
+
+    public int getAvailableConnectionNumber(){
+        return availableConnections.size();
+    }
+
+    public int getUnavailableConnectionNumber(){
+        return unavailableConnections.size();
+    }
 }

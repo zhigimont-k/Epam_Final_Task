@@ -16,14 +16,12 @@
     <fmt:message bundle="${locale}" key="locale.user.warning.email" var="emailWarning"/>
     <fmt:message bundle="${locale}" key="locale.user.warning.phonenumber" var="phoneNumberWarning"/>
 
-    <title>403 | Cat Beauty Bar</title>
+    <title>400 | Cat Beauty Bar</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
-<img src="${pageContext.request.contextPath}/images/cat403.png" alt="" height="150"><h2>403 error</h2><br/>
-You haven't seen anything.<br/>
-We did not, either.<br/>
-Let's just pretend you didn't try to do something without access, okay?<br/>
-<a href="${pageContext.request.contextPath}/home">Feel like going back?</a>
+<img src="${pageContext.request.contextPath}/images/cat500.png" alt="" height="150"><h2>400 error</h2><br/>
+Your request looks suspicious.<br/>
+<a href="${pageContext.request.contextPath}/home">Better go back.</a>
 </body>
 </html>

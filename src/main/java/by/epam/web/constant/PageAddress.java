@@ -13,6 +13,7 @@ public final class PageAddress {
     public static final String ERROR_PAGE = "/WEB-INF/jsp/error/error.jsp";
     public static final String NOT_FOUND_ERROR_PAGE = "/WEB-INF/jsp/error/notFound.jsp";
     public static final String FORBIDDEN_ERROR_PAGE = "/WEB-INF/jsp/error/forbidden.jsp";
+    public static final String BAD_REQUEST_ERROR_PAGE = "/WEB-INF/jsp/error/badRequest.jsp";
 
     public static final String USERS_PAGE = "/WEB-INF/jsp/admin/users.jsp";
 

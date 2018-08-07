@@ -33,28 +33,28 @@ public class AddActivityCommand implements Command {
                 boolean nameExists = service.nameExists(name);
                 if (nameExists) {
                     requestContent.setSessionAttribute(RequestParameter.DATA_EXISTS, true);
-                    router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                    router.setRedirect(true);
                     router.setPage(PageAddress.VIEW_ACTIVITIES);
                 } else {
                     requestContent.removeSessionAttribute(RequestParameter.DATA_EXISTS);
                     service.addActivity(name, description, new BigDecimal(price));
-                    router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                    router.setRedirect(true);
                     router.setPage(PageAddress.VIEW_ACTIVITIES);
                 }
             } else {
                 requestContent.setSessionAttribute(RequestParameter.ILLEGAL_INPUT, true);
-                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setRedirect(true);
                 router.setPage(PageAddress.VIEW_ACTIVITIES);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
     }
 
-    boolean validateActivity(String name, String description, String price) {
+    private boolean validateActivity(String name, String description, String price) {
         return ActivityValidator.getInstance().validateName(name) &&
                 ActivityValidator.getInstance().validateDescription(description) &&
                 ActivityValidator.getInstance().validatePrice(price);

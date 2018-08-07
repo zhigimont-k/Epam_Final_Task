@@ -1,11 +1,8 @@
 package by.epam.web.controller;
 
 public class PageRouter {
-    public enum TransitionType {
-        FORWARD, REDIRECT
-    }
+    private boolean redirect = false;
     private String page;
-    private TransitionType transitionType = TransitionType.FORWARD;
 
     public String getPage() {
         return page;
@@ -15,15 +12,11 @@ public class PageRouter {
         this.page = page;
     }
 
-    public TransitionType getTransitionType() {
-        return transitionType;
+    public boolean getRedirect() {
+        return redirect;
     }
 
-    public void setTransitionType(TransitionType transitionType) {
-        if (transitionType == null){
-            this.transitionType = TransitionType.FORWARD;
-        } else {
-            this.transitionType = transitionType;
-        }
+    public void setRedirect(boolean value) {
+        redirect = value;
     }
 }

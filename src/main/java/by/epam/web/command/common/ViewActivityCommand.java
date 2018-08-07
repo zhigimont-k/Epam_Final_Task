@@ -44,20 +44,20 @@ public class ViewActivityCommand implements Command {
                     requestContent.setAttribute(RequestParameter.ACTIVITY, found.get());
                     requestContent.setAttribute(RequestParameter.REVIEW_LIST, reviewList);
 
-                    router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                    router.setRedirect(false);
                     router.setPage(PageAddress.VIEW_ACTIVITY_PAGE);
                 } else {
-                    router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                    router.setRedirect(false);
                     router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
                 }
             } else {
-                router.setTransitionType(PageRouter.TransitionType.FORWARD);
-                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
+                router.setRedirect(false);
+                router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
             }
 
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

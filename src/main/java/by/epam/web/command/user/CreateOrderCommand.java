@@ -26,11 +26,11 @@ public class CreateOrderCommand implements Command {
             List<Activity> activityList = service.findAvailableActivities();
 
             requestContent.setAttribute(RequestParameter.ACTIVITY_LIST, activityList);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setRedirect(false);
             router.setPage(PageAddress.ADD_ORDER_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

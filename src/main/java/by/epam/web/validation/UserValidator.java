@@ -7,10 +7,10 @@ import java.util.regex.Pattern;
 
 public class UserValidator {
     private static UserValidator instance = new UserValidator();
-    private static final String LOGIN_FORMAT = "[\\w^_]{4,20}";
-    private static final String PASSWORD_FORMAT = "[\\w^_]{6,32}";
+    private static final String LOGIN_FORMAT = "[\\w]{4,20}";
+    private static final String PASSWORD_FORMAT = "[\\w]{6,32}";
     private static final String EMAIL_FORMAT =
-            "([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})";
+            "([\\w\\-\\.]+)@([\\w\\-\\.]+)\\.([a-zA-Z]{2,5})";
     private static final int MAX_EMAIL_LENGTH = 50;
     private static final String PHONE_NUMBER_FORMAT = "\\+(\\d{12})";
     private static final String USER_NAME_FORMAT = "[\\p{L}\\s]{2,40}";
@@ -53,8 +53,8 @@ public class UserValidator {
     }
 
     public boolean validateStatus(String status){
-        return User.Status.BANNED.getName().equals(status) ||
-                User.Status.USER.getName().equals(status) ||
-                User.Status.ADMIN.getName().equals(status);
+        return User.Status.BANNED.getName().equalsIgnoreCase(status) ||
+                User.Status.USER.getName().equalsIgnoreCase(status) ||
+                User.Status.ADMIN.getName().equalsIgnoreCase(status);
     }
 }

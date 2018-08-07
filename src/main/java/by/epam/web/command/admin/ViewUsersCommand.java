@@ -28,11 +28,11 @@ public class ViewUsersCommand implements Command {
 
             requestContent.setAttribute(RequestParameter.USER_LIST, userList);
 
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setRedirect(false);
             router.setPage(PageAddress.USERS_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

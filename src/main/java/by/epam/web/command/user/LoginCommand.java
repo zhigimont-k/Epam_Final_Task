@@ -30,16 +30,16 @@ public class LoginCommand implements Command {
             if (found.isPresent()) {
                 User user = found.get();
                 requestContent.setSessionAttribute(RequestParameter.USER, user);
-                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setRedirect(true);
                 router.setPage(PageAddress.HOME_PAGE);
             } else {
                 requestContent.setAttribute(RequestParameter.AUTH_FAIL, true);
-                router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                router.setRedirect(false);
                 router.setPage(PageAddress.LOGIN_PAGE);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

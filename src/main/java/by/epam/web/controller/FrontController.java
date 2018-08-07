@@ -40,11 +40,11 @@ public class FrontController extends HttpServlet {
             PageRouter router = command.execute(requestContent);
             requestContent.insertValues(request);
             if (router != null) {
-                if(PageRouter.TransitionType.FORWARD.equals(router.getTransitionType())) {
+                if(router.getRedirect()) {
+                    response.sendRedirect(router.getPage());
+                } else {
                     RequestDispatcher dispatcher = request.getRequestDispatcher(router.getPage());
                     dispatcher.forward(request, response);
-                } else {
-                    response.sendRedirect(router.getPage());
                 }
             }
         }

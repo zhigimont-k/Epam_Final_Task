@@ -15,12 +15,12 @@ public class ChangeLocaleCommand implements Command {
         PageRouter router = new PageRouter();
         String lang = requestContent.getParameter(RequestParameter.LANGUAGE);
         if (validateLanguage(lang)){
-            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+            router.setRedirect(true);
             router.setPage(constructRedirectAddress(requestContent));
             requestContent.setSessionAttribute(RequestParameter.LOCAL, lang);
         } else {
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
-            router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
+            router.setRedirect(false);
+            router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
         }
         return router;
     }

@@ -29,15 +29,15 @@ public class EditActivityCommand implements Command {
             if (found.isPresent()){
                 requestContent.setSessionAttribute(RequestParameter.ACTIVITY, found.get());
 
-                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setRedirect(true);
                 router.setPage(PageAddress.EDIT_ACTIVITY_PAGE);
             } else {
-                router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                router.setRedirect(false);
                 router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

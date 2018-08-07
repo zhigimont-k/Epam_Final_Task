@@ -29,7 +29,6 @@ public class UpdateUserCommand implements Command {
             String password = requestContent.getParameter(RequestParameter.PASSWORD);
             if (validateParameters(password, userName)){
                 String newPassword = requestContent.getParameter(RequestParameter.NEW_PASSWORD);
-                logger.log(Level.INFO, userName+" "+password+" "+newPassword);
                 if (newPassword.isEmpty()){
                     service.updateUserName(user.getId(), userName);
                     Optional<User> found = service.findUserById(user.getId());
@@ -42,31 +41,34 @@ public class UpdateUserCommand implements Command {
                             service.updateUser(user.getId(), newPassword, userName);
                             Optional<User> found = service.findUserById(user.getId());
                             if (found.isPresent()){
+                                requestContent.removeSessionAttribute(RequestParameter.ILLEGAL_INPUT);
+                                requestContent.removeSessionAttribute(RequestParameter.AUTH_FAIL);
                                 requestContent.setSessionAttribute(RequestParameter.USER, found.get());
+
+                                router.setRedirect(true);
+                                router.setPage(PageAddress.VIEW_USER_INFO);
                             }
                         } else {
-                            requestContent.setAttribute(RequestParameter.AUTH_FAIL, true);
-                            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                            requestContent.setSessionAttribute(RequestParameter.AUTH_FAIL, true);
+                            router.setRedirect(true);
                             router.setPage(PageAddress.VIEW_USER_INFO);
                         }
                     } else {
-                        requestContent.setAttribute(RequestParameter.ILLEGAL_INPUT, true);
+                        requestContent.setSessionAttribute(RequestParameter.ILLEGAL_INPUT, true);
 
-                        router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                        router.setRedirect(true);
                         router.setPage(PageAddress.VIEW_USER_INFO);
                     }
                 }
-                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
-                router.setPage(PageAddress.VIEW_USER_INFO);
             } else {
                 requestContent.setAttribute(RequestParameter.ILLEGAL_INPUT, true);
 
-                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setRedirect(true);
                 router.setPage(PageAddress.VIEW_USER_INFO);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

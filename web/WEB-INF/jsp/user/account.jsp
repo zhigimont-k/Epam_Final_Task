@@ -73,11 +73,11 @@
             <br/>
             <input type="submit" value="${button}"/>
             <br/>
-            <c:if test="${authFail == true}">
+            <c:if test="${sessionScope.authFail == true}">
                 ${authFailMessage}
             </c:if>
-            <c:if test="${illegalInput == true}">
-                Please check f your input is correct
+            <c:if test="${sessionScope.illegalInput == true}">
+                Please check if your input is correct
             </c:if>
         </form>
     </div>

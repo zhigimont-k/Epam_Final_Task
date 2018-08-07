@@ -57,15 +57,15 @@ public class ViewOrderCommand implements Command {
                     order.addActivity(activity);
                 }
                 requestContent.setSessionAttribute(RequestParameter.ORDER, order);
-                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setRedirect(true);
                 router.setPage(PageAddress.VIEW_ORDER_PAGE);
             } else {
-                router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+                router.setRedirect(true);
                 router.setPage(PageAddress.ADD_ORDER);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

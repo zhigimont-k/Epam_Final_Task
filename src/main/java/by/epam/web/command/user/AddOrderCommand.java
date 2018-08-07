@@ -25,11 +25,11 @@ public class AddOrderCommand implements Command {
             service.addOrder(order.getUserId(), order.getDateTime(), order.getActivityList());
             requestContent.removeSessionAttribute(RequestParameter.ORDER);
 
-            router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+            router.setRedirect(true);
             router.setPage(PageAddress.VIEW_USER_ORDERS);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

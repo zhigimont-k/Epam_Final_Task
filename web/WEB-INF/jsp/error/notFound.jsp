@@ -20,7 +20,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
-<h2>404 error</h2><br/>
+<img src="${pageContext.request.contextPath}/images/cat404.png" alt="" height="150"><h2>404 error</h2><br/>
 Oops, something went wrong.<br/>
 <a href="${pageContext.request.contextPath}/home">Go back, perhaps?</a>
 </body>

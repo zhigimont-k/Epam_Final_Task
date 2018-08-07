@@ -148,3 +148,14 @@ select {
     border-radius: 4px;
     background-color: #f1f1f1;
 }
+
+.column {
+    float: left;
+    width: 50%;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}

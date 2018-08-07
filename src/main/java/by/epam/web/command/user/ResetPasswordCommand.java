@@ -39,20 +39,20 @@ public class ResetPasswordCommand implements Command {
                     new MailSenderThread(email, MailComposer.getResetPasswordMessageTheme(),
                             MailComposer.getResetPasswordMessage(newPassword)).start();
 
-                    router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                    router.setRedirect(false);
                     router.setPage(PageAddress.HOME_PAGE);
                 } else {
                     requestContent.setAttribute(RequestParameter.NO_EMAIL_FOUND, true);
-                    router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                    router.setRedirect(false);
                     router.setPage(PageAddress.LOGIN_PAGE);
                 }
             } else {
-                router.setTransitionType(PageRouter.TransitionType.FORWARD);
-                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
+                router.setRedirect(false);
+                router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

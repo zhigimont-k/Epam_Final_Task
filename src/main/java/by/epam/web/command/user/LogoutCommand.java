@@ -10,7 +10,7 @@ public class LogoutCommand implements Command {
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
-        router.setTransitionType(PageRouter.TransitionType.REDIRECT);
+        router.setRedirect(true);
         router.setPage(PageAddress.HOME_PAGE);
         return router;
     }

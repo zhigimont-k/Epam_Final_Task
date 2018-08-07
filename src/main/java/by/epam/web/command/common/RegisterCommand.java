@@ -38,25 +38,23 @@ public class RegisterCommand implements Command {
                     User user = service.registerUser(login, password, email, phoneNumber, userName,
                             cardNumber);
                     requestContent.setSessionAttribute(RequestParameter.USER, user);
-                    //////////
-                    router.setTransitionType(PageRouter.TransitionType.FORWARD);
-                    //////////
+                    router.setRedirect(true);
                     router.setPage(PageAddress.HOME_PAGE);
                 } else {
                     requestContent.setAttribute(RequestParameter.ILLEGAL_INPUT, true);
-                    router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                    router.setRedirect(false);
                     router.setPage(PageAddress.REGISTER_PAGE);
                 }
 
             } else {
                 requestContent.setAttribute(RequestParameter.DATA_EXISTS, true);
-                router.setTransitionType(PageRouter.TransitionType.FORWARD);
+                router.setRedirect(false);
                 router.setPage(PageAddress.REGISTER_PAGE);
             }
 
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;

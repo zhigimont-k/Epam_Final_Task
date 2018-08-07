@@ -27,11 +27,11 @@ public class ViewUserInfoCommand implements Command {
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             BigDecimal money = service.findMoneyByCardNumber(user.getCardNumber());
             requestContent.setAttribute(RequestParameter.MONEY, money);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setRedirect(false);
             router.setPage(PageAddress.ACCOUNT_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
-            router.setTransitionType(PageRouter.TransitionType.FORWARD);
+            router.setRedirect(false);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
