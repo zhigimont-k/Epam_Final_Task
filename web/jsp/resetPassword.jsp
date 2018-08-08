@@ -40,5 +40,6 @@
         </form>
     </div>
 </div>
+<jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>
 </body>
 </html>

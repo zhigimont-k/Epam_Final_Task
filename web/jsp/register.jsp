@@ -100,5 +100,6 @@
         ${toLogin} <a href="${pageContext.request.contextPath}/login">${signIn}</a>
     </div>
 </div>
+<jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>
 </body>
 </html>

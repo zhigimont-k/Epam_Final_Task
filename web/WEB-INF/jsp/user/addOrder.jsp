@@ -62,5 +62,6 @@
         Please make sure that service list is not empty.
     </c:if>
 </form>
+<jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>
 </body>
 </html>

@@ -4,7 +4,7 @@ import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
 import by.epam.web.constant.PageAddress;
 import by.epam.web.constant.RequestParameter;
-import by.epam.web.util.content.SessionRequestContent;
+import by.epam.web.controller.SessionRequestContent;
 
 public class ChangeLocaleCommand implements Command {
     private static final String RUSSIAN_LANGUAGE = "ru";

@@ -18,9 +18,7 @@ import java.util.Optional;
 
 public class UserDaoImpl implements UserDao {
     private static Logger logger = LogManager.getLogger();
-
     private static ConnectionPool pool = ConnectionPool.getInstance();
-
     private static final String DB_USER_ID_FIELD = "user_id";
     private static final String DB_LOGIN_FIELD = "login";
     private static final String DB_PASSWORD_FIELD = "password";
@@ -28,9 +26,8 @@ public class UserDaoImpl implements UserDao {
     private static final String DB_USER_EMAIL_FIELD = "user_email";
     private static final String DB_PHONE_NUMBER_FIELD = "phone_number";
     private static final String DB_USER_STATUS_FIELD = "user_status";
-
     private static final String DB_CARD_NUMBER_FIELD = "card_number";
-
+    private static final String DB_CARD_MONEY_FIELD = "money";
     private static final String INSERT_USER = "INSERT INTO user " +
             "(login, password, user_email, phone_number, user_name) " +
             "VALUES (?, SHA1(?), ?, ?, ?)";
@@ -90,26 +87,20 @@ public class UserDaoImpl implements UserDao {
         try {
             connection = pool.takeConnection();
             connection.setAutoCommit(false);
-
             String login = user.getLogin();
             String password = user.getPassword();
             String email = user.getEmail();
             String phoneNumber = user.getPhoneNumber();
             String userName = user.getUserName();
             String cardNumber = user.getCardNumber();
-
             preparedStatement = connection.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS);
-
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, password);
             preparedStatement.setString(3, email);
             preparedStatement.setString(4, phoneNumber);
             preparedStatement.setString(5, userName);
-
             preparedStatement.executeUpdate();
-
             resultSet = preparedStatement.getGeneratedKeys();
-
             if (resultSet.next()) {
                 int userId = resultSet.getInt(1);
                 user.setId(userId);
@@ -117,16 +108,12 @@ public class UserDaoImpl implements UserDao {
             } else {
                 throw new DaoException("Couldn't retrieve new user's ID");
             }
-
             preparedStatement = connection.prepareStatement(ADD_CARD);
             preparedStatement.setString(1, cardNumber);
             preparedStatement.setInt(2, user.getId());
             preparedStatement.executeUpdate();
-
             connection.commit();
             connection.setAutoCommit(true);
-
-            return user;
         } catch (SQLException e) {
             try {
                 if (connection != null) {
@@ -136,23 +123,24 @@ public class UserDaoImpl implements UserDao {
             } catch (SQLException ex) {
                 logger.log(Level.ERROR, "Couldn't rollback connection: " + e.getMessage(), e);
             }
-            throw new DaoException("Failed to register user" + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to register user" + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return user;
     }
 
     @Override
-    public boolean propertyExists(UniqueUserInfo property, String value) throws DaoException {
+    public boolean propertyExists(UniqueUserInfo property, String value) {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet;
-
         try {
             connection = pool.takeConnection();
             switch (property) {
@@ -169,37 +157,35 @@ public class UserDaoImpl implements UserDao {
                     preparedStatement = connection.prepareStatement(FIND_USER_BY_CARD_NUMBER);
                     break;
             }
-
             preparedStatement.setString(1, value);
             resultSet = preparedStatement.executeQuery();
-
             return resultSet.next();
         } catch (SQLException e) {
-            throw new DaoException(e);
+            logger.log(Level.ERROR, "Couldn't check uniqueness: " + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return false;
     }
 
     @Override
-    public Optional<User> findUserByLoginAndPassword(String login, String password) throws DaoException {
+    public Optional<User> findUserByLoginAndPassword(String login, String password) {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         Optional<User> result = Optional.empty();
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN_AND_PASSWORD);
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, password);
             resultSet = preparedStatement.executeQuery();
-
             if (resultSet.next()) {
                 User user = new User();
                 user.setId(resultSet.getInt(DB_USER_ID_FIELD));
@@ -212,36 +198,33 @@ public class UserDaoImpl implements UserDao {
                 user.setCardNumber(resultSet.getString(DB_CARD_NUMBER_FIELD));
                 result = Optional.of(user);
             }
-
-            return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user by login and password: " + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find user by login and password: " + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return result;
     }
 
     @Override
-    public Optional<User> findUserByLogin(String login) throws DaoException {
+    public Optional<User> findUserByLogin(String login) {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         Optional<User> result = Optional.empty();
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN);
             preparedStatement.setString(1, login);
             resultSet = preparedStatement.executeQuery();
-
             if (resultSet.next()) {
                 User user = new User();
-
                 user.setId(resultSet.getInt(DB_USER_ID_FIELD));
                 user.setLogin(login);
                 user.setPassword(resultSet.getString(DB_PASSWORD_FIELD));
@@ -251,36 +234,33 @@ public class UserDaoImpl implements UserDao {
                 user.setStatus(resultSet.getString(DB_USER_STATUS_FIELD));
                 result = Optional.of(user);
             }
-
-            return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user by login: " + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find user by login: " + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return result;
     }
 
     @Override
-    public Optional<User> findUserById(int id) throws DaoException {
+    public Optional<User> findUserById(int id) {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         Optional<User> result = Optional.empty();
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(FIND_USER_BY_ID);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
-
             if (resultSet.next()) {
                 User user = new User();
-
                 user.setId(id);
                 user.setLogin(resultSet.getString(DB_LOGIN_FIELD));
                 user.setPassword(resultSet.getString(DB_PASSWORD_FIELD));
@@ -291,35 +271,32 @@ public class UserDaoImpl implements UserDao {
                 user.setCardNumber(resultSet.getString(DB_CARD_NUMBER_FIELD));
                 result = Optional.of(user);
             }
-
-            return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user by id: " + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find user by id: " + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return result;
     }
 
     @Override
-    public List<User> findAllUsers() throws DaoException {
+    public List<User> findAllUsers() {
         ProxyConnection connection = null;
         ResultSet resultSet;
         Statement statement = null;
         List<User> userList = new ArrayList<>();
         try {
             connection = pool.takeConnection();
-
             statement = connection.createStatement();
             resultSet = statement.executeQuery(FIND_ALL_USERS);
-
             while (resultSet.next()) {
                 User user = new User();
-
                 user.setId(resultSet.getInt(DB_USER_ID_FIELD));
                 user.setLogin(resultSet.getString(DB_LOGIN_FIELD));
                 user.setPassword(resultSet.getString(DB_PASSWORD_FIELD));
@@ -329,105 +306,101 @@ public class UserDaoImpl implements UserDao {
                 user.setStatus(resultSet.getString(DB_USER_STATUS_FIELD));
                 userList.add(user);
             }
-            return userList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find users" + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find users: " + e.getMessage(), e);
         } finally {
+            closeStatement(statement);
             try {
-                closeStatement(statement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return userList;
     }
 
     @Override
-    public void changeUserStatus(int userId, String status) throws DaoException {
+    public void changeUserStatus(int userId, String status) {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(UPDATE_USER_STATUS);
             preparedStatement.setString(1, status);
             preparedStatement.setInt(2, userId);
             preparedStatement.executeUpdate();
-
         } catch (SQLException e) {
-            throw new DaoException("Failed to change user status: " + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to change user status: " + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
     }
 
     @Override
-    public void updateUser(int id, String password, String userName) throws DaoException {
+    public void updateUser(int id, String password, String userName) {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(UPDATE_USER);
             preparedStatement.setString(1, password);
             preparedStatement.setString(2, userName);
             preparedStatement.setInt(3, id);
             preparedStatement.executeUpdate();
-
         } catch (SQLException e) {
-            throw new DaoException("Failed to update user: " + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to update user: " + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
     }
 
     @Override
-    public void updateUserName(int id, String userName) throws DaoException {
+    public void updateUserName(int id, String userName) {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(UPDATE_USER_NAME);
             preparedStatement.setString(1, userName);
             preparedStatement.setInt(2, id);
             preparedStatement.executeUpdate();
-
         } catch (SQLException e) {
-            throw new DaoException("Failed to change user name: " + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to change user name: " + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
     }
 
     @Override
-    public Optional<User> findUserByEmail(String email) throws DaoException {
+    public Optional<User> findUserByEmail(String email) {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         Optional<User> result = Optional.empty();
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(FIND_USER_BY_EMAIL);
             preparedStatement.setString(1, email);
             resultSet = preparedStatement.executeQuery();
-
             if (resultSet.next()) {
                 User user = new User();
                 user.setId(resultSet.getInt(DB_USER_ID_FIELD));
@@ -437,112 +410,106 @@ public class UserDaoImpl implements UserDao {
                 user.setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD));
                 user.setUserName(resultSet.getString(DB_USER_NAME_FIELD));
                 user.setStatus(resultSet.getString(DB_USER_STATUS_FIELD));
-                user.setCardNumber(resultSet.getString(DB_CARD_NUMBER_FIELD));
                 result = Optional.of(user);
             }
-
-            return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user by email: " + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find user by email: " + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return result;
     }
 
-    public void addMoneyToCard(String cardNumber, BigDecimal amount) throws DaoException {
+    public void addMoneyToCard(String cardNumber, BigDecimal amount) {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(ADD_MONEY_TO_CARD);
             preparedStatement.setBigDecimal(1, amount);
             preparedStatement.setString(2, cardNumber);
             preparedStatement.executeUpdate();
-
         } catch (SQLException e) {
-            throw new DaoException("Failed to add money to card: " + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to add money to card: " + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
     }
 
     @Override
-    public BigDecimal findMoneyByCardNumber(String cardNumber) throws DaoException {
+    public BigDecimal findMoneyByCardNumber(String cardNumber) {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         BigDecimal money = BigDecimal.ZERO;
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(FIND_MONEY_ON_CARD_BY_CARD_NUMBER);
             preparedStatement.setString(1, cardNumber);
             ResultSet resultSet = preparedStatement.executeQuery();
-
             if (resultSet.next()) {
-                money = money.add(resultSet.getBigDecimal("money"));
+                money = money.add(resultSet.getBigDecimal(DB_CARD_MONEY_FIELD));
             }
-            return money;
-
         } catch (SQLException e) {
-            throw new DaoException("Failed to find money: " + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find money: " + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return money;
     }
 
     @Override
-    public Optional<User> findUserByIdAndCardNumber(int userId, String cardNumber)
-            throws DaoException {
+    public Optional<User> findUserByIdAndCardNumber(int userId, String cardNumber) {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         Optional<User> result = Optional.empty();
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(FIND_USER_BY_ID_AND_CARD_NUMBER);
             preparedStatement.setInt(1, userId);
             preparedStatement.setString(2, cardNumber);
             resultSet = preparedStatement.executeQuery();
-
             if (resultSet.next()) {
                 User user = new User();
-                user.setId(resultSet.getInt(DB_USER_ID_FIELD));
+                user.setId(userId);
                 user.setLogin(resultSet.getString(DB_LOGIN_FIELD));
                 user.setPassword(DB_PASSWORD_FIELD);
                 user.setEmail(resultSet.getString(DB_USER_EMAIL_FIELD));
                 user.setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD));
                 user.setUserName(resultSet.getString(DB_USER_NAME_FIELD));
                 user.setStatus(resultSet.getString(DB_USER_STATUS_FIELD));
+                user.setCardNumber(cardNumber);
                 result = Optional.of(user);
             }
-
-            return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user by login and password: " + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find user by login and password: " + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return result;
     }
 }

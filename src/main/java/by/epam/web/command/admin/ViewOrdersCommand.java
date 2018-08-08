@@ -8,7 +8,7 @@ import by.epam.web.entity.Order;
 import by.epam.web.service.OrderService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
-import by.epam.web.util.content.SessionRequestContent;
+import by.epam.web.controller.SessionRequestContent;
 import by.epam.web.validation.NumberValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;

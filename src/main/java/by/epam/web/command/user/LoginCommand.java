@@ -8,7 +8,7 @@ import by.epam.web.entity.User;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.service.UserService;
-import by.epam.web.util.content.SessionRequestContent;
+import by.epam.web.controller.SessionRequestContent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,7 +34,7 @@ public class LoginCommand implements Command {
                 router.setPage(PageAddress.HOME_PAGE);
             } else {
                 requestContent.setAttribute(RequestParameter.AUTH_FAIL, true);
-                router.setPage(PageAddress.LOGIN_PAGE);
+                router.setPage(PageAddress.REGISTER_PAGE);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);

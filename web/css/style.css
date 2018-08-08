@@ -3,6 +3,7 @@ html, body{height: 90%}
 body {
     background-color: #eeeeee;
 	font-family:"Helvetica";
+    padding-bottom: 50px;
 }
 
 #header {
@@ -149,10 +150,13 @@ select {
     background-color: #f1f1f1;
 }
 
-.row {
-    display: flex;
+.column {
+    float: left;
+    width: 50%;
 }
 
-.column {
-    flex: 50%;
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
 }

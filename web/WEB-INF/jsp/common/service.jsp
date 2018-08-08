@@ -23,7 +23,7 @@
 
 <div>
     <div class="row">
-        <div class="column">
+        <div class="column" style="width:30%;">
             <input type="hidden" name="activityId" value="${activity.id}"/>
             <br/>
             ${serviceNameLabel}: ${activity.name}
@@ -38,6 +38,7 @@
                 <jsp:include page="/WEB-INF/jsp/user/addReview.jsp"/>
             </c:if>
         </div>
+        <div class="column" style="width:20%;"><br/></div>
         <div class="column">
             <c:forEach var="review" items="${reviewList}">
                 <form name="reviewListForm" method="POST" action="app">
@@ -58,5 +59,6 @@
         </div>
     </div>
 </div>
+<jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>
 </body>
 </html>

@@ -52,7 +52,6 @@ public class ConnectionPool {
                 logger.log(Level.ERROR, e.getMessage(), e);
             }
         }
-
         if (availableConnections.size() < ConnectionManager.INITIAL_POOL_SIZE) {
             for (int i = availableConnections.size() - 1;
                  i < ConnectionManager.getInstance().getPoolSize(); i++) {
@@ -63,14 +62,12 @@ public class ConnectionPool {
                 }
             }
         }
-
         if (availableConnections.isEmpty()) {
             logger.fatal("Couldn't create any connections");
             throw new RuntimeException("Couldn't create any connections");
         } else if (availableConnections.size() == ConnectionManager.INITIAL_POOL_SIZE) {
             logger.log(Level.INFO, "Successfully initialized connection pool");
         }
-
     }
 
     public ProxyConnection takeConnection() throws PoolException {
@@ -145,9 +142,5 @@ public class ConnectionPool {
 
     public int getAvailableConnectionNumber(){
         return availableConnections.size();
-    }
-
-    public int getUnavailableConnectionNumber(){
-        return unavailableConnections.size();
     }
 }

@@ -22,15 +22,12 @@ import java.util.Optional;
 
 public class ActivityDaoImpl implements ActivityDao {
     private static Logger logger = LogManager.getLogger();
-
     private static ConnectionPool pool = ConnectionPool.getInstance();
-
     private static final String DB_ACTIVITY_ID_FIELD = "service_id";
     private static final String DB_ACTIVITY_NAME_FIELD = "service_name";
     private static final String DB_ACTIVITY_DESCRIPTION_FIELD = "service_description";
     private static final String DB_ACTIVITY_PRICE_FIELD = "service_price";
     private static final String DB_ACTIVITY_STATUS_FIELD = "service_status";
-
     private static final String INSERT_ACTIVITY = "INSERT INTO service " +
             "(service_name, service_description, service_price) " +
             "VALUES (?, ?, ?)";
@@ -56,7 +53,7 @@ public class ActivityDaoImpl implements ActivityDao {
             "WHERE service_id = ?";
 
     @Override
-    public void addActivity(Activity activity) throws DaoException {
+    public void addActivity(Activity activity) {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -64,42 +61,37 @@ public class ActivityDaoImpl implements ActivityDao {
             String name = activity.getName();
             String description = activity.getDescription();
             BigDecimal price = activity.getPrice();
-
             preparedStatement = connection.prepareStatement(INSERT_ACTIVITY);
-
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, description);
             preparedStatement.setBigDecimal(3, price);
-
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoException("Failed to add activity: " + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to add activity: " + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
     }
 
     @Override
-    public Optional<Activity> findActivityById(int id) throws DaoException {
+    public Optional<Activity> findActivityById(int id) {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         Optional<Activity> result = Optional.empty();
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(FIND_ACTIVITY_BY_ID);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
-
             if (resultSet.next()) {
                 Activity activity = new Activity();
-
                 activity.setId(id);
                 activity.setName(resultSet.getString(DB_ACTIVITY_NAME_FIELD));
                 activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim());
@@ -107,36 +99,33 @@ public class ActivityDaoImpl implements ActivityDao {
                 activity.setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD));
                 result = Optional.of(activity);
             }
-
-            return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find activity by id" + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find activity by id" + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return result;
     }
 
     @Override
-    public Optional<Activity> findActivityByName(String name) throws DaoException {
+    public Optional<Activity> findActivityByName(String name) {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         Optional<Activity> result = Optional.empty();
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(FIND_ACTIVITY_BY_NAME);
             preparedStatement.setString(1, name);
             resultSet = preparedStatement.executeQuery();
-
             if (resultSet.next()) {
                 Activity activity = new Activity();
-
                 activity.setId(resultSet.getInt(DB_ACTIVITY_ID_FIELD));
                 activity.setName(name);
                 activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim());
@@ -144,35 +133,32 @@ public class ActivityDaoImpl implements ActivityDao {
                 activity.setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD));
                 result = Optional.of(activity);
             }
-
-            return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find activity by name" + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find activity by name" + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return result;
     }
 
     @Override
-    public List<Activity> findAllActivities() throws DaoException {
+    public List<Activity> findAllActivities() {
         ProxyConnection connection = null;
         ResultSet resultSet;
         Statement statement = null;
         List<Activity> activityList = new ArrayList<>();
         try {
             connection = pool.takeConnection();
-
             statement = connection.createStatement();
             resultSet = statement.executeQuery(FIND_ALL_ACTIVITIES);
-
             while (resultSet.next()) {
                 Activity activity = new Activity();
-
                 activity.setId(resultSet.getInt(DB_ACTIVITY_ID_FIELD));
                 activity.setName(resultSet.getString(DB_ACTIVITY_NAME_FIELD));
                 activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim());
@@ -180,57 +166,55 @@ public class ActivityDaoImpl implements ActivityDao {
                 activity.setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD));
                 activityList.add(activity);
             }
-            return activityList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find activities" + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find activities" + e.getMessage(), e);
         } finally {
+            closeStatement(statement);
             try {
-                closeStatement(statement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return activityList;
     }
 
     @Override
-    public void changeActivityStatus(int id, String status) throws DaoException {
+    public void changeActivityStatus(int id, String status) {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(UPDATE_ACTIVITY_STATUS);
             preparedStatement.setString(1, status);
             preparedStatement.setInt(2, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoException("Failed to change activity status" + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to change activity status" + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
     }
 
     @Override
-    public List<Activity> findAvailableActivities() throws DaoException {
+    public List<Activity> findAvailableActivities() {
         ProxyConnection connection = null;
         ResultSet resultSet;
         Statement statement = null;
         List<Activity> activityList = new LinkedList<>();
         try {
             connection = pool.takeConnection();
-
             statement = connection.createStatement();
             resultSet = statement.executeQuery(FIND_AVAILABLE_ACTIVITIES);
-
             while (resultSet.next()) {
                 Activity activity = new Activity();
-
                 activity.setId(resultSet.getInt(DB_ACTIVITY_ID_FIELD));
                 activity.setName(resultSet.getString(DB_ACTIVITY_NAME_FIELD));
                 activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim());
@@ -238,27 +222,27 @@ public class ActivityDaoImpl implements ActivityDao {
                 activity.setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD));
                 activityList.add(activity);
             }
-            return activityList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find available activities" + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find available activities" + e.getMessage(), e);
         } finally {
+            closeStatement(statement);
             try {
-                closeStatement(statement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return activityList;
     }
 
     @Override
     public void updateActivity(int id, String name, String description,
-                               BigDecimal price, String status) throws DaoException {
+                               BigDecimal price, String status) {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(UPDATE_ACTIVITY);
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, description);
@@ -266,21 +250,16 @@ public class ActivityDaoImpl implements ActivityDao {
             preparedStatement.setString(4, status);
             preparedStatement.setInt(5, id);
             preparedStatement.executeUpdate();
-
         } catch (SQLException e) {
-            throw new DaoException("Failed to update activity:  " + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to update activity:  " + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
-    }
-
-    Activity buildActivity(int id, String name, String description, String status,
-                           BigDecimal price){
-        return new Activity();
     }
 }

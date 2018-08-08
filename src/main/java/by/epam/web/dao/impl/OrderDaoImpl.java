@@ -20,9 +20,7 @@ import java.util.Optional;
 
 public class OrderDaoImpl implements OrderDao {
     private static Logger logger = LogManager.getLogger();
-
     private static ConnectionPool pool = ConnectionPool.getInstance();
-
     private static final String DB_ORDER_ID_FIELD = "order_id";
     private static final String DB_ORDER_USER_ID_FIELD = "user_id";
     private static final String DB_ORDER_SERVICE_ID_FIELD = "service_id";
@@ -30,15 +28,12 @@ public class OrderDaoImpl implements OrderDao {
     private static final String DB_ORDER_TIME_FIELD = "order_time";
     private static final String DB_ORDER_PRICE_FIELD = "order_price";
     private static final String DB_ORDER_PAID_FIELD = "paid";
-
     private static final String DB_ACTIVITY_ID_FIELD = "service_id";
     private static final String DB_ACTIVITY_NAME_FIELD = "service_name";
     private static final String DB_ACTIVITY_DESCRIPTION_FIELD = "service_description";
     private static final String DB_ACTIVITY_PRICE_FIELD = "service_price";
     private static final String DB_ACTIVITY_STATUS_FIELD = "service_status";
-
     private static final String DB_USER_EMAIL_FIELD = "user_email";
-
     private static final String INSERT_ORDER_INFO = "INSERT INTO order_info " +
             "(user_id, order_time) " +
             "VALUES (?, ?)";
@@ -100,46 +95,35 @@ public class OrderDaoImpl implements OrderDao {
         try {
             connection = pool.takeConnection();
             connection.setAutoCommit(false);
-
             int userId = order.getUserId();
             Timestamp time = order.getDateTime();
             List<Activity> activityList = new ArrayList<>();
             for (int i = 0; i < order.activityListSize(); i++) {
                 activityList.add(order.getActivity(i));
             }
-
             preparedStatement = connection.prepareStatement(INSERT_ORDER_INFO, Statement.RETURN_GENERATED_KEYS);
-
             preparedStatement.setInt(1, userId);
             preparedStatement.setTimestamp(2, time);
-
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
-
             if (resultSet.next()) {
                 int orderId = resultSet.getInt(1);
                 order.setId(orderId);
             } else {
                 throw new DaoException("Couldn't retrieve order's ID and status");
             }
-
             for (Activity activity : activityList) {
                 preparedStatement = connection.prepareStatement(INSERT_ORDER_ACTIVITIES);
-
                 preparedStatement.setInt(1, order.getId());
                 preparedStatement.setInt(2, activity.getId());
-
                 preparedStatement.executeUpdate();
             }
-
             preparedStatement = connection.prepareStatement(SET_ORDER_PRICE);
             preparedStatement.setBigDecimal(1, calculateOrderPrice(order.getActivityList()));
             preparedStatement.setInt(2, order.getId());
             preparedStatement.executeUpdate();
-
             connection.commit();
             connection.setAutoCommit(true);
-
         } catch (SQLException e) {
             try {
                 if (connection != null) {
@@ -149,39 +133,36 @@ public class OrderDaoImpl implements OrderDao {
             } catch (SQLException ex) {
                 logger.log(Level.ERROR, "Couldn't rollback connection: " + e.getMessage(), e);
             }
-            throw new DaoException("Failed to add order" + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to add order" + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
     }
 
     @Override
-    public void changeOrderStatus(int id, String status) throws DaoException {
+    public void changeOrderStatus(int id, String status) {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.takeConnection();
             connection.setAutoCommit(false);
-
             preparedStatement = connection.prepareStatement(UPDATE_ORDER_STATUS);
             preparedStatement.setString(1, status);
             preparedStatement.setInt(2, id);
             preparedStatement.executeUpdate();
-
-            if (Order.Status.CANCELLED.getName().equalsIgnoreCase(status)){
+            if (Order.Status.CANCELLED.getName().equalsIgnoreCase(status)) {
                 preparedStatement = connection.prepareStatement(RETURN_ORDER_MONEY);
                 preparedStatement.setInt(1, id);
                 preparedStatement.executeUpdate();
             }
-
             connection.commit();
             connection.setAutoCommit(true);
-
         } catch (SQLException e) {
             try {
                 if (connection != null) {
@@ -191,36 +172,33 @@ public class OrderDaoImpl implements OrderDao {
             } catch (SQLException ex) {
                 logger.log(Level.ERROR, "Couldn't rollback connection: " + e.getMessage(), e);
             }
-            throw new DaoException("Failed to change order status" + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to change order status" + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
     }
 
     @Override
-    public List<Order> findAllOrders(int startPosition, int numberOfRecords) throws DaoException {
+    public List<Order> findAllOrders(int startPosition, int numberOfRecords) {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         List<Order> orderList = new ArrayList<>();
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(FIND_ALL_ORDERS);
             preparedStatement.setInt(1, startPosition);
             preparedStatement.setInt(2, numberOfRecords);
             resultSet = preparedStatement.executeQuery();
-
-
             while (resultSet.next()) {
                 Order order = new Order();
                 int currentOrderId = resultSet.getInt(DB_ORDER_ID_FIELD);
-
                 order.setId(currentOrderId);
                 order.setUserId(resultSet.getInt(DB_ORDER_USER_ID_FIELD));
                 order.setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD));
@@ -232,35 +210,33 @@ public class OrderDaoImpl implements OrderDao {
                 }
                 orderList.add(order);
             }
-            return orderList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find orders" + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find orders" + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return orderList;
     }
 
     @Override
-    public Optional<Order> findOrderById(int id) throws DaoException {
+    public Optional<Order> findOrderById(int id) {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         Optional<Order> result = Optional.empty();
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(FIND_ORDER_BY_ID);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
-
             if (resultSet.next()) {
                 Order order = new Order();
-
                 order.setId(id);
                 order.setUserId(resultSet.getInt(DB_ORDER_USER_ID_FIELD));
                 order.setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD));
@@ -271,42 +247,38 @@ public class OrderDaoImpl implements OrderDao {
                 for (Activity activity : activityList) {
                     order.addActivity(activity);
                 }
-
                 result = Optional.of(order);
             }
-            return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find order by id" + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find order by id" + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return result;
     }
 
     @Override
-    public List<Order> findOrdersByUser(int userId, int startPosition, int numberOfRecords) throws DaoException {
+    public List<Order> findOrdersByUser(int userId, int startPosition, int numberOfRecords) {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         List<Order> orderList = new ArrayList<>();
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(FIND_ORDERS_BY_USER_ID_LIMITED);
-
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, startPosition);
             preparedStatement.setInt(3, numberOfRecords);
             resultSet = preparedStatement.executeQuery();
-
             while (resultSet.next()) {
                 Order order = new Order();
                 int currentOrderId = resultSet.getInt(DB_ORDER_ID_FIELD);
-
                 order.setId(currentOrderId);
                 order.setUserId(userId);
                 order.setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD));
@@ -319,37 +291,34 @@ public class OrderDaoImpl implements OrderDao {
                 }
                 orderList.add(order);
             }
-            return orderList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find orders by user" + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find orders by user" + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return orderList;
     }
 
     @Override
-    public List<Order> findOrdersByUser(int userId) throws DaoException {
+    public List<Order> findOrdersByUser(int userId) {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         List<Order> orderList = new ArrayList<>();
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(FIND_ORDERS_BY_USER_ID);
-
             preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
-
             while (resultSet.next()) {
                 Order order = new Order();
                 int currentOrderId = resultSet.getInt(DB_ORDER_ID_FIELD);
-
                 order.setId(currentOrderId);
                 order.setUserId(userId);
                 order.setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD));
@@ -362,39 +331,36 @@ public class OrderDaoImpl implements OrderDao {
                 }
                 orderList.add(order);
             }
-            return orderList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find orders by user" + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find orders by user" + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return orderList;
     }
 
     @Override
-    public List<Order> findOrdersByUserAndStatus(User user, String status) throws DaoException {
+    public List<Order> findOrdersByUserAndStatus(User user, String status) {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         List<Order> orderList = new ArrayList<>();
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(FIND_ORDERS_BY_USER_ID);
-
             int userId = user.getId();
             preparedStatement.setInt(1, userId);
             preparedStatement.setString(1, status);
             resultSet = preparedStatement.executeQuery();
-
             while (resultSet.next()) {
                 Order order = new Order();
                 int currentOrderId = resultSet.getInt(DB_ORDER_ID_FIELD);
-
                 order.setId(currentOrderId);
                 order.setUserId(userId);
                 order.setStatus(status);
@@ -407,17 +373,18 @@ public class OrderDaoImpl implements OrderDao {
                 }
                 orderList.add(order);
             }
-            return orderList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find orders by user and order status" + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find orders by user and order status" + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return orderList;
     }
 
     private BigDecimal calculateOrderPrice(List<Activity> activityList) {
@@ -429,44 +396,41 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public List<Activity> findActivitiesByOrderId(int id) throws DaoException {
+    public List<Activity> findActivitiesByOrderId(int id) {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
         List<Activity> activityList = new ArrayList<>();
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(FIND_ACTIVITIES_BY_ORDER_ID);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
-
             while (resultSet.next()) {
                 Activity activity = new Activity();
-
                 activity.setId(resultSet.getInt(DB_ACTIVITY_ID_FIELD));
                 activity.setName(resultSet.getString(DB_ACTIVITY_NAME_FIELD));
                 activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim());
                 activity.setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD));
                 activity.setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD));
-
                 activityList.add(activity);
             }
-            return activityList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find activities by order id" + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find activities by order id" + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return activityList;
     }
 
     @Override
-    public List<String> findEmailsForUpcomingOrders() throws DaoException {
+    public List<String> findEmailsForUpcomingOrders() {
         ProxyConnection connection = null;
         ResultSet resultSet;
         Statement statement = null;
@@ -475,54 +439,45 @@ public class OrderDaoImpl implements OrderDao {
         List<Integer> orderIdList = new ArrayList<>();
         try {
             connection = pool.takeConnection();
-
             statement = connection.createStatement();
             resultSet = statement.executeQuery(FIND_EMAILS_FOR_UPCOMING_ORDERS);
-
             while (resultSet.next()) {
                 emailList.add(resultSet.getString(DB_USER_EMAIL_FIELD));
                 orderIdList.add(resultSet.getInt(DB_ORDER_ID_FIELD));
             }
             preparedStatement = connection.prepareStatement(SET_ORDER_REMINDED);
-
             for (int orderId : orderIdList) {
                 preparedStatement.setInt(1, orderId);
                 preparedStatement.executeUpdate();
             }
-
-            return emailList;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find emails for upcoming orders" + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find emails for upcoming orders" + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(statement);
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return emailList;
     }
 
-
-    public void payForOrder(int orderId) throws DaoException {
+    public void payForOrder(int orderId) {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.takeConnection();
             connection.setAutoCommit(false);
-
             preparedStatement = connection.prepareStatement(PAY_FOR_ORDER);
             preparedStatement.setInt(1, orderId);
             preparedStatement.executeUpdate();
-
             preparedStatement = connection.prepareStatement(UPDATE_ORDER_STATUS);
             preparedStatement.setString(1, Order.Status.CONFIRMED.getName());
             preparedStatement.setInt(2, orderId);
-
             connection.commit();
             connection.setAutoCommit(true);
-
         } catch (SQLException e) {
             try {
                 if (connection != null) {
@@ -532,86 +487,70 @@ public class OrderDaoImpl implements OrderDao {
             } catch (SQLException ex) {
                 logger.log(Level.ERROR, "Couldn't rollback connection: " + e.getMessage(), e);
             }
-            throw new DaoException("Failed to pay for order: " + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to pay for order: " + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
     }
 
     @Override
-    public int countOrders() throws DaoException {
+    public int countOrders() {
         ProxyConnection connection = null;
         ResultSet resultSet;
         Statement statement = null;
-        int result;
+        int result = 0;
         try {
             connection = pool.takeConnection();
-
             statement = connection.createStatement();
             resultSet = statement.executeQuery(COUNT_ORDERS);
-
             if (resultSet.next()) {
                 result = resultSet.getInt(1);
-            } else {
-                throw new DaoException("Couldn't count orders");
             }
-            return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find orders" + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find orders" + e.getMessage(), e);
         } finally {
+            closeStatement(statement);
             try {
-                closeStatement(statement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
+        return result;
     }
 
     @Override
-    public int countUserOrders(int userId) throws DaoException {
+    public int countUserOrders(int userId) {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
-        int result;
+        int result = 0;
         try {
             connection = pool.takeConnection();
-
             preparedStatement = connection.prepareStatement(COUNT_USER_ORDERS);
             preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
-
             if (resultSet.next()) {
                 result = resultSet.getInt(1);
-            } else {
-                throw new DaoException("Couldn't count user orders");
             }
-            return result;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find orders" + e.getMessage(), e);
+            logger.log(Level.ERROR, "Failed to find orders" + e.getMessage(), e);
         } finally {
+            closeStatement(preparedStatement);
             try {
-                closeStatement(preparedStatement);
                 pool.releaseConnection(connection);
             } catch (PoolException e) {
-                logger.log(Level.ERROR, e.getMessage(), e);
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
-    }
-
-    private Order buildOrder(int id, int userId, String status, Timestamp time, BigDecimal price,
-                             boolean paid) {
-//        order.setId(currentOrderId);
-//        order.setUserId(userId);
-//        order.setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD));
-//        order.setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD));
-//        order.setPrice(resultSet.getBigDecimal(DB_ORDER_PRICE_FIELD));
-//        order.setPaid(resultSet.getBoolean(DB_ORDER_PAID_FIELD));
-        return new Order();
+        return result;
     }
 }

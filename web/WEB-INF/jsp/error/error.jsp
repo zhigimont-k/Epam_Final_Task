@@ -27,6 +27,7 @@
     Exception: ${pageContext.exception}
     <br/>
     Message from exception: ${pageContext.exception.message}
+    <br/>
     <a href="${pageContext.request.contextPath}/home">What in the world is this? I'm going home</a>
 </div>
 </body>

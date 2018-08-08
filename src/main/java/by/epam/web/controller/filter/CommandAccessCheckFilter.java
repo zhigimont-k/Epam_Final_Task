@@ -45,7 +45,7 @@ public class CommandAccessCheckFilter implements Filter {
                 filterChain.doFilter(servletRequest, servletResponse);
             } else {
                 logger.log(Level.ERROR, "Tried to call command " + command + " without access");
-                logger.log(Level.INFO, "User: "+user+", command right: "+ commandAccessLevel);
+                logger.log(Level.INFO, "User: " + user.getLogin() + ", command right: " + commandAccessLevel);
                 HttpServletResponse response = (HttpServletResponse) servletResponse;
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
             }

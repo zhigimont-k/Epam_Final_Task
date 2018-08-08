@@ -1,4 +1,4 @@
-package by.epam.web.util.mail;
+package by.epam.web.util;
 
 public class MailComposer {
 

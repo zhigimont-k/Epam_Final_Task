@@ -7,7 +7,7 @@ import by.epam.web.constant.RequestParameter;
 import by.epam.web.service.ActivityService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
-import by.epam.web.util.content.SessionRequestContent;
+import by.epam.web.controller.SessionRequestContent;
 import by.epam.web.validation.ActivityValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -30,6 +30,7 @@ public class AddActivityCommand implements Command {
 
             if (validateActivity(name, description, price)) {
                 requestContent.removeSessionAttribute(RequestParameter.ILLEGAL_INPUT);
+                requestContent.removeSessionAttribute(RequestParameter.DATA_EXISTS);
                 boolean nameExists = service.nameExists(name);
                 if (nameExists) {
                     requestContent.setSessionAttribute(RequestParameter.DATA_EXISTS, true);

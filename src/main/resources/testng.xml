@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suite userName="final" verbose="2" >
-  <test userName="Test" >
-    <classes>
-      <class userName="by.epam.final.///"/>
-    </classes>
- </test>
+<suite userName="final" verbose="2">
+    <test userName="Test">
+        <classes>
+            <class userName="by.epam.web.pool.ConnectionPoolTest"/>
+            <class userName="by.epam.web.validation.ActivityValidatorTest"/>
+            <class userName="by.epam.web.validation.OrderValidatorTest"/>
+            <class userName="by.epam.web.validation.ReviewValidatorTest"/>
+            <class userName="by.epam.web.validation.UserValidatorTest"/>
+        </classes>
+    </test>
 </suite>

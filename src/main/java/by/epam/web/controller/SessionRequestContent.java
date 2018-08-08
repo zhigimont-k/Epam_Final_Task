@@ -1,4 +1,4 @@
-package by.epam.web.util.content;
+package by.epam.web.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;

@@ -1,4 +1,4 @@
-package by.epam.web.util.mail;
+package by.epam.web.util;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -10,17 +10,24 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
 
 public class MailSenderThread extends Thread {
     private static Logger logger = LogManager.getLogger();
     private static final String FROM_MAIL = "catbeautysalonmeow@gmail.com";
+    private static final String MAIL_PROPERTIES_PATH = "mail.properties";
+    private static final String HOST = "mail.smtps.host";
+    private static final String PORT = "mail.smtp.port";
+    private static final String USER = "smtps.auth.user";
+    private static final String PASSWORD = "smtps.auth.pass";
     private String mailTo;
     private String mailFrom;
     private String mailSubject;
     private String mailContent;
     private Session mailSession;
+    private Properties properties;
 
     public MailSenderThread(String mailTo, String mailSubject, String mailContent) {
         this.mailTo = mailTo;
@@ -30,14 +37,15 @@ public class MailSenderThread extends Thread {
     }
 
     private void buildMailSession() {
-        Properties props = new Properties();
-        props.put(Settings.SMTP_AUTH, "true");
-        props.put(Settings.PROTOCOL, Settings.PROTOCOL_VALUE);
-        props.put(Settings.HOST, Settings.HOST_VALUE);
-        props.put(Settings.USER, "true");
-        props.put(Settings.SEND_PARTIAL, "true");
-        props.put(Settings.START_TLS_ENABLE, "true");
-        mailSession=Session.getDefaultInstance(props);
+        properties = new Properties();
+        try {
+            properties.load(MailSenderThread.class.getClassLoader().
+                    getResourceAsStream(MAIL_PROPERTIES_PATH));
+        } catch (IOException e) {
+            logger.log(Level.ERROR, "Unable to find mail properties file");
+        }
+
+        mailSession = Session.getDefaultInstance(properties);
         mailSession.setDebug(true);
     }
 
@@ -52,8 +60,10 @@ public class MailSenderThread extends Thread {
             message.setContent(mailContent, "text/html; charset=UTF-8");
             message.setSentDate(new Date());
             Transport transport = mailSession.getTransport();
-            transport.connect(Settings.HOST_VALUE, Settings.DEFAULT_PORT,
-                    Settings.USER_VALUE, Settings.PASSWORD_VALUE);
+            transport.connect(properties.getProperty(HOST),
+                    Integer.parseInt(properties.getProperty(PORT)),
+                    properties.getProperty(USER),
+                    properties.getProperty(PASSWORD));
             transport.sendMessage(message, message.getRecipients(Message.RecipientType.TO));
             transport.close();
             logger.log(Level.INFO, "Message sent");

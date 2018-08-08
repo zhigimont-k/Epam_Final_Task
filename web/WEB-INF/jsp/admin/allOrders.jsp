@@ -88,5 +88,6 @@
     <a href="app?command=viewAllOrders&pageNumber=${currentPage + 1}">Next</a>
 </c:if>
 
+<jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>
 </body>
 </html>

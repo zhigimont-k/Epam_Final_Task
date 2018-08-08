@@ -70,9 +70,6 @@
         </c:forEach>
     </table>
 </div>
-
-
-
 <c:if test="${currentPage != 1}">
     <a href="app?command=viewUserOrders&pageNumber=${currentPage - 1}">Previous</a>
 </c:if>
@@ -92,7 +89,6 @@
     <a href="app?command=viewUserOrders&pageNumber=${currentPage + 1}">Next</a>
 </c:if>
 
-
-
+<jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>
 </body>
 </html>

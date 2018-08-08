@@ -20,7 +20,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
-<img src="${pageContext.request.contextPath}/images/cat500.png" alt="" height="150"><h2>400 error</h2><br/>
+<img src="${pageContext.request.contextPath}/images/cat400.png" alt="" height="150"><h2>400 error</h2><br/>
 Sorry friend, but your request looks suspicious.<br/>
 <a href="${pageContext.request.contextPath}/home">Better go back.</a>
 </body>
