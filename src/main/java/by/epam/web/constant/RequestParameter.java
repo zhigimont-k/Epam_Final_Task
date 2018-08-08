@@ -53,5 +53,7 @@ public final class RequestParameter {
     public static final String NUMBER_OF_PAGES = "numberOfPages";
     public static final String CURRENT_TABLE_PAGE_NUMBER = "currentPage";
     public static final String PAGE_NUMBER = "pageNumber";
+
+    public static final String PHOTO = "photo";
     private RequestParameter(){}
 }

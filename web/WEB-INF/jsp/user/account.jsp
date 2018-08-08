@@ -80,6 +80,15 @@
                 Please check if your input is correct
             </c:if>
         </form>
+
+        <form name="updateUserForm" method="POST" action="image" enctype="multipart/form-data">
+            <input type="hidden" name="userId" value="${sessionScope.user.id}"/>
+            <input type="file" name="photo" size="50" placeholder="Upload Your Image" required/><br><br>
+            <input type="submit" value="Save">
+        </form>
+        <br/>
+        <img src="image?userId=${sessionScope.user.id}" height="200px"
+             onerror="this.style.display='none'"/>
     </div>
 </div>
 <jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>

@@ -44,6 +44,8 @@
                 <form name="reviewListForm" method="POST" action="app">
                     <input type="hidden" name="command" value="editReview"/>
                     <input type="hidden" name="reviewId" value="${review.id}"/>
+                    <img src="image?userId=${review.userId}" height="100px"
+                         onerror="this.style.display='none'"/>
                         ${review.userLogin} -
                     <fmt:formatDate value="${review.creationDate}" type="both" dateStyle="short" timeStyle="short"/>
                     <br/>${review.mark}
