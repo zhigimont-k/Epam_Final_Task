@@ -32,53 +32,37 @@ public class UpdateActivityCommand implements Command {
             if (id.isEmpty()) {
                 id = (String) requestContent.getSessionAttribute(RequestParameter.ACTIVITY_ID);
             }
-            if (NumberValidator.getInstance().validateId(id)) {
-                requestContent.setSessionAttribute(RequestParameter.ACTIVITY_ID, id);
-                String newName = requestContent.getParameter(RequestParameter.ACTIVITY_NAME);
-                String newDescription = requestContent.getParameter(RequestParameter.ACTIVITY_DESCRIPTION);
-                String newPrice = requestContent.getParameter(RequestParameter.ACTIVITY_PRICE);
-                String newStatus = requestContent.getParameter(RequestParameter.ACTIVITY_STATUS);
-
-                if (validateActivity(newName, newDescription, newPrice, newStatus)) {
-                    boolean nameExists = service.nameExists(newName);
-                    if (nameExists) {
-                        requestContent.setSessionAttribute(RequestParameter.DATA_EXISTS, true);
-                        router.setRedirect(true);
-                        router.setPage(PageAddress.VIEW_ACTIVITIES);
-                    } else {
-                        requestContent.removeSessionAttribute(RequestParameter.DATA_EXISTS);
-                        Optional<Activity> found = service.findActivityById(Integer.parseInt(id));
-                        if (found.isPresent()) {
-                            found.get().setName(newName);
-                            found.get().setDescription(newDescription);
-                            found.get().setPrice(new BigDecimal(newPrice));
-                            found.get().setStatus(newStatus);
-                            service.updateActivity(found.get());
-                            router.setRedirect(true);
-                            router.setPage(PageAddress.VIEW_ACTIVITIES);
-
-                        } else {
-                            router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
-                        }
-                    }
-                } else {
-                    router.setRedirect(true);
-                    router.setPage(PageAddress.EDIT_ACTIVITY_PAGE);
-                }
+            requestContent.setSessionAttribute(RequestParameter.ACTIVITY_ID, id);
+            String newName = requestContent.getParameter(RequestParameter.ACTIVITY_NAME);
+            String newDescription = requestContent.getParameter(RequestParameter.ACTIVITY_DESCRIPTION);
+            String newPrice = requestContent.getParameter(RequestParameter.ACTIVITY_PRICE);
+            String newStatus = requestContent.getParameter(RequestParameter.ACTIVITY_STATUS);
+            boolean nameExists = service.nameExists(newName);
+            if (nameExists) {
+                requestContent.setSessionAttribute(RequestParameter.DATA_EXISTS, true);
+                router.setRedirect(true);
+                router.setPage(PageAddress.EDIT_ACTIVITY_PAGE);
             } else {
-                router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
+                requestContent.removeSessionAttribute(RequestParameter.DATA_EXISTS);
+                requestContent.removeSessionAttribute(RequestParameter.ACTIVITY);
+                Optional<Activity> found = service.findActivityById(Integer.parseInt(id));
+                if (found.isPresent()) {
+                    found.get().setName(newName);
+                    found.get().setDescription(newDescription);
+                    found.get().setPrice(new BigDecimal(newPrice));
+                    found.get().setStatus(newStatus);
+                    service.updateActivity(Integer.parseInt(id), newName, newDescription,
+                            newPrice, newStatus);
+                    router.setRedirect(true);
+                    router.setPage(PageAddress.VIEW_ACTIVITIES);
+                } else {
+                    router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
+                }
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
-    }
-
-    private boolean validateActivity(String name, String description, String price, String status) {
-        return ActivityValidator.getInstance().validateName(name) &&
-                ActivityValidator.getInstance().validateDescription(description) &&
-                ActivityValidator.getInstance().validatePrice(price) &&
-                ActivityValidator.getInstance().validateStatus(status);
     }
 }

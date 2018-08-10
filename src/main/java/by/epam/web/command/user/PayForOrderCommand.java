@@ -27,24 +27,20 @@ public class PayForOrderCommand implements Command {
         try {
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             String id = requestContent.getParameter(RequestParameter.ORDER_ID);
-            if (NumberValidator.getInstance().validateId(id)){
-                int orderId = Integer.parseInt(id);
-                List<Order> userOrders = service.findOrdersByUser(user.getId());
-                boolean orderByUserExists = false;
-                for (Order order : userOrders){
-                    if (order.getId() == orderId){
-                        orderByUserExists = true;
-                    }
+            int orderId = Integer.parseInt(id);
+            List<Order> userOrders = service.findOrdersByUser(user.getId());
+            boolean orderByUserExists = false;
+            for (Order order : userOrders){
+                if (order.getId() == orderId){
+                    orderByUserExists = true;
                 }
-                if (orderByUserExists){
-                    service.payForOrder(Integer.parseInt(id));
-                    router.setRedirect(true);
-                    router.setPage(PageAddress.VIEW_USER_ORDERS);
-                } else {
-                    router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
-                }
+            }
+            if (orderByUserExists){
+                service.payForOrder(Integer.parseInt(id));
+                router.setRedirect(true);
+                router.setPage(PageAddress.VIEW_USER_ORDERS);
             } else {
-                router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
+                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);

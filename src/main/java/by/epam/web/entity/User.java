@@ -22,7 +22,6 @@ public class User extends Entity {
     private String phoneNumber;
     private Status status;
     private String cardNumber;
-    private byte[] image;
 
     public int getId() {
         return id;
@@ -98,14 +97,6 @@ public class User extends Entity {
 
     public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
-    }
-
-    public byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(byte[] image) {
-        this.image = image;
     }
 
     @Override

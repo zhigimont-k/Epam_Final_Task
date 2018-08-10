@@ -27,21 +27,17 @@ public class CancelOrderCommand implements Command {
         try {
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             String id = requestContent.getParameter(RequestParameter.ORDER_ID);
-            if (NumberValidator.getInstance().validateId(id)){
-                Optional<Order> found = service.findOrderById(Integer.parseInt(id));
-                if (found.isPresent()) {
-                    if (user.getId() == found.get().getUserId()) {
-                        service.changeOrderStatus(Integer.parseInt(id), Order.Status.CANCELLED.getName());
-                        router.setRedirect(true);
-                        router.setPage(PageAddress.VIEW_USER_ORDERS);
-                    } else {
-                        router.setPage(PageAddress.FORBIDDEN_ERROR_PAGE);
-                    }
+            Optional<Order> found = service.findOrderById(Integer.parseInt(id));
+            if (found.isPresent()) {
+                if (user.getId() == found.get().getUserId()) {
+                    service.changeOrderStatus(Integer.parseInt(id), Order.Status.CANCELLED.getName());
+                    router.setRedirect(true);
+                    router.setPage(PageAddress.VIEW_USER_ORDERS);
                 } else {
-                    router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
+                    router.setPage(PageAddress.FORBIDDEN_ERROR_PAGE);
                 }
             } else {
-                router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
+                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);

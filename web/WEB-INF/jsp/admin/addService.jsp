@@ -24,6 +24,7 @@
 <c:if test="${sessionScope.user.status ne 'admin'}">
     <jsp:forward page="${pageContext.request.contextPath}/home"/>
 </c:if>
+<jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
 <div id="custom-form">
     <div>
         <form name="addServiceForm" method="POST" action="app">

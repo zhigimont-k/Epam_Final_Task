@@ -97,6 +97,15 @@
         <url-pattern>/viewOrder</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Add service</servlet-name>
+        <jsp-file>/WEB-INF/jsp/admin/addService.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Add service</servlet-name>
+        <url-pattern>/addService</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>encodingFilter</filter-name>
         <filter-class>by.epam.web.controller.filter.EncodingFilter</filter-class>

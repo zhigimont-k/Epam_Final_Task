@@ -18,6 +18,10 @@ public class ActivityValidator {
         return instance;
     }
 
+    public boolean validateActivity(String name, String description, String price){
+        return validateName(name) && validateDescription(description) && validatePrice(price);
+    }
+
     public boolean validateName(String name) {
         Matcher matcher = Pattern.compile(NAME_FORMAT).matcher(name);
         return matcher.matches() && !name.trim().isEmpty();

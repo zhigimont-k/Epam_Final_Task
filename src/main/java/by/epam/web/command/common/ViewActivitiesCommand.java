@@ -22,12 +22,9 @@ public class ViewActivitiesCommand implements Command {
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
-
             ActivityService service = ServiceFactory.getInstance().getActivityService();
             List<Activity> activityList = service.findAllActivities();
-
             requestContent.setAttribute(RequestParameter.ACTIVITY_LIST, activityList);
-
             router.setPage(PageAddress.ACTIVITIES_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);

@@ -28,19 +28,13 @@ public class ChangeOrderStatusCommand implements Command {
 
             String id = requestContent.getParameter(RequestParameter.ORDER_ID);
             String status = requestContent.getParameter(RequestParameter.ORDER_STATUS);
-
-            if (validateParameters(id, status)){
-                Optional<Order> found = service.findOrderById(Integer.parseInt(id));
-                if (found.isPresent()){
-                    service.changeOrderStatus(Integer.parseInt(id), status);
-
-                    router.setRedirect(true);
-                    router.setPage(PageAddress.VIEW_ALL_ORDERS);
-                } else {
-                    router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
-                }
+            Optional<Order> found = service.findOrderById(Integer.parseInt(id));
+            if (found.isPresent()){
+                service.changeOrderStatus(Integer.parseInt(id), status);
+                router.setRedirect(true);
+                router.setPage(PageAddress.VIEW_ALL_ORDERS);
             } else {
-                router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
+                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
 
         } catch (ServiceException e) {

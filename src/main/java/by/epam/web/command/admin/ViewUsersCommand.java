@@ -22,12 +22,9 @@ public class ViewUsersCommand implements Command {
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
-
             UserService service = ServiceFactory.getInstance().getUserService();
             List<User> userList = service.findAllUsers();
-
             requestContent.setAttribute(RequestParameter.USER_LIST, userList);
-
             router.setPage(PageAddress.USERS_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);

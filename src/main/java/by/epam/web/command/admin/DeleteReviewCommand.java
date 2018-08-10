@@ -27,19 +27,15 @@ public class DeleteReviewCommand implements Command {
             ReviewService service = ServiceFactory.getInstance().getReviewService();
             String id = requestContent.getParameter(RequestParameter.REVIEW_ID);
 
-            if (NumberValidator.getInstance().validateId(id)){
-                int reviewId = Integer.parseInt(id);
-                Optional<Review> found = service.findReviewById(reviewId);
-                if (found.isPresent()) {
-                    int activityId = found.get().getActivityId();
-                    service.deleteReview(reviewId);
-                    router.setRedirect(true);
-                    router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
-                } else {
-                    router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
-                }
+            int reviewId = Integer.parseInt(id);
+            Optional<Review> found = service.findReviewById(reviewId);
+            if (found.isPresent()) {
+                int activityId = found.get().getActivityId();
+                service.deleteReview(reviewId);
+                router.setRedirect(true);
+                router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
             } else {
-                router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
+                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
 
         } catch (ServiceException e) {

@@ -29,24 +29,19 @@ public class ResetPasswordCommand implements Command {
         PageRouter router = new PageRouter();
         try {
             String email = requestContent.getParameter(RequestParameter.EMAIL);
-            if (UserValidator.getInstance().validateEmail(email)){
-                Optional<User> found = service.findUserByEmail(email);
-                if (found.isPresent()) {
-                    String newPassword = PasswordGenerator.generatePassword();
-                    service.updateUser(found.get().getId(), newPassword, found.get().getUserName());
-                    found.get().setPassword(newPassword);
+            Optional<User> found = service.findUserByEmail(email);
+            if (found.isPresent()) {
+                String newPassword = PasswordGenerator.generatePassword();
+                service.updateUser(found.get().getId(), newPassword, found.get().getUserName());
+                found.get().setPassword(newPassword);
 
-                    new MailSenderThread(email, MailComposer.getResetPasswordMessageTheme(),
-                            MailComposer.getResetPasswordMessage(newPassword)).start();
-
-                    router.setPage(PageAddress.HOME_PAGE);
-                } else {
-                    requestContent.setAttribute(RequestParameter.NO_EMAIL_FOUND, true);
-                    router.setPage(PageAddress.RESET_PASSWORD_PAGE);
-                }
+                new MailSenderThread(email, MailComposer.getResetPasswordMessageTheme(),
+                        MailComposer.getResetPasswordMessage(newPassword)).start();
+                requestContent.setAttribute(RequestParameter.OPERATION_SUCCESS, true);
             } else {
-                router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
+                requestContent.setAttribute(RequestParameter.NO_EMAIL_FOUND, true);
             }
+            router.setPage(PageAddress.RESET_PASSWORD_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setRedirect(false);

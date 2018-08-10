@@ -30,11 +30,10 @@ public class CopyrightTag extends TagSupport {
     }
 
     public void setYear(String year) {
+        this.year = year;
         String current = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
-        if (current.equalsIgnoreCase(year)) {
-            this.year = year;
-        } else {
-            this.year = year + " – " + current;
+        if (!current.equalsIgnoreCase(year)) {
+            this.year += " – " + current;
         }
 
     }
@@ -44,7 +43,9 @@ public class CopyrightTag extends TagSupport {
     }
 
     public void setMessage(String message) {
-        this.message = message;
+        if (message != null){
+            this.message = message;
+        }
     }
 }
 

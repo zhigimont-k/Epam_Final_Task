@@ -26,18 +26,13 @@ public class EditActivityCommand implements Command {
 
             ActivityService service = ServiceFactory.getInstance().getActivityService();
             String activityId = requestContent.getParameter(RequestParameter.ACTIVITY_ID);
-            if (NumberValidator.getInstance().validateId(activityId)) {
-                Optional<Activity> found = service.findActivityById(Integer.parseInt(activityId));
-                if (found.isPresent()) {
-                    requestContent.setSessionAttribute(RequestParameter.ACTIVITY, found.get());
-
-                    router.setRedirect(true);
-                    router.setPage(PageAddress.EDIT_ACTIVITY_PAGE);
-                } else {
-                    router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
-                }
+            Optional<Activity> found = service.findActivityById(Integer.parseInt(activityId));
+            if (found.isPresent()) {
+                requestContent.setSessionAttribute(RequestParameter.ACTIVITY, found.get());
+                router.setRedirect(true);
+                router.setPage(PageAddress.EDIT_ACTIVITY_PAGE);
             } else {
-                router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
+                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
 
         } catch (ServiceException e) {

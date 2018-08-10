@@ -14,6 +14,10 @@ public final class RequestParameter {
     public static final String USER_LIST = "userList";
     public static final String CARD_NUMBER = "cardNumber";
     public static final String MONEY = "money";
+    public static final String LOGIN_EXISTS = "loginExists";
+    public static final String EMAIL_EXISTS = "emailExists";
+    public static final String PHONE_NUMBER_EXISTS = "phoneNumberExists";
+    public static final String CARD_NUMBER_EXISTS = "cardNumberExists";
 
     public static final String ILLEGAL_INPUT = "illegalInput";
     public static final String DATA_EXISTS = "dataExists";
@@ -55,5 +59,7 @@ public final class RequestParameter {
     public static final String PAGE_NUMBER = "pageNumber";
 
     public static final String PHOTO = "photo";
+    public static final String OPERATION_SUCCESS = "operationSuccess";
+    public static final String OPERATION_FAIL = "operationFail";
     private RequestParameter(){}
 }

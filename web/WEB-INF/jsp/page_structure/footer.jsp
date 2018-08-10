@@ -5,30 +5,27 @@
 
 <html>
 <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
 
     <fmt:message bundle="${locale}" key="locale.user.role.guest" var="guest"/>
     <fmt:message bundle="${locale}" key="locale.user.message.welcome" var="welcomeMessage"/>
     <fmt:message bundle="${locale}" key="locale.user.message.welcomeBack" var="welcomeBackMessage"/>
-    <style>
-        .footer {
-            position: relative;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            background-color: black;
-            color: whitesmoke;
-            text-align: center;
-        }
-    </style>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
-<div class="footer">
-    <div>
-        <cbb:copyright projectName="Cat Beauty Bar" message="All rights reserved." year="2018"/>
+<footer class="footer">
+    <div class="container">
+        <span class="text-muted">
+            <cbb:copyright projectName="Cat Beauty Bar" message="All rights reserved." year="2018"/></span>
     </div>
-</div>
+</footer>
 </body>
 </html>

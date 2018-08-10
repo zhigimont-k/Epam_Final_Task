@@ -77,15 +77,18 @@ public class OrderDaoImpl implements OrderDao {
             "JOIN order_info " +
             "ON order_info.order_id = ? " +
             "SET paid = 0, money = money + order_price, order_info.order_time = order_info.order_time " +
-            "WHERE card.user_id = order_info.user_id AND paid = 1";
+            "WHERE card.user_id = order_info.user_id AND paid = 1 AND order_status = 'confirmed'";
     private static final String PAY_FOR_ORDER = "UPDATE card " +
             "JOIN order_info " +
             "ON order_info.order_id = ? " +
             "SET paid = 1, money = money - order_price, order_info.order_time = order_info.order_time  " +
-            "WHERE card.user_id = order_info.user_id AND paid = 0";
+            "WHERE card.user_id = order_info.user_id AND paid = 0 AND order_status = 'pending'";
     private static final String COUNT_ORDERS = "SELECT DISTINCT COUNT(*) FROM order_info";
     private static final String COUNT_USER_ORDERS = "SELECT DISTINCT COUNT(*) FROM order_info " +
             "WHERE user_id = ?";
+    private static final String CANCEL_UNCONFIRMED_OUTDATED_ORDERS = "UPDATE order_info " +
+            "SET order_status = 'cancelled' " +
+            "WHERE DATE(order_time) <= CURRENT_DATE AND order_status = 'pending'";
 
     @Override
     public void addOrder(Order order) throws DaoException {
@@ -552,5 +555,26 @@ public class OrderDaoImpl implements OrderDao {
             }
         }
         return result;
+    }
+
+    @Override
+    public void cancelUnconfirmedOutdatedOrders() {
+        ProxyConnection connection = null;
+        Statement statement = null;
+        try {
+            connection = pool.takeConnection();
+            statement = connection.createStatement();
+            statement.executeUpdate(CANCEL_UNCONFIRMED_OUTDATED_ORDERS);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to cancel unconfirmed orders: " + e.getMessage(), e);
+        } finally {
+            closeStatement(statement);
+            try {
+                pool.releaseConnection(connection);
+            } catch (PoolException e) {
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

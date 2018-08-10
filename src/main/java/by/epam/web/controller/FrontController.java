@@ -34,7 +34,7 @@ public class FrontController extends HttpServlet {
         VIEW_ORDER("viewOrder"),
         VIEW_USER_ORDERS("viewUserOrders"),
         VIEW_ALL_ORDERS("viewAllOrders"),
-        LOGOUT("logout");
+        CREATE_ORDER("createOrder");
 
         private String commandName;
 

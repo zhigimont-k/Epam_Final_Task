@@ -24,7 +24,6 @@ public class AddOrderCommand implements Command {
             Order order = (Order)requestContent.getSessionAttribute(RequestParameter.ORDER);
             service.addOrder(order.getUserId(), order.getDateTime(), order.getActivityList());
             requestContent.removeSessionAttribute(RequestParameter.ORDER);
-
             router.setRedirect(true);
             router.setPage(PageAddress.VIEW_USER_ORDERS);
         } catch (ServiceException e) {

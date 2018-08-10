@@ -96,17 +96,19 @@ public class ConnectionPool {
     }
 
     public void releaseConnection(ProxyConnection connection) throws PoolException {
-        try {
-            if (!connection.getAutoCommit()) {
-                connection.setAutoCommit(true);
+        if (connection != null) {
+            try {
+                if (!connection.getAutoCommit()) {
+                    connection.setAutoCommit(true);
+                }
+                unavailableConnections.remove(connection);
+                availableConnections.put(connection);
+            } catch (InterruptedException e) {
+                logger.log(Level.ERROR, e);
+                Thread.currentThread().interrupt();
+            } catch (SQLException e) {
+                throw new PoolException("Couldn't release connection: " + e.getMessage(), e);
             }
-            unavailableConnections.remove(connection);
-            availableConnections.put(connection);
-        } catch (InterruptedException e) {
-            logger.log(Level.ERROR, e);
-            Thread.currentThread().interrupt();
-        } catch (SQLException e) {
-            throw new PoolException("Couldn't release connection: " + e.getMessage(), e);
         }
     }
 
@@ -140,7 +142,7 @@ public class ConnectionPool {
         });
     }
 
-    public int getAvailableConnectionNumber(){
+    public int getAvailableConnectionNumber() {
         return availableConnections.size();
     }
 }

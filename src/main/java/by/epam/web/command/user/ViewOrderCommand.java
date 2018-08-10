@@ -36,33 +36,27 @@ public class ViewOrderCommand implements Command {
             String date = requestContent.getParameter(RequestParameter.ORDER_DATE);
             String time = requestContent.getParameter(RequestParameter.ORDER_TIME);
             String[] activityIdList = requestContent.getParameters(RequestParameter.ACTIVITY_ID);
-            if (validateOrder(date, time, activityIdList)) {
-
-                BigDecimal orderPrice = new BigDecimal(BigInteger.ZERO);
-                List<Activity> activityList = new ArrayList<>();
-                ActivityService activityService = ServiceFactory.getInstance().getActivityService();
-                for (String activityId : activityIdList) {
-                    int id = Integer.parseInt(activityId);
-                    Optional<Activity> found = activityService.findActivityById(id);
-                    if (found.isPresent()) {
-                        activityList.add(found.get());
-                        orderPrice = orderPrice.add(found.get().getPrice());
-                    }
+            BigDecimal orderPrice = new BigDecimal(BigInteger.ZERO);
+            List<Activity> activityList = new ArrayList<>();
+            ActivityService activityService = ServiceFactory.getInstance().getActivityService();
+            for (String activityId : activityIdList) {
+                int id = Integer.parseInt(activityId);
+                Optional<Activity> found = activityService.findActivityById(id);
+                if (found.isPresent()) {
+                    activityList.add(found.get());
+                    orderPrice = orderPrice.add(found.get().getPrice());
                 }
-                Order order = new Order();
-                order.setUserId(userId);
-                order.setDateTime(buildTimestamp(date, time));
-                order.setPrice(orderPrice);
-                for (Activity activity : activityList) {
-                    order.addActivity(activity);
-                }
-                requestContent.setSessionAttribute(RequestParameter.ORDER, order);
-                router.setRedirect(true);
-                router.setPage(PageAddress.VIEW_ORDER_PAGE);
-            } else {
-                router.setRedirect(true);
-                router.setPage(PageAddress.ADD_ORDER);
             }
+            Order order = new Order();
+            order.setUserId(userId);
+            order.setDateTime(buildTimestamp(date, time));
+            order.setPrice(orderPrice);
+            for (Activity activity : activityList) {
+                order.addActivity(activity);
+            }
+            requestContent.setSessionAttribute(RequestParameter.ORDER, order);
+            router.setRedirect(true);
+            router.setPage(PageAddress.VIEW_ORDER_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);

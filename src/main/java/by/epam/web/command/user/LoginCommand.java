@@ -23,7 +23,6 @@ public class LoginCommand implements Command {
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
-            //можно не валидировать, т.к. данные не отправляются в бд?
             String login = requestContent.getParameter(RequestParameter.LOGIN);
             String password = requestContent.getParameter(RequestParameter.PASSWORD);
             Optional<User> found = service.findUserByLoginAndPassword(login, password);
@@ -34,7 +33,7 @@ public class LoginCommand implements Command {
                 router.setPage(PageAddress.HOME_PAGE);
             } else {
                 requestContent.setAttribute(RequestParameter.AUTH_FAIL, true);
-                router.setPage(PageAddress.REGISTER_PAGE);
+                router.setPage(PageAddress.LOGIN_PAGE);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);

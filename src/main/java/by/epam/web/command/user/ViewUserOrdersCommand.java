@@ -33,24 +33,19 @@ public class ViewUserOrdersCommand implements Command {
                         (RequestParameter.PAGE_NUMBER));
                 int numberOfRecords = service.countUserOrders(user.getId());
                 int numberOfPages = (int) Math.ceil(numberOfRecords * 1.0 / RECORDS_PER_PAGE);
-
                 if (pageNumber > numberOfPages){
                     pageNumber = numberOfPages;
                 }
-
                 List<Order> orderList = service.findOrdersByUser(user.getId(),
                         (pageNumber - 1) * RECORDS_PER_PAGE,
                         RECORDS_PER_PAGE);
-
                 requestContent.setAttribute(RequestParameter.ORDER_LIST, orderList);
                 requestContent.setAttribute(RequestParameter.NUMBER_OF_PAGES, numberOfPages);
                 requestContent.setAttribute(RequestParameter.CURRENT_TABLE_PAGE_NUMBER, pageNumber);
-
                 router.setPage(PageAddress.USER_ORDERS_PAGE);
             } else {
                 router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
             }
-
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);

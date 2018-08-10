@@ -43,7 +43,6 @@ public class ViewActivityCommand implements Command {
                     }
                     requestContent.setAttribute(RequestParameter.ACTIVITY, found.get());
                     requestContent.setAttribute(RequestParameter.REVIEW_LIST, reviewList);
-
                     router.setPage(PageAddress.VIEW_ACTIVITY_PAGE);
                 } else {
                     router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
@@ -51,7 +50,6 @@ public class ViewActivityCommand implements Command {
             } else {
                 router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
             }
-
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);

@@ -22,7 +22,7 @@ public final class PageAddress {
     public static final String ACTIVITIES_PAGE = "/WEB-INF/jsp/common/services.jsp";
     public static final String EDIT_ACTIVITY_PAGE = "/WEB-INF/jsp/admin/editService.jsp";
     public static final String VIEW_ACTIVITY_PAGE = "/WEB-INF/jsp/common/service.jsp";
-
+    public static final String ADD_ACTIVITY_PAGE = "/addService";
 
     public static final String ADD_ORDER_PAGE = "/WEB-INF/jsp/user/addOrder.jsp";
     public static final String VIEW_ORDER_PAGE = "/viewOrder";

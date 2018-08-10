@@ -30,23 +30,14 @@ public class RegisterCommand implements Command {
             String phoneNumber = requestContent.getParameter(RequestParameter.PHONE_NUMBER);
             String cardNumber = requestContent.getParameter(RequestParameter.CARD_NUMBER);
 
-            if (checkUniqueness(login, email, phoneNumber, cardNumber)){
-                requestContent.removeSessionAttribute(RequestParameter.DATA_EXISTS);
-                if (validateUser(login, password, email,
-                        phoneNumber, userName, cardNumber)){
-                    requestContent.removeSessionAttribute(RequestParameter.ILLEGAL_INPUT);
-                    User user = service.registerUser(login, password, email, phoneNumber, userName,
-                            cardNumber);
-                    requestContent.setSessionAttribute(RequestParameter.USER, user);
-                    router.setRedirect(true);
-                    router.setPage(PageAddress.HOME_PAGE);
-                } else {
-                    requestContent.setAttribute(RequestParameter.ILLEGAL_INPUT, true);
-                    router.setPage(PageAddress.REGISTER_PAGE);
-                }
-
+            if (checkUniqueness(requestContent, login, email, phoneNumber, cardNumber)){
+                requestContent.removeSessionAttribute(RequestParameter.ILLEGAL_INPUT);
+                User user = service.registerUser(login, password, email, phoneNumber, userName,
+                        cardNumber);
+                requestContent.setSessionAttribute(RequestParameter.USER, user);
+                router.setRedirect(true);
+                router.setPage(PageAddress.HOME_PAGE);
             } else {
-                requestContent.setAttribute(RequestParameter.DATA_EXISTS, true);
                 router.setPage(PageAddress.REGISTER_PAGE);
             }
 
@@ -57,24 +48,27 @@ public class RegisterCommand implements Command {
         return router;
     }
 
-    private boolean checkUniqueness(String login, String email, String phoneNumber, String cardNumber)
+    private boolean checkUniqueness(SessionRequestContent requestContent, String login,
+                                    String email, String phoneNumber, String cardNumber)
             throws ServiceException{
-        boolean loginExists = service.loginExists(login);
-        boolean emailExists = service.emailExists(email);
-        boolean phoneNumberExists = service.phoneNumberExists(phoneNumber);
-        boolean cardNumberExists = service.cardNumberExists(cardNumber);
+        boolean flag = true;
+        if (service.loginExists(login)){
+            flag = false;
+            requestContent.setAttribute(RequestParameter.LOGIN_EXISTS, true);
+        }
+        if (service.emailExists(email)){
+            flag = false;
+            requestContent.setAttribute(RequestParameter.EMAIL_EXISTS, true);
+        }
+        if (service.phoneNumberExists(phoneNumber)){
+            flag = false;
+            requestContent.setAttribute(RequestParameter.PHONE_NUMBER_EXISTS, true);
+        }
+        if (service.cardNumberExists(cardNumber)){
+            flag = false;
+            requestContent.setAttribute(RequestParameter.CARD_NUMBER_EXISTS, true);
+        }
 
-        return !loginExists && !emailExists && !phoneNumberExists && !cardNumberExists;
-    }
-
-    private boolean validateUser(String login, String password, String email,
-                                 String phoneNumber, String userName, String cardNumber) {
-
-        return UserValidator.getInstance().validateLogin(login) &&
-                UserValidator.getInstance().validatePassword(password) &&
-                UserValidator.getInstance().validateEmail(email) &&
-                UserValidator.getInstance().validatePhoneNumber(phoneNumber) &&
-                UserValidator.getInstance().validateUserName(userName) &&
-                UserValidator.getInstance().validateCardNumber(cardNumber);
+        return flag;
     }
 }

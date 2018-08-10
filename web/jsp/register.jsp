@@ -4,6 +4,14 @@
 
 <html>
 <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
 
@@ -25,7 +33,6 @@
 
     <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
     <title>${pageTitle} | ${projectName}</title>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 
     <script type="text/javascript" src="../js/inputScript.js"></script>
 </head>
@@ -41,11 +48,11 @@
             <label>${loginLabel}*
                 <input type="text" name="login" maxlength="20" minlength="4"
                        pattern="[\w^_]{4,20}" required/></label>
-            <c:if test="${sessionScope.loginExists == true}">
-                User with this login already exists.
-            </c:if>
-            <c:if test="${sessionScope.illegalLogin == true}">
-                Login should consist of 4-20 latin characters or numbers.
+            <c:if test="${loginExists == true}">
+                <div class="alert alert-danger alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Warning!</strong> User with this login already exists.
+                </div>
             </c:if>
             <br/>
             <label>${passwordLabel}*
@@ -54,42 +61,41 @@
                        pattern="[\w^_]{6,32}" required/></label>
             <label><input type="checkbox" onclick="togglePasswordVisibility()">${showPassword}</label>
             <br/>
-            <c:if test="${sessionScope.illegalPassword == true}">
-                Password should consist of 6-32 latin characters or numbers.
-            </c:if>
             <label>${emailLabel}*
                 <br/>
                 <input type="email" name="email" maxlength="50" minlength="5"
                        pattern="([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})"
                        required/></label>
-            <c:if test="${sessionScope.emailExists == true}">
-                User with this email already exists.
-            </c:if>
-            <c:if test="${sessionScope.illegalEmail == true}">
-                Email should consist of 5-50 characters and contain @ symbol.
+            <c:if test="${emailExists == true}">
+                <div class="alert alert-danger alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Warning!</strong> User with this email already exists.
+                </div>
             </c:if>
             <br/>
             <label>${phoneNumberLabel}*
                 <input type="text" name="phoneNumber" maxlength="13" minlength="13"
                        pattern="\+(\d{12})" required/></label>
-            <c:if test="${sessionScope.phoneNumberExists == true}">
-                User with this phone number already exists.
-            </c:if>
-            <c:if test="${sessionScope.illegalPhoneNumber == true}">
-                Phone number should consist of 13 characters and begin with +.
+            <c:if test="${phoneNumberExists == true}">
+                <div class="alert alert-danger alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Warning!</strong> User with this phone number already exists.
+                </div>
             </c:if>
             <br/>
             <label>${userNameLabel}
                 <input type="text" name="userName" maxlength="40" minlength="2"
                        pattern="[\p{L}\s]{2,40}"/></label>
             <br/>
-            <c:if test="${sessionScope.illegalUserName == true}">
-                Username should consist of 2-40 symbols or left empty.
-            </c:if>
             <label>Номер карты*
                 <input type="text" name="cardNumber" maxlength="16" minlength="16"
                        pattern="\d{16}" required/></label>
-
+            <c:if test="${cardNumberExists == true}">
+                <div class="alert alert-danger alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Warning!</strong> User with this card number already exists.
+                </div>
+            </c:if>
             <br/>
             <input type="submit" value="${button}"/>
             <c:if test="${illegalInput == true}">

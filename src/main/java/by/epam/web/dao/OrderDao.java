@@ -23,4 +23,5 @@ public interface OrderDao extends AbstractDao<Order> {
     void payForOrder(int orderId) throws DaoException;
     int countOrders() throws DaoException;
     int countUserOrders(int userId) throws DaoException;
+    void cancelUnconfirmedOutdatedOrders();
 }

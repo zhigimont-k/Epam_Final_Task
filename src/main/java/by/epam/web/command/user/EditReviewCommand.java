@@ -27,20 +27,16 @@ public class EditReviewCommand implements Command {
         try {
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             String reviewId = requestContent.getParameter(RequestParameter.REVIEW_ID);
-            if (NumberValidator.getInstance().validateId(reviewId)){
-                Optional<Review> found = service.findReviewById(Integer.parseInt(reviewId));
-                if (found.isPresent()){
-                    if (user.getId() == found.get().getUserId()){
-                        requestContent.setSessionAttribute(RequestParameter.REVIEW, found.get());
-                        router.setPage(PageAddress.EDIT_REVIEW_PAGE);
-                    } else {
-                        router.setPage(PageAddress.FORBIDDEN_ERROR_PAGE);
-                    }
+            Optional<Review> found = service.findReviewById(Integer.parseInt(reviewId));
+            if (found.isPresent()){
+                if (user.getId() == found.get().getUserId()){
+                    requestContent.setSessionAttribute(RequestParameter.REVIEW, found.get());
+                    router.setPage(PageAddress.EDIT_REVIEW_PAGE);
                 } else {
-                    router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
+                    router.setPage(PageAddress.FORBIDDEN_ERROR_PAGE);
                 }
             } else {
-                router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
+                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);

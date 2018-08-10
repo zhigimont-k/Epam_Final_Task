@@ -4,6 +4,8 @@ import by.epam.web.dao.DaoException;
 import by.epam.web.dao.UserDao;
 import by.epam.web.dao.impl.UserDaoImpl;
 import by.epam.web.entity.User;
+import by.epam.web.validation.NumberValidator;
+import by.epam.web.validation.UserValidator;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -96,25 +98,38 @@ public class UserService {
         }
     }
 
-    public void changeUserStatus(int userId, String status) throws ServiceException {
+    public boolean changeUserStatus(int userId, String status) throws ServiceException {
+        if (!UserValidator.getInstance().validateStatus(status)){
+            return false;
+        }
         try {
             userDao.changeUserStatus(userId, status);
+            return true;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    public void updateUser(int id, String newPassword, String newUserName) throws ServiceException {
+    public boolean updateUser(int id, String newPassword, String newUserName) throws ServiceException {
+        if (!UserValidator.getInstance().validatePassword(newPassword) ||
+                !UserValidator.getInstance().validateUserName(newUserName)){
+            return false;
+        }
         try {
             userDao.updateUser(id, newPassword, newUserName);
+            return true;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    public void updateUserName(int id, String newUserName) throws ServiceException {
+    public boolean updateUserName(int id, String newUserName) throws ServiceException {
+        if (!UserValidator.getInstance().validateUserName(newUserName)){
+            return false;
+        }
         try {
             userDao.updateUserName(id, newUserName);
+            return true;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -128,9 +143,14 @@ public class UserService {
         }
     }
 
-    public void addMoneyToCard(String cardNumber, BigDecimal money) throws ServiceException {
+    public boolean addMoneyToCard(String cardNumber, String money) throws ServiceException {
+        if (!UserValidator.getInstance().validateCardNumber(cardNumber) ||
+                !NumberValidator.getInstance().validateMoney(money)){
+            return false;
+        }
         try {
-            userDao.addMoneyToCard(cardNumber, money);
+            userDao.addMoneyToCard(cardNumber, new BigDecimal(money));
+            return true;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

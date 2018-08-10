@@ -29,29 +29,18 @@ public class AddMoneyToCardCommand implements Command {
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             String cardNumber = requestContent.getParameter(RequestParameter.CARD_NUMBER);
             String moneyToAdd = requestContent.getParameter(RequestParameter.MONEY);
-            if (validateParameters(cardNumber, moneyToAdd)){
-                if (service.findUserByIdAndCard(user.getId(), cardNumber).isPresent()) {
-                    service.addMoneyToCard(cardNumber,
-                            BigDecimal.valueOf(Double.parseDouble(moneyToAdd)));
-                    router.setRedirect(true);
-                    router.setPage(PageAddress.VIEW_USER_INFO);
-                } else {
-                    requestContent.setAttribute(RequestParameter.NO_CARD_FOUND, true);
-                    router.setPage(PageAddress.ADD_MONEY_PAGE);
+            if (service.findUserByIdAndCard(user.getId(), cardNumber).isPresent()) {
+                if (service.addMoneyToCard(cardNumber, moneyToAdd)) {
+                    requestContent.setAttribute(RequestParameter.OPERATION_SUCCESS, true);
                 }
             } else {
-                router.setPage(PageAddress.ADD_MONEY_PAGE);
+                requestContent.setAttribute(RequestParameter.NO_CARD_FOUND, true);
             }
+            router.setPage(PageAddress.ADD_MONEY_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
-    }
-
-    private boolean validateParameters(String cardNumber,
-                                       String moneyToAdd){
-        return UserValidator.getInstance().validateCardNumber(cardNumber) &&
-                NumberValidator.getInstance().validateMoney(moneyToAdd);
     }
 }

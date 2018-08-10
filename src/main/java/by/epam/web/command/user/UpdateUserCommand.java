@@ -27,44 +27,30 @@ public class UpdateUserCommand implements Command {
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             String userName = requestContent.getParameter(RequestParameter.USER_NAME);
             String password = requestContent.getParameter(RequestParameter.PASSWORD);
-            if (validateParameters(password, userName)){
-                String newPassword = requestContent.getParameter(RequestParameter.NEW_PASSWORD);
-                if (newPassword.isEmpty()){
-                    service.updateUserName(user.getId(), userName);
+            String newPassword = requestContent.getParameter(RequestParameter.NEW_PASSWORD);
+            if (newPassword.isEmpty()){
+                service.updateUserName(user.getId(), userName);
+                Optional<User> found = service.findUserById(user.getId());
+                if (found.isPresent()){
+                    requestContent.setSessionAttribute(RequestParameter.USER, found.get());
+                }
+            } else {
+                if (service.findUserByLoginAndPassword(user.getLogin(), password).isPresent()){
+                    service.updateUser(user.getId(), newPassword, userName);
                     Optional<User> found = service.findUserById(user.getId());
                     if (found.isPresent()){
+                        requestContent.removeSessionAttribute(RequestParameter.ILLEGAL_INPUT);
+                        requestContent.removeSessionAttribute(RequestParameter.AUTH_FAIL);
                         requestContent.setSessionAttribute(RequestParameter.USER, found.get());
-                    }
-                } else {
-                    if (UserValidator.getInstance().validatePassword(newPassword)){
-                        if (service.findUserByLoginAndPassword(user.getLogin(), password).isPresent()){
-                            service.updateUser(user.getId(), newPassword, userName);
-                            Optional<User> found = service.findUserById(user.getId());
-                            if (found.isPresent()){
-                                requestContent.removeSessionAttribute(RequestParameter.ILLEGAL_INPUT);
-                                requestContent.removeSessionAttribute(RequestParameter.AUTH_FAIL);
-                                requestContent.setSessionAttribute(RequestParameter.USER, found.get());
-
-                                router.setRedirect(true);
-                                router.setPage(PageAddress.VIEW_USER_INFO);
-                            }
-                        } else {
-                            requestContent.setSessionAttribute(RequestParameter.AUTH_FAIL, true);
-                            router.setRedirect(true);
-                            router.setPage(PageAddress.VIEW_USER_INFO);
-                        }
-                    } else {
-                        requestContent.setSessionAttribute(RequestParameter.ILLEGAL_INPUT, true);
 
                         router.setRedirect(true);
                         router.setPage(PageAddress.VIEW_USER_INFO);
                     }
+                } else {
+                    requestContent.setSessionAttribute(RequestParameter.AUTH_FAIL, true);
+                    router.setRedirect(true);
+                    router.setPage(PageAddress.VIEW_USER_INFO);
                 }
-            } else {
-                requestContent.setAttribute(RequestParameter.ILLEGAL_INPUT, true);
-
-                router.setRedirect(true);
-                router.setPage(PageAddress.VIEW_USER_INFO);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);

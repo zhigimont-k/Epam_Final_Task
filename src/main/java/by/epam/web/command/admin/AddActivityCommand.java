@@ -28,25 +28,20 @@ public class AddActivityCommand implements Command {
             String description = requestContent.getParameter(RequestParameter.ACTIVITY_DESCRIPTION);
             String price = requestContent.getParameter(RequestParameter.ACTIVITY_PRICE);
 
-            if (validateActivity(name, description, price)) {
-                requestContent.removeSessionAttribute(RequestParameter.ILLEGAL_INPUT);
-                requestContent.removeSessionAttribute(RequestParameter.DATA_EXISTS);
-                boolean nameExists = service.nameExists(name);
-                if (nameExists) {
-                    requestContent.setSessionAttribute(RequestParameter.DATA_EXISTS, true);
-                    router.setRedirect(true);
-                    router.setPage(PageAddress.VIEW_ACTIVITIES);
-                } else {
-                    requestContent.removeSessionAttribute(RequestParameter.DATA_EXISTS);
-                    service.addActivity(name, description, new BigDecimal(price));
-                    router.setRedirect(true);
-                    router.setPage(PageAddress.VIEW_ACTIVITIES);
-                }
+            requestContent.removeSessionAttribute(RequestParameter.ILLEGAL_INPUT);
+            requestContent.removeSessionAttribute(RequestParameter.DATA_EXISTS);
+            boolean nameExists = service.nameExists(name);
+            if (nameExists) {
+                requestContent.setAttribute(RequestParameter.DATA_EXISTS, true);
+                router.setPage(PageAddress.ADD_ACTIVITY_PAGE);
             } else {
-                requestContent.setSessionAttribute(RequestParameter.ILLEGAL_INPUT, true);
-                router.setRedirect(true);
-                router.setPage(PageAddress.VIEW_ACTIVITIES);
+                if (service.addActivity(name, description, price)) {
+                    requestContent.setAttribute(RequestParameter.OPERATION_SUCCESS, true);
+                } else {
+                    requestContent.setAttribute(RequestParameter.OPERATION_FAIL, true);
+                }
             }
+            router.setPage(PageAddress.ADD_ACTIVITY_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);

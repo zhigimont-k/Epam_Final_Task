@@ -17,9 +17,6 @@
 <body>
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-<c:if test="${sessionScope.user.status eq 'admin'}">
-    <jsp:include page="/WEB-INF/jsp/admin/addService.jsp"/>
-</c:if>
 
 <div>
     <table id="sorted-table">

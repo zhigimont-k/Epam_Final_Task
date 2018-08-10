@@ -4,6 +4,7 @@ import by.epam.web.dao.DaoException;
 import by.epam.web.dao.ActivityDao;
 import by.epam.web.dao.impl.ActivityDaoImpl;
 import by.epam.web.entity.Activity;
+import by.epam.web.validation.ActivityValidator;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,14 +16,18 @@ public class ActivityService {
     ActivityService() {
     }
 
-    public void addActivity(String name, String description, BigDecimal price) throws ServiceException {
+    public boolean addActivity(String name, String description, String price) throws ServiceException {
+        if (!ActivityValidator.getInstance().validateActivity(name, description, price)){
+            return false;
+        }
         Activity activity;
         try {
             activity = new Activity();
             activity.setName(name);
             activity.setDescription(description);
-            activity.setPrice(price);
+            activity.setPrice(new BigDecimal(price));
             activityDao.addActivity(activity);
+            return true;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -61,18 +66,28 @@ public class ActivityService {
         }
     }
 
-    public void changeActivityStatus(int id, String status) throws ServiceException {
+    public boolean changeActivityStatus(int id, String status) throws ServiceException {
+        if (!ActivityValidator.getInstance().validateStatus(status)){
+            return false;
+        }
         try {
             activityDao.changeActivityStatus(id, status);
+            return true;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    public void updateActivity(Activity activity) throws ServiceException {
+    public boolean updateActivity(int id, String name, String description, String price,
+                               String status) throws ServiceException {
+        if (!ActivityValidator.getInstance().validateActivity(name, description, price) ||
+                !ActivityValidator.getInstance().validateStatus(status)){
+            return false;
+        }
         try {
-            activityDao.updateActivity(activity.getId(), activity.getName(),
-                    activity.getDescription(), activity.getPrice(), activity.getStatus());
+            activityDao.updateActivity(id, name,
+                    description, new BigDecimal(price), status);
+            return true;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
