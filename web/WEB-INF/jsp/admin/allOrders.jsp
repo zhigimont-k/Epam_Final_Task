@@ -32,16 +32,20 @@
 </c:if>
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-<div>
-    <table id="sorted-table">
+
+<div class="container">
+    <table class="table">
+        <thead>
         <tr>
-            <th onclick="sortTable(0)">id</th>
-            <th onclick="sortTable(1)">time</th>
-            <th onclick="sortTable(2)">status</th>
-            <th onclick="sortTable(3)">services</th>
-            <th onclick="sortTable(4)">price</th>
+            <th>id</th>
+            <th>time</th>
+            <th>status</th>
+            <th>services</th>
+            <th>price</th>
             <th>change status</th>
         </tr>
+        </thead>
+        <tbody>
         <c:forEach var="order" items="${orderList}">
             <tr>
                 <form name="orderForm" method="POST" action="app">
@@ -56,7 +60,6 @@
                     </c:forEach>
                     </td>
                     <td>${order.price}</td>
-                    <c:if test="${order.status ne 'cancelled' && order.status ne 'finished'}">
                     <td>
                         <input type="hidden" name="command" value="changeOrderStatus"/>
                         <select name="orderStatus">
@@ -67,12 +70,10 @@
                         </select>
                         <input type="submit" value="Submit">
                     </td>
-                    </c:if>
-
-
                 </form>
             </tr>
         </c:forEach>
+        </tbody>
     </table>
 </div>
 

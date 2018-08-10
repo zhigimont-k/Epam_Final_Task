@@ -4,8 +4,17 @@
 
 <html>
 <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
+    <fmt:setBundle basename="cbb_info" var="cbb"/>
 
     <fmt:message bundle="${locale}" key="locale.page.title.auth" var="pageTitle"/>
     <fmt:message bundle="${locale}" key="locale.user.label.login" var="loginLabel"/>
@@ -17,8 +26,7 @@
 
     <fmt:message bundle="${locale}" key="locale.user.warning.auth.fail" var="authFailMessage"/>
 
-    <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+    <fmt:message bundle="${cbb}" key="cbb.name.full" var="projectName"/>
 
     <title>PasswordReset | ${projectName}</title>
 </head>
@@ -35,6 +43,18 @@
             <label>E-mail:
                 <input type="email" name="email" maxlength="35" required/></label>
             <br/>
+            <c:if test="${noEmailFound == true}">
+                <div class="alert alert-danger alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Warning!</strong> No user with this email found.
+                </div>
+                <c:if test="${operationSuccess == true}">
+                    <div class="alert alert-success alert-dismissible">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Done!</strong> Check your email to get the new password.
+                    </div>
+                </c:if>
+            </c:if>
             <input type="submit" value="Reset password"/>
             <br/>
         </form>

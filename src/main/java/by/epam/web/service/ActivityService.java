@@ -17,7 +17,7 @@ public class ActivityService {
     }
 
     public boolean addActivity(String name, String description, String price) throws ServiceException {
-        if (!ActivityValidator.getInstance().validateActivity(name, description, price)){
+        if (!ActivityValidator.getInstance().validateActivity(name, description, price)) {
             return false;
         }
         Activity activity;
@@ -37,6 +37,21 @@ public class ActivityService {
         try {
             Optional<Activity> found = activityDao.findActivityByName(name);
             return found.isPresent();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public boolean activityExists(int activityId, String activityName) throws ServiceException {
+        try {
+            List<Activity> allActivities = activityDao.findAllActivities();
+            for (Activity activity : allActivities){
+                if (activity.getName().equalsIgnoreCase(activityName) &&
+                        activity.getId() != activityId){
+                    return true;
+                }
+            }
+            return false;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -67,7 +82,7 @@ public class ActivityService {
     }
 
     public boolean changeActivityStatus(int id, String status) throws ServiceException {
-        if (!ActivityValidator.getInstance().validateStatus(status)){
+        if (!ActivityValidator.getInstance().validateStatus(status)) {
             return false;
         }
         try {
@@ -79,9 +94,9 @@ public class ActivityService {
     }
 
     public boolean updateActivity(int id, String name, String description, String price,
-                               String status) throws ServiceException {
+                                  String status) throws ServiceException {
         if (!ActivityValidator.getInstance().validateActivity(name, description, price) ||
-                !ActivityValidator.getInstance().validateStatus(status)){
+                !ActivityValidator.getInstance().validateStatus(status)) {
             return false;
         }
         try {

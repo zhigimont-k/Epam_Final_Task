@@ -1,33 +1,39 @@
 package by.epam.web.util;
 
+import java.util.ResourceBundle;
+
 public class MailComposer {
-
-    private static final String PASSWORD_RESET_MESSAGE_THEME = "CBB | Password reset";
-    private static final String ORDER_REMINDER_MESSAGE_THEME = "CBB | Order reminder";
-
-    private static final String PASSWORD_RESET_MESSAGE = "Someone requested a password reset" +
-            " and used your email. If you have no account on CBB, please ignore this message.\n" +
-            "New password is: %s";
-    private static final String ORDER_REMINDER_MESSAGE = "Dear %s, you have an " +
-            "upcoming order in CBB soon. Thank you for using our service. Have a nice day.";
+    private static MailComposer instance = new MailComposer();
+    private static final String BUNDLE_NAME = "message";
+    private static ResourceBundle bundle;
+    private static final String RESET_PASSWORD_MESSAGE_NAME = "message.cbb.password.reset.message";
+    private static final String RESET_PASSWORD_MESSAGE_THEME_NAME = "message.cbb.password.reset.message";
+    private static final String ORDER_REMINDER_MESSAGE_NAME = "message.cbb.password.reset.message";
+    private static final String ORDER_REMINDER_MESSAGE_THEME_NAME = "message.cbb.password.reset.message";
 
 
-    private MailComposer(){}
+    private MailComposer(){
+        bundle = ResourceBundle.getBundle(BUNDLE_NAME);
+    }
+
+    public static MailComposer getInstance(){
+        return instance;
+    }
 
     public static String getResetPasswordMessage(String newPassword){
-        return String.format(PASSWORD_RESET_MESSAGE, newPassword);
+        return String.format(bundle.getString(RESET_PASSWORD_MESSAGE_NAME), newPassword);
     }
 
     public static String getResetPasswordMessageTheme(){
-        return PASSWORD_RESET_MESSAGE_THEME;
+        return bundle.getString(RESET_PASSWORD_MESSAGE_THEME_NAME);
     }
 
     public static String getOrderReminderMessage(String userLogin){
-        return String.format(ORDER_REMINDER_MESSAGE, userLogin);
+        return String.format(bundle.getString(ORDER_REMINDER_MESSAGE_NAME), userLogin);
     }
 
     public static String getOrderReminderMessageTheme(){
-        return ORDER_REMINDER_MESSAGE_THEME;
+        return bundle.getString(ORDER_REMINDER_MESSAGE_THEME_NAME);
     }
 
 }

@@ -14,10 +14,10 @@
             crossorigin="anonymous"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
+    <fmt:setBundle basename="cbb_info" var="projectInfo"/>
 
-    <fmt:message bundle="${locale}" key="locale.user.role.guest" var="guest"/>
-    <fmt:message bundle="${locale}" key="locale.user.message.welcome" var="welcomeMessage"/>
-    <fmt:message bundle="${locale}" key="locale.user.message.welcomeBack" var="welcomeBackMessage"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.name.full" var="fullName"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.year" var="year"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>

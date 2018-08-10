@@ -4,6 +4,13 @@
 
 <html>
 <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
 
@@ -11,31 +18,67 @@
 
     <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
     <title>${pageTitle} | ${projectName}</title>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/table.js"></script>
 </head>
 <body>
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-
-<div>
-    <table id="sorted-table">
-        <c:forEach var="activity" items="${activityList}">
-            <tr>
-                <form name="activityListForm" method="POST" action="app">
-                    <input type="hidden" name="command" value="addActivityToOrder"/>
-                    <input type="hidden" name="activityId" value="${activity.id}"/>
-                    <td><a href="app?command=viewActivity&activityId=${activity.id}">${activity.name}</a></td>
-                    <td>${activity.description}</td>
-                    <td>${activity.price}</td>
-                    <td>${activity.status}</td>
-                    <c:if test="${sessionScope.user.status == 'admin'}">
-                    <td><a href="app?command=editActivity&activityId=${activity.id}">edit</a></td>
-                    </c:if>
-                </form>
-            </tr>
-        </c:forEach>
-    </table>
+<div class="container">
+    <div class="row col-xs-offset-1">
+        <%--<div class="panel-group">--%>
+            <c:forEach var="activity" items="${activityList}">
+                <div class="col-md-3">
+                    <c:choose>
+                        <c:when test="${activity.status == 'available'}">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <a href="app?command=viewActivity&activityId=${activity.id}">
+                                            ${activity.name}
+                                    </a>
+                                    <p class="text-muted">${activity.status}</p>
+                                </div>
+                                <div class="panel-body">
+                                        ${activity.description}
+                                    <h4>${activity.price}</h4>
+                                </div>
+                                <c:if test="${sessionScope.user.status == 'admin'}">
+                                    <form name="activityListForm" method="POST" action="app">
+                                        <input type="hidden" name="command" value="editActivity"/>
+                                        <input type="hidden" name="activityId" value="${activity.id}"/>
+                                        <div class="panel-footer">
+                                            <input type="submit" class="btn btn-link" value="edit"/>
+                                        </div>
+                                    </form>
+                                </c:if>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">
+                                    <a href="app?command=viewActivity&activityId=${activity.id}">
+                                            ${activity.name}
+                                    </a>
+                                    <p class="text-muted">${activity.status}</p>
+                                </div>
+                                <div class="panel-body">
+                                        ${activity.description}
+                                    <h4>${activity.price}</h4>
+                                </div>
+                                <c:if test="${sessionScope.user.status == 'admin'}">
+                                    <form name="activityListForm" method="POST" action="app">
+                                        <input type="hidden" name="command" value="editActivity"/>
+                                        <input type="hidden" name="activityId" value="${activity.id}"/>
+                                        <div class="panel-footer">
+                                            <input type="submit" class="btn btn-link" value="edit"/>
+                                        </div>
+                                    </form>
+                                </c:if>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </c:forEach>
+        <%--</div>--%>
+    </div>
 </div>
 <jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>
 </body>

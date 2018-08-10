@@ -37,7 +37,7 @@ public class OrderDaoImpl implements OrderDao {
     private static final String INSERT_ORDER_INFO = "INSERT INTO order_info " +
             "(user_id, order_time) " +
             "VALUES (?, ?)";
-    private static final String INSERT_ORDER_ACTIVITIES = "INSERT INTO order_link " +
+    private static final String INSERT_ORDER_ACTIVITIES = "INSERT INTO order_services " +
             "(order_id, service_id) " +
             "VALUES (?, ?)";
     private static final String CANCEL_ORDER = "UPDATE order_info " +
@@ -60,7 +60,7 @@ public class OrderDaoImpl implements OrderDao {
             "LIMIT ?,? ";
     private static final String FIND_ACTIVITIES_BY_ORDER_ID = "SELECT service.service_id, " +
             "service_name, service_description, service_status, service_price FROM service " +
-            "JOIN order_link ON service.service_id = order_link.service_id " +
+            "JOIN order_services ON service.service_id = order_services.service_id " +
             "WHERE order_id = ?";
     private static final String FIND_EMAILS_FOR_UPCOMING_ORDERS =
             "SELECT DISTINCT user.user_email, order_info.order_id " +

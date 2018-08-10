@@ -23,13 +23,9 @@ public class AddActivityCommand implements Command {
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
-
             String name = requestContent.getParameter(RequestParameter.ACTIVITY_NAME);
             String description = requestContent.getParameter(RequestParameter.ACTIVITY_DESCRIPTION);
             String price = requestContent.getParameter(RequestParameter.ACTIVITY_PRICE);
-
-            requestContent.removeSessionAttribute(RequestParameter.ILLEGAL_INPUT);
-            requestContent.removeSessionAttribute(RequestParameter.DATA_EXISTS);
             boolean nameExists = service.nameExists(name);
             if (nameExists) {
                 requestContent.setAttribute(RequestParameter.DATA_EXISTS, true);

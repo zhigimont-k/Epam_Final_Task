@@ -34,36 +34,45 @@
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
 <c:if test="${not empty sessionScope.user}">
-    <jsp:forward page="/home"/>
+    <jsp:forward page="${pageContext.request.contextPath}/home"/>
 </c:if>
-<div id="custom-form">
-    <div>
-        <form name="loginForm" method="POST" action="app">
-            <input type="hidden" name="command" value="login"/>
-            <label>${loginLabel}
-                <input type="text" name="login" maxlength="40" pattern="\w+{4, 40}" required/></label>
-            <label>${passwordLabel}
-                <br/>
-                <input type="password" name="password" id="passwordField" maxlength="32" required/></label>
-            <br/>
-            <label><input type="checkbox" onclick="togglePasswordVisibility()">${showPassword}</label>
-            <br/>
-            <input type="submit" value="${button}"/>
-            <br/>
+<div class="container">
+    <div class="row centered-form center-block">
+        <div class="container col-md-4 col-md-offset-6">
+            <form name="loginForm" method="POST" action="app">
+                <input type="hidden" name="command" value="login"/>
+                <div class="form-group">
+                    <label>${loginLabel}:
+                        <br/>
+                        <input type="text"
+                               name="login"
+                               maxlength="40"
+                               pattern="\w+{4, 40}"
+                               data-toggle="tooltip" title="hi"
+                               required/>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>${passwordLabel}:
+                        <br/>
+                        <input type="password" name="password" id="passwordField" maxlength="32" required/>
+                    </label>
+                    <br/>
+                    <label><input type="checkbox" onclick="togglePasswordVisibility()">${showPassword}</label>
+                </div>
+                <button type="submit" class="btn btn-default">${button}</button>
+            </form>
             <c:if test="${authFail == true}">
                 <div class="alert alert-danger alert-dismissible">
                         ${authFailMessage}
                 </div>
             </c:if>
-            <br/>
-        </form>
-
-        ${toRegister} <a href="${pageContext.request.contextPath}/register">${signUp}</a>
-        <br/>
-        <a href="${pageContext.request.contextPath}/resetPassword">Forgot your password?</a>
-
+            <p>${toRegister} <a href="${pageContext.request.contextPath}/register">${signUp}</a></p>
+            <p><a href="${pageContext.request.contextPath}/resetPassword">Forgot your password?</a></p>
+        </div>
     </div>
 </div>
+
 <jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>
 </body>
 </html>

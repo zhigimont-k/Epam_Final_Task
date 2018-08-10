@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebFilter(filterName = "AdminPageFilter",
-        urlPatterns = {"/addService"})
+        urlPatterns = {"/addService", "/editService"})
 public class AdminPageFilter implements Filter {
 
     @Override

@@ -20,7 +20,7 @@ public final class PageAddress {
     public static final String USERS_PAGE = "/WEB-INF/jsp/admin/users.jsp";
 
     public static final String ACTIVITIES_PAGE = "/WEB-INF/jsp/common/services.jsp";
-    public static final String EDIT_ACTIVITY_PAGE = "/WEB-INF/jsp/admin/editService.jsp";
+    public static final String EDIT_ACTIVITY_PAGE = "/editService";
     public static final String VIEW_ACTIVITY_PAGE = "/WEB-INF/jsp/common/service.jsp";
     public static final String ADD_ACTIVITY_PAGE = "/addService";
 
@@ -31,14 +31,12 @@ public final class PageAddress {
 
     public static final String EDIT_REVIEW_PAGE = "/WEB-INF/jsp/user/editReview.jsp";
 
-
     public static final String VIEW_ACTIVITIES = "app?command=viewActivities";
     public static final String VIEW_ALL_ORDERS = "app?command=viewAllOrders&pageNumber=1";
     public static final String VIEW_USERS = "app?command=viewUsers";
     public static final String VIEW_ACTIVITY = "app?command=viewActivity&activityId=";
     public static final String VIEW_USER_ORDERS = "app?command=viewUserOrders&pageNumber=1";
     public static final String VIEW_USER_INFO = "app?command=viewUserInfo";
-    public static final String ADD_ORDER = "app?command=createOrder";
 
 
     private PageAddress(){}

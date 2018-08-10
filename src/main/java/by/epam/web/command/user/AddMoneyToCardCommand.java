@@ -25,13 +25,13 @@ public class AddMoneyToCardCommand implements Command {
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
-
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             String cardNumber = requestContent.getParameter(RequestParameter.CARD_NUMBER);
             String moneyToAdd = requestContent.getParameter(RequestParameter.MONEY);
             if (service.findUserByIdAndCard(user.getId(), cardNumber).isPresent()) {
                 if (service.addMoneyToCard(cardNumber, moneyToAdd)) {
                     requestContent.setAttribute(RequestParameter.OPERATION_SUCCESS, true);
+                    router.setRedirect(true);
                 }
             } else {
                 requestContent.setAttribute(RequestParameter.NO_CARD_FOUND, true);

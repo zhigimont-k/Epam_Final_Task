@@ -27,32 +27,28 @@ public class UpdateActivityCommand implements Command {
 
         PageRouter router = new PageRouter();
         try {
-
-            String id = requestContent.getParameter(RequestParameter.ACTIVITY_ID);
-            if (id.isEmpty()) {
-                id = (String) requestContent.getSessionAttribute(RequestParameter.ACTIVITY_ID);
-            }
-            requestContent.setSessionAttribute(RequestParameter.ACTIVITY_ID, id);
+            int activityId = ((Activity) requestContent.getSessionAttribute
+                    (RequestParameter.ACTIVITY)).getId();
             String newName = requestContent.getParameter(RequestParameter.ACTIVITY_NAME);
             String newDescription = requestContent.getParameter(RequestParameter.ACTIVITY_DESCRIPTION);
             String newPrice = requestContent.getParameter(RequestParameter.ACTIVITY_PRICE);
             String newStatus = requestContent.getParameter(RequestParameter.ACTIVITY_STATUS);
-            boolean nameExists = service.nameExists(newName);
-            if (nameExists) {
+            boolean activityExists = service.activityExists(activityId, newName);
+            if (activityExists) {
                 requestContent.setSessionAttribute(RequestParameter.DATA_EXISTS, true);
                 router.setRedirect(true);
                 router.setPage(PageAddress.EDIT_ACTIVITY_PAGE);
             } else {
-                requestContent.removeSessionAttribute(RequestParameter.DATA_EXISTS);
-                requestContent.removeSessionAttribute(RequestParameter.ACTIVITY);
-                Optional<Activity> found = service.findActivityById(Integer.parseInt(id));
+                Optional<Activity> found = service.findActivityById(activityId);
                 if (found.isPresent()) {
                     found.get().setName(newName);
                     found.get().setDescription(newDescription);
                     found.get().setPrice(new BigDecimal(newPrice));
                     found.get().setStatus(newStatus);
-                    service.updateActivity(Integer.parseInt(id), newName, newDescription,
+                    service.updateActivity(activityId, newName, newDescription,
                             newPrice, newStatus);
+                    requestContent.setSessionAttribute(RequestParameter.DATA_EXISTS, false);
+                    requestContent.setSessionAttribute(RequestParameter.ACTIVITY, null);
                     router.setRedirect(true);
                     router.setPage(PageAddress.VIEW_ACTIVITIES);
                 } else {

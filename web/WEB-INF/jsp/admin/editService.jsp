@@ -4,6 +4,13 @@
 
 <html>
 <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
 
@@ -18,7 +25,7 @@
     <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
-<c:if test="${sessionScope.user.status ne 'admin'}">
+<c:if test="${sessionScope.user.status ne 'admin' || empty sessionScope.activity}">
     <jsp:forward page="${pageContext.request.contextPath}/home"/>
 </c:if>
 
@@ -27,22 +34,24 @@
 <div>
     <form name="activityEditForm" method="POST" action="app">
         <input type="hidden" name="command" value="updateActivity"/>
-        <input type="hidden" name="activityId" value="${activity.id}"/>
+        <input type="hidden" name="activityId" value="${sessionScope.activity.id}"/>
         <label>${serviceNameLabel}
             <br/>
-            <input type="text" value="${activity.name}" name="activityName" maxlength="20" minlength="4" required/>
+            <input type="text" value="${sessionScope.activity.name}" name="activityName"
+                   maxlength="20" minlength="4" required/>
         </label>
-
         <br/>
         <label>${serviceDescriptionLabel}
             <br/>
-            <textarea name="activityDescription" cols="30" rows="10" required>${activity.description}
+            <textarea name="activityDescription" cols="30" rows="10" required>
+                ${sessionScope.activity.description}
             </textarea>
         </label>
         <br/>
         <label>${servicePriceLabel}
             <br/>
-            <input type="text" value="${activity.price}" name="activityPrice" maxlength="5" minlength="1" required/>
+            <input type="text" value="${sessionScope.activity.price}"
+                   name="activityPrice" maxlength="5" minlength="1" required/>
         </label>
 
         Status:
@@ -53,8 +62,11 @@
 
         <br/>
         <input type="submit" value="${button}"/>
-        <c:if test="${activityExists == true}">
-            Activity with this name already exists.
+        <c:if test="${sessionScope.dataExists == true}">
+            <div class="alert alert-danger alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Fail!</strong> Activity with this name already exists.
+            </div>
         </c:if>
     </form>
 </div>

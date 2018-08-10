@@ -27,7 +27,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-inverse navbar-fixed-top text-capitalize">
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Cat Beauty Bar</a>
@@ -41,7 +41,7 @@
             </li>
 
             <c:if test="${empty sessionScope.user}">
-                <li><a href="${pageContext.request.contextPath}/register">${signUp}</a></li>
+                <li ><a href="${pageContext.request.contextPath}/register">${signUp}</a></li>
                 <li><a href="${pageContext.request.contextPath}/login">${signIn}</a></li>
             </c:if>
             <c:if test="${sessionScope.user ne null && sessionScope.user.status ne 'banned'}">
@@ -60,7 +60,10 @@
             <c:if test="${sessionScope.user ne null}">
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="app?command=logout">${logout}</a></li>
+            <li><form name="reviewEditForm" method="POST" action="app">
+                <input type="hidden" name="command" value="logout"/>
+                <input type="submit" class="btn btn-link" value="${logout}"/>
+            </form></li>
             </c:if>
         </ul>
     </div>

@@ -53,7 +53,7 @@ public class Activity extends Entity {
     }
 
     public String getStatus(){
-        return status.name();
+        return status.getName();
     }
 
     public void setStatus(Status status) {

@@ -35,25 +35,31 @@
 </c:if>
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-<div>
-    <table id="sorted-table">
+
+
+<div class="container">
+    <table class="table">
+        <thead>
         <tr>
-            <th onclick="sortTable(0)">id</th>
-            <th onclick="sortTable(1)">time</th>
-            <th onclick="sortTable(2)">status</th>
-            <th onclick="sortTable(3)">services</th>
-            <th onclick="sortTable(4)">price</th>
+            <th>id</th>
+            <th>time</th>
+            <th>status</th>
+            <th>services</th>
+            <th>price</th>
         </tr>
+        </thead>
+        <tbody>
         <c:forEach var="order" items="${orderList}">
             <tr>
+                <td>${order.id}</td>
+                <td><fmt:formatDate value="${order.dateTime}" type="both"
+                                    dateStyle="short" timeStyle="short"/></td>
+                <td>${order.status}</td>
+
+                <td>${order.paid}</td>
+
                 <form name="orderForm" method="POST" action="app">
                     <input type="hidden" name="orderId" value="${order.id}"/>
-                    <td>${order.id}</td>
-                    <td><fmt:formatDate value="${order.dateTime}" type="both"
-                                        dateStyle="short" timeStyle="short"/></td>
-                    <td>${order.status}</td>
-
-                    <td>${order.paid}</td>
                     <td><c:forEach var="activity" items="${order.activityList}">
                         <a href="app?command=viewActivity&activityId=${activity.id}">${activity.name}</a>
                         <br/>
@@ -61,23 +67,21 @@
                     </td>
                     <td>${order.price}</td>
                     <c:if test="${order.status ne 'cancelled' && order.status ne 'finished'}">
-                    <td>
-                        <a href="app?command=cancelOrder&orderId=${order.id}">${cancelBtn}</a>
-                    </td>
+                        <td>
+                            <a href="app?command=cancelOrder&orderId=${order.id}">${cancelBtn}</a>
+                        </td>
                     </c:if>
                     <c:if test="${order.paid eq false && order.status ne 'cancelled' && order.status ne 'finished'}">
                         <td>
                             <a href="app?command=payForOrder&orderId=${order.id}">pay</a>
                         </td>
                     </c:if>
-
-
                 </form>
             </tr>
         </c:forEach>
+        </tbody>
     </table>
 </div>
-
 
 <ul class="pagination">
     <c:if test="${currentPage != 1}">

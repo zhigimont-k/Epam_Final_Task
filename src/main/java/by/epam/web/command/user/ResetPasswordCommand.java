@@ -34,10 +34,9 @@ public class ResetPasswordCommand implements Command {
                 String newPassword = PasswordGenerator.generatePassword();
                 service.updateUser(found.get().getId(), newPassword, found.get().getUserName());
                 found.get().setPassword(newPassword);
-
+                requestContent.setAttribute(RequestParameter.OPERATION_SUCCESS, true);
                 new MailSenderThread(email, MailComposer.getResetPasswordMessageTheme(),
                         MailComposer.getResetPasswordMessage(newPassword)).start();
-                requestContent.setAttribute(RequestParameter.OPERATION_SUCCESS, true);
             } else {
                 requestContent.setAttribute(RequestParameter.NO_EMAIL_FOUND, true);
             }

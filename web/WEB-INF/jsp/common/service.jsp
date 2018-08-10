@@ -52,7 +52,7 @@
             <input type="hidden" name="reviewId" value="${review.id}"/>
             <div class="media">
                 <div class="media-left">
-                    <img src="image?userId=${review.userId}" class="media-object"
+                    <img src="image?userId=${review.userId}" class="media-object rounded"
                          style="width:60px"
                          onerror="this.style.display='none'">
                 </div>
