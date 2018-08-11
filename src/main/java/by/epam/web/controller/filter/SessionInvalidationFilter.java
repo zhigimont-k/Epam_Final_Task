@@ -32,7 +32,6 @@ public class SessionInvalidationFilter implements Filter{
             logger.log(Level.INFO, "Destroyed session");
         }
         filterChain.doFilter(servletRequest, servletResponse);
-
     }
 
     @Override

@@ -26,27 +26,15 @@ public class ChangeUserStatusCommand implements Command {
         PageRouter router = new PageRouter();
         try {
 
-            String id = requestContent.getParameter(RequestParameter.USER_ID);
+            int id = Integer.parseInt(requestContent.getParameter(RequestParameter.USER_ID));
             String status = requestContent.getParameter(RequestParameter.USER_STATUS);
-            int intValue = Integer.parseInt(id);
-            Optional<User> found = service.findUserById(intValue);
-            if (found.isPresent()){
-                service.changeUserStatus(intValue, status);
-
-                router.setRedirect(true);
-                router.setPage(PageAddress.VIEW_USERS);
-            } else {
-                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
-            }
+            service.changeUserStatus(id, status);
+            router.setRedirect(true);
+            router.setPage(PageAddress.VIEW_USERS);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
-    }
-
-    private boolean validateParameters(String id, String status){
-        return NumberValidator.getInstance().validateId(id) &&
-                UserValidator.getInstance().validateStatus(status);
     }
 }

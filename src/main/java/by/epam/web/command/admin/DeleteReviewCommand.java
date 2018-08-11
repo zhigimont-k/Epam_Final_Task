@@ -23,11 +23,9 @@ public class DeleteReviewCommand implements Command {
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
-
             ReviewService service = ServiceFactory.getInstance().getReviewService();
-            String id = requestContent.getParameter(RequestParameter.REVIEW_ID);
-
-            int reviewId = Integer.parseInt(id);
+            int reviewId = Integer.parseInt(requestContent.getParameter
+                    (RequestParameter.REVIEW_ID));
             Optional<Review> found = service.findReviewById(reviewId);
             if (found.isPresent()) {
                 int activityId = found.get().getActivityId();
@@ -37,7 +35,6 @@ public class DeleteReviewCommand implements Command {
             } else {
                 router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
-
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);

@@ -54,7 +54,6 @@ public class CommandAccessCheckFilter implements Filter {
             HttpServletResponse response = (HttpServletResponse) servletResponse;
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
-
     }
 
     private boolean accessGranted(CommandAccessLevel commandAccessLevel, User user) {

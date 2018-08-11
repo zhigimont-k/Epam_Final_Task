@@ -14,10 +14,11 @@
     <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
-
+    <fmt:setBundle basename="cbb_info" var="projectInfo"/>
     <fmt:message bundle="${locale}" key="locale.page.title.services" var="pageTitle"/>
-
-    <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
+    <fmt:message bundle="${locale}" key="locale.status.available" var="available"/>
+    <fmt:message bundle="${locale}" key="locale.status.unavailable" var="unavailable"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
     <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
@@ -35,7 +36,7 @@
                                     <a href="app?command=viewActivity&activityId=${activity.id}">
                                             ${activity.name}
                                     </a>
-                                    <p class="text-muted">${activity.status}</p>
+                                    <p class="text-muted text-lowercase">${available}</p>
                                 </div>
                                 <div class="panel-body">
                                         ${activity.description}
@@ -58,7 +59,7 @@
                                     <a href="app?command=viewActivity&activityId=${activity.id}">
                                             ${activity.name}
                                     </a>
-                                    <p class="text-muted">${activity.status}</p>
+                                    <p class="text-muted text-lowercase">${unavailable}</p>
                                 </div>
                                 <div class="panel-body">
                                         ${activity.description}

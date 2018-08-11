@@ -3,7 +3,6 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 
-@SuppressWarnings("serial")
 public class WelcomeTag extends TagSupport{
     private String name;
     private String message;

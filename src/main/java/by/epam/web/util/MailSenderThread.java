@@ -22,6 +22,7 @@ public class MailSenderThread extends Thread {
     private static final String PORT = "mail.smtp.port";
     private static final String USER = "smtps.auth.user";
     private static final String PASSWORD = "smtps.auth.pass";
+    private static final String CONTENT_VALUE = "text/html; charset=UTF-8";
     private String mailTo;
     private String mailFrom;
     private String mailSubject;
@@ -57,7 +58,7 @@ public class MailSenderThread extends Thread {
             message.setFrom(new InternetAddress(mailFrom));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(mailTo));
             message.setSubject(mailSubject);
-            message.setContent(mailContent, "text/html; charset=UTF-8");
+            message.setContent(mailContent, CONTENT_VALUE);
             message.setSentDate(new Date());
             Transport transport = mailSession.getTransport();
             transport.connect(properties.getProperty(HOST),

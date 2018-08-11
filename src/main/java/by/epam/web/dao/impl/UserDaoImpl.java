@@ -1,5 +1,6 @@
 package by.epam.web.dao.impl;
 
+import by.epam.web.entity.UserBuilder;
 import by.epam.web.pool.ConnectionPool;
 import by.epam.web.pool.PoolException;
 import by.epam.web.pool.ProxyConnection;
@@ -187,55 +188,19 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(2, password);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                User user = new User();
-                user.setId(resultSet.getInt(DB_USER_ID_FIELD));
-                user.setLogin(login);
-                user.setPassword(password);
-                user.setEmail(resultSet.getString(DB_USER_EMAIL_FIELD));
-                user.setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD));
-                user.setUserName(resultSet.getString(DB_USER_NAME_FIELD));
-                user.setStatus(resultSet.getString(DB_USER_STATUS_FIELD));
-                user.setCardNumber(resultSet.getString(DB_CARD_NUMBER_FIELD));
-                result = Optional.of(user);
+                result = Optional.of(new UserBuilder()
+                        .setId(resultSet.getInt(DB_USER_ID_FIELD))
+                        .setLogin(login)
+                        .setPassword(resultSet.getString(DB_PASSWORD_FIELD))
+                        .setEmail(resultSet.getString(DB_USER_EMAIL_FIELD))
+                        .setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD))
+                        .setUserName(resultSet.getString(DB_USER_NAME_FIELD))
+                        .setStatus(resultSet.getString(DB_USER_STATUS_FIELD))
+                        .setCardNumber(resultSet.getString(DB_CARD_NUMBER_FIELD))
+                        .create());
             }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Failed to find user by login and password: " + e.getMessage(), e);
-        } finally {
-            closeStatement(preparedStatement);
-            try {
-                pool.releaseConnection(connection);
-            } catch (PoolException e) {
-                logger.fatal("Can't release connection: " + e.getMessage(), e);
-                throw new RuntimeException(e);
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public Optional<User> findUserByLogin(String login) {
-        ProxyConnection connection = null;
-        ResultSet resultSet;
-        PreparedStatement preparedStatement = null;
-        Optional<User> result = Optional.empty();
-        try {
-            connection = pool.takeConnection();
-            preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN);
-            preparedStatement.setString(1, login);
-            resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                User user = new User();
-                user.setId(resultSet.getInt(DB_USER_ID_FIELD));
-                user.setLogin(login);
-                user.setPassword(resultSet.getString(DB_PASSWORD_FIELD));
-                user.setEmail(resultSet.getString(DB_USER_EMAIL_FIELD));
-                user.setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD));
-                user.setUserName(resultSet.getString(DB_USER_NAME_FIELD));
-                user.setStatus(resultSet.getString(DB_USER_STATUS_FIELD));
-                result = Optional.of(user);
-            }
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to find user by login: " + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
@@ -260,16 +225,16 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                User user = new User();
-                user.setId(id);
-                user.setLogin(resultSet.getString(DB_LOGIN_FIELD));
-                user.setPassword(resultSet.getString(DB_PASSWORD_FIELD));
-                user.setEmail(resultSet.getString(DB_USER_EMAIL_FIELD));
-                user.setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD));
-                user.setUserName(resultSet.getString(DB_USER_NAME_FIELD));
-                user.setStatus(resultSet.getString(DB_USER_STATUS_FIELD));
-                user.setCardNumber(resultSet.getString(DB_CARD_NUMBER_FIELD));
-                result = Optional.of(user);
+                result = Optional.of(new UserBuilder()
+                        .setId(id)
+                        .setLogin(resultSet.getString(DB_LOGIN_FIELD))
+                        .setPassword(resultSet.getString(DB_PASSWORD_FIELD))
+                        .setEmail(resultSet.getString(DB_USER_EMAIL_FIELD))
+                        .setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD))
+                        .setUserName(resultSet.getString(DB_USER_NAME_FIELD))
+                        .setStatus(resultSet.getString(DB_USER_STATUS_FIELD))
+                        .setCardNumber(resultSet.getString(DB_CARD_NUMBER_FIELD))
+                        .create());
             }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Failed to find user by id: " + e.getMessage(), e);
@@ -296,15 +261,15 @@ public class UserDaoImpl implements UserDao {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(FIND_ALL_USERS);
             while (resultSet.next()) {
-                User user = new User();
-                user.setId(resultSet.getInt(DB_USER_ID_FIELD));
-                user.setLogin(resultSet.getString(DB_LOGIN_FIELD));
-                user.setPassword(resultSet.getString(DB_PASSWORD_FIELD));
-                user.setEmail(resultSet.getString(DB_USER_EMAIL_FIELD));
-                user.setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD));
-                user.setUserName(resultSet.getString(DB_USER_NAME_FIELD));
-                user.setStatus(resultSet.getString(DB_USER_STATUS_FIELD));
-                userList.add(user);
+                userList.add(new UserBuilder()
+                        .setId(resultSet.getInt(DB_USER_ID_FIELD))
+                        .setLogin(resultSet.getString(DB_LOGIN_FIELD))
+                        .setPassword(resultSet.getString(DB_PASSWORD_FIELD))
+                        .setEmail(resultSet.getString(DB_USER_EMAIL_FIELD))
+                        .setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD))
+                        .setUserName(resultSet.getString(DB_USER_NAME_FIELD))
+                        .setStatus(resultSet.getString(DB_USER_STATUS_FIELD))
+                        .create());
             }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Failed to find users: " + e.getMessage(), e);
@@ -353,6 +318,7 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(1, password);
             preparedStatement.setString(2, userName);
             preparedStatement.setInt(3, id);
+            logger.log(Level.INFO, preparedStatement);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Failed to update user: " + e.getMessage(), e);
@@ -402,15 +368,16 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(1, email);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                User user = new User();
-                user.setId(resultSet.getInt(DB_USER_ID_FIELD));
-                user.setLogin(resultSet.getString(DB_LOGIN_FIELD));
-                user.setPassword(resultSet.getString(DB_PASSWORD_FIELD));
-                user.setEmail(email);
-                user.setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD));
-                user.setUserName(resultSet.getString(DB_USER_NAME_FIELD));
-                user.setStatus(resultSet.getString(DB_USER_STATUS_FIELD));
-                result = Optional.of(user);
+                result = Optional.of(new UserBuilder()
+                        .setId(resultSet.getInt(DB_USER_ID_FIELD))
+                        .setLogin(resultSet.getString(DB_LOGIN_FIELD))
+                        .setPassword(resultSet.getString(DB_PASSWORD_FIELD))
+                        .setEmail(resultSet.getString(DB_USER_EMAIL_FIELD))
+                        .setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD))
+                        .setUserName(resultSet.getString(DB_USER_NAME_FIELD))
+                        .setStatus(resultSet.getString(DB_USER_STATUS_FIELD))
+                        .setCardNumber(resultSet.getString(DB_CARD_NUMBER_FIELD))
+                        .create());
             }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Failed to find user by email: " + e.getMessage(), e);
@@ -488,16 +455,16 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(2, cardNumber);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                User user = new User();
-                user.setId(userId);
-                user.setLogin(resultSet.getString(DB_LOGIN_FIELD));
-                user.setPassword(DB_PASSWORD_FIELD);
-                user.setEmail(resultSet.getString(DB_USER_EMAIL_FIELD));
-                user.setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD));
-                user.setUserName(resultSet.getString(DB_USER_NAME_FIELD));
-                user.setStatus(resultSet.getString(DB_USER_STATUS_FIELD));
-                user.setCardNumber(cardNumber);
-                result = Optional.of(user);
+                result = Optional.of(new UserBuilder()
+                        .setId(userId)
+                        .setLogin(resultSet.getString(DB_LOGIN_FIELD))
+                        .setPassword(resultSet.getString(DB_PASSWORD_FIELD))
+                        .setEmail(resultSet.getString(DB_USER_EMAIL_FIELD))
+                        .setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD))
+                        .setUserName(resultSet.getString(DB_USER_NAME_FIELD))
+                        .setStatus(resultSet.getString(DB_USER_STATUS_FIELD))
+                        .setCardNumber(cardNumber)
+                        .create());
             }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Failed to find user by login and password: " + e.getMessage(), e);

@@ -72,7 +72,7 @@
         <br/>
         Money on card: ${money}
         <br/>
-        <label>${userNameLabel}
+        <label>${userNameLabel}:
             <input type="text" name="userName" minlength="2" maxlength="40"
                    value="${sessionScope.user.userName}"
                    pattern="[\p{L}\s]{2,40}"/></label>

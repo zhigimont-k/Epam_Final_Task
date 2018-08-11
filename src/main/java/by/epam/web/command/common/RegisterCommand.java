@@ -22,14 +22,12 @@ public class RegisterCommand implements Command {
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
-
             String login = requestContent.getParameter(RequestParameter.LOGIN);
             String password = requestContent.getParameter(RequestParameter.PASSWORD);
             String email = requestContent.getParameter(RequestParameter.EMAIL);
             String userName = requestContent.getParameter(RequestParameter.USER_NAME);
             String phoneNumber = requestContent.getParameter(RequestParameter.PHONE_NUMBER);
             String cardNumber = requestContent.getParameter(RequestParameter.CARD_NUMBER);
-
             if (checkUniqueness(requestContent, login, email, phoneNumber, cardNumber)){
                 requestContent.removeSessionAttribute(RequestParameter.ILLEGAL_INPUT);
                 User user = service.registerUser(login, password, email, phoneNumber, userName,

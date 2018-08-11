@@ -73,26 +73,6 @@ public class ActivityService {
         }
     }
 
-    public Optional<Activity> findActivityByName(String name) throws ServiceException {
-        try {
-            return activityDao.findActivityByName(name);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public boolean changeActivityStatus(int id, String status) throws ServiceException {
-        if (!ActivityValidator.getInstance().validateStatus(status)) {
-            return false;
-        }
-        try {
-            activityDao.changeActivityStatus(id, status);
-            return true;
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
     public boolean updateActivity(int id, String name, String description, String price,
                                   String status) throws ServiceException {
         if (!ActivityValidator.getInstance().validateActivity(name, description, price) ||

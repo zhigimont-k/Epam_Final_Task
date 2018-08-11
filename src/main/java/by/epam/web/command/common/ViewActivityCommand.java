@@ -29,24 +29,16 @@ public class ViewActivityCommand implements Command {
             if (NumberValidator.getInstance().validateId(id)){
                 int activityId = Integer.parseInt(id);
                 Optional<Activity> found = service.findActivityById(activityId);
-                if (found.isPresent()) {
-                    ReviewService reviewService = ServiceFactory.getInstance().getReviewService();
-                    List<Review> reviewList = reviewService.findReviewByActivityId(activityId);
-                    UserService userService = ServiceFactory.getInstance().getUserService();
-                    for (Review review : reviewList) {
-                        Optional<User> foundUser = userService.findUserById(review.getUserId());
-                        if (foundUser.isPresent()) {
-                            review.setUserLogin(foundUser.get().getLogin());
-                        } else {
-                            logger.log(Level.ERROR, "Couldn't find user to get login for review");
-                        }
-                    }
-                    requestContent.setAttribute(RequestParameter.ACTIVITY, found.get());
-                    requestContent.setAttribute(RequestParameter.REVIEW_LIST, reviewList);
-                    router.setPage(PageAddress.VIEW_ACTIVITY_PAGE);
-                } else {
-                    router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
+                ReviewService reviewService = ServiceFactory.getInstance().getReviewService();
+                List<Review> reviewList = reviewService.findReviewByActivityId(activityId);
+                UserService userService = ServiceFactory.getInstance().getUserService();
+                for (Review review : reviewList) {
+                    Optional<User> foundUser = userService.findUserById(review.getUserId());
+                    review.setUserLogin(foundUser.get().getLogin());
                 }
+                requestContent.setAttribute(RequestParameter.ACTIVITY, found.get());
+                requestContent.setAttribute(RequestParameter.REVIEW_LIST, reviewList);
+                router.setPage(PageAddress.VIEW_ACTIVITY_PAGE);
             } else {
                 router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
             }

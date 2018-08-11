@@ -31,14 +31,15 @@ public class PayForOrderCommand implements Command {
             String id = requestContent.getParameter(RequestParameter.ORDER_ID);
             int orderId = Integer.parseInt(id);
             if (service.findOrderById(orderId).get().getPrice().compareTo(
-                    userService.findMoneyByCardNumber(user.getCardNumber())
-            ) <= 0){
-                requestContent.setSessionAttribute("notEnoughMoney", false);
+                    userService.findMoneyByCardNumber(user.getCardNumber())) <= 0){
+                requestContent.setSessionAttribute(
+                        RequestParameter.NOT_ENOUGH_MONEY, false);
                 service.payForOrder(Integer.parseInt(id));
                 router.setRedirect(true);
                 router.setPage(PageAddress.VIEW_USER_ORDERS);
             } else {
-                requestContent.setSessionAttribute("notEnoughMoney", true);
+                requestContent.setSessionAttribute(
+                        RequestParameter.NOT_ENOUGH_MONEY, true);
                 router.setRedirect(true);
                 router.setPage(PageAddress.VIEW_USER_ORDERS);
             }

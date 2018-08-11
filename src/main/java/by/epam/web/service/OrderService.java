@@ -53,22 +53,6 @@ public class OrderService {
         }
     }
 
-    public List<Order> findOrdersByUser(int userId) throws ServiceException{
-        try{
-            return orderDao.findOrdersByUser(userId);
-        } catch (DaoException e){
-            throw new ServiceException(e);
-        }
-    }
-
-    public List<Order> findOrdersByUserAndStatus(User user, String status) throws ServiceException {
-        try {
-            return orderDao.findOrdersByUserAndStatus(user, status);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
     public List<Order> findAllOrders(int startPosition, int numberOfRecords) throws ServiceException {
         try {
             return orderDao.findAllOrders(startPosition, numberOfRecords);

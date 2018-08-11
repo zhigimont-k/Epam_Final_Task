@@ -36,16 +36,10 @@ public class ChangeOrderStatusCommand implements Command {
             } else {
                 router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
-
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
-    }
-
-    private boolean validateParameters(String id, String status){
-        return NumberValidator.getInstance().validateId(id) &&
-                OrderValidator.getInstance().validateStatus(status);
     }
 }

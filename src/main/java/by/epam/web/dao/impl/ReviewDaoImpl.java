@@ -3,6 +3,7 @@ package by.epam.web.dao.impl;
 import by.epam.web.dao.DaoException;
 import by.epam.web.dao.ReviewDao;
 import by.epam.web.entity.Review;
+import by.epam.web.entity.ReviewBuilder;
 import by.epam.web.pool.ConnectionPool;
 import by.epam.web.pool.PoolException;
 import by.epam.web.pool.ProxyConnection;
@@ -108,14 +109,14 @@ public class ReviewDaoImpl implements ReviewDao {
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                Review review = new Review();
-                review.setId(id);
-                review.setUserId(resultSet.getInt(DB_REVIEW_USER_ID_FIELD));
-                review.setActivityId(resultSet.getInt(DB_REVIEW_ACTIVITY_ID_FIELD));
-                review.setCreationDate(resultSet.getTimestamp(DB_REVIEW_CREATION_DATE_FIELD));
-                review.setMark(resultSet.getInt(DB_REVIEW_MARK_FIELD));
-                review.setMessage(resultSet.getString(DB_REVIEW_MESSAGE_FIELD));
-                result = Optional.of(review);
+                result = Optional.of(new ReviewBuilder()
+                        .setId(id)
+                        .setUserId(resultSet.getInt(DB_REVIEW_USER_ID_FIELD))
+                        .setActivityId(resultSet.getInt(DB_REVIEW_ACTIVITY_ID_FIELD))
+                        .setCreationDate(resultSet.getTimestamp(DB_REVIEW_CREATION_DATE_FIELD))
+                        .setMark(resultSet.getInt(DB_REVIEW_MARK_FIELD))
+                        .setMessage(resultSet.getString(DB_REVIEW_MESSAGE_FIELD))
+                        .create());
             }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Failed to find review by id" + e.getMessage(), e);
@@ -143,53 +144,17 @@ public class ReviewDaoImpl implements ReviewDao {
             preparedStatement.setInt(1, activityId);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Review review = new Review();
-                review.setId(resultSet.getInt(DB_REVIEW_ID_FIELD));
-                review.setUserId(resultSet.getInt(DB_REVIEW_USER_ID_FIELD));
-                review.setActivityId(activityId);
-                review.setCreationDate(resultSet.getTimestamp(DB_REVIEW_CREATION_DATE_FIELD));
-                review.setMark(resultSet.getInt(DB_REVIEW_MARK_FIELD));
-                review.setMessage(resultSet.getString(DB_REVIEW_MESSAGE_FIELD));
-                reviewList.add(review);
+                reviewList.add(new ReviewBuilder()
+                        .setId(resultSet.getInt(DB_REVIEW_ID_FIELD))
+                        .setUserId(resultSet.getInt(DB_REVIEW_USER_ID_FIELD))
+                        .setActivityId(activityId)
+                        .setCreationDate(resultSet.getTimestamp(DB_REVIEW_CREATION_DATE_FIELD))
+                        .setMark(resultSet.getInt(DB_REVIEW_MARK_FIELD))
+                        .setMessage(resultSet.getString(DB_REVIEW_MESSAGE_FIELD))
+                        .create());
             }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Failed to find review by activity id" + e.getMessage(), e);
-        } finally {
-            closeStatement(preparedStatement);
-            try {
-                pool.releaseConnection(connection);
-            } catch (PoolException e) {
-                logger.fatal("Can't release connection: " + e.getMessage(), e);
-                throw new RuntimeException(e);
-            }
-        }
-        return reviewList;
-    }
-
-    @Override
-    public List<Review> findReviewsByUserId(int userId) {
-        ProxyConnection connection = null;
-        ResultSet resultSet;
-        PreparedStatement preparedStatement = null;
-        List<Review> reviewList = new ArrayList<>();
-        try {
-            connection = pool.takeConnection();
-            preparedStatement = connection.prepareStatement(FIND_REVIEW_BY_USER_ID);
-            preparedStatement.setInt(1, userId);
-            resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                Review review = new Review();
-                review.setId(resultSet.getInt(DB_REVIEW_ID_FIELD));
-                review.setUserId(userId);
-                review.setActivityId(resultSet.getInt(DB_REVIEW_ACTIVITY_ID_FIELD));
-                review.setCreationDate(resultSet.getTimestamp(DB_REVIEW_CREATION_DATE_FIELD));
-                review.setMark(resultSet.getInt(DB_REVIEW_MARK_FIELD));
-                review.setMessage(resultSet.getString(DB_REVIEW_MESSAGE_FIELD));
-                reviewList.add(review);
-            }
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to find review by user id" + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {

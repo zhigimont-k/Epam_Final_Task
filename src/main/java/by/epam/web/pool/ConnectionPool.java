@@ -18,7 +18,6 @@ public class ConnectionPool {
     private static ConnectionPool instance;
     private static AtomicBoolean isCreated = new AtomicBoolean(false);
     private static ReentrantLock lock = new ReentrantLock();
-
     private BlockingQueue<ProxyConnection> availableConnections;
     private Deque<ProxyConnection> unavailableConnections;
 

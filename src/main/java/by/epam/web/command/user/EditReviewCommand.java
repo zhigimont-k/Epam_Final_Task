@@ -25,17 +25,12 @@ public class EditReviewCommand implements Command {
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
-            User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             String reviewId = requestContent.getParameter(RequestParameter.REVIEW_ID);
             Optional<Review> found = service.findReviewById(Integer.parseInt(reviewId));
-            if (found.isPresent()){
-                if (user.getId() == found.get().getUserId()){
-                    requestContent.setSessionAttribute(RequestParameter.REVIEW, found.get());
-                    router.setRedirect(true);
-                    router.setPage(PageAddress.EDIT_REVIEW_PAGE);
-                } else {
-                    router.setPage(PageAddress.FORBIDDEN_ERROR_PAGE);
-                }
+            if (found.isPresent()) {
+                requestContent.setSessionAttribute(RequestParameter.REVIEW, found.get());
+                router.setRedirect(true);
+                router.setPage(PageAddress.EDIT_REVIEW_PAGE);
             } else {
                 router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }

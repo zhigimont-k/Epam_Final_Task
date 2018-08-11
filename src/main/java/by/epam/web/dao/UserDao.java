@@ -16,7 +16,6 @@ public interface UserDao extends AbstractDao<User> {
     User register(User user) throws DaoException;
     Optional<User> findUserByLoginAndPassword(String login, String password) throws DaoException;
     Optional<User> findUserByIdAndCardNumber(int userId, String cardNumber) throws DaoException;
-    Optional<User> findUserByLogin(String login) throws DaoException;
     Optional<User> findUserById(int id) throws DaoException;
     Optional<User> findUserByEmail(String email) throws DaoException;
     List<User> findAllUsers() throws DaoException;

@@ -22,7 +22,6 @@ import java.util.Optional;
 public class AddReviewCommand implements Command {
     private static Logger logger = LogManager.getLogger();
     private static ReviewService service = ServiceFactory.getInstance().getReviewService();
-    private static ActivityService activityService = ServiceFactory.getInstance().getActivityService();
 
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
@@ -32,17 +31,10 @@ public class AddReviewCommand implements Command {
             String activityId = requestContent.getParameter(RequestParameter.ACTIVITY_ID);
             String mark = requestContent.getParameter(RequestParameter.REVIEW_MARK);
             String message = requestContent.getParameter(RequestParameter.REVIEW_MESSAGE).trim();
-            Optional<Activity> found = activityService.findActivityById(
-                    Integer.parseInt(activityId));
-            if (found.isPresent()){
-                service.addReview(userId, Integer.parseInt(activityId),
-                        Integer.parseInt(mark), message);
-
-                router.setRedirect(true);
-                router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
-            } else {
-                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
-            }
+            service.addReview(userId, Integer.parseInt(activityId),
+                    Integer.parseInt(mark), message);
+            router.setRedirect(true);
+            router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);

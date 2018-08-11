@@ -2,9 +2,7 @@ package by.epam.web.dao.impl;
 
 import by.epam.web.dao.DaoException;
 import by.epam.web.dao.OrderDao;
-import by.epam.web.entity.Activity;
-import by.epam.web.entity.Order;
-import by.epam.web.entity.User;
+import by.epam.web.entity.*;
 import by.epam.web.pool.ConnectionPool;
 import by.epam.web.pool.PoolException;
 import by.epam.web.pool.ProxyConnection;
@@ -111,7 +109,8 @@ public class OrderDaoImpl implements OrderDao {
             for (int i = 0; i < order.activityListSize(); i++) {
                 activityList.add(order.getActivity(i));
             }
-            preparedStatement = connection.prepareStatement(INSERT_ORDER_INFO, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement = connection.prepareStatement(INSERT_ORDER_INFO,
+                    Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, userId);
             preparedStatement.setTimestamp(2, time);
             preparedStatement.executeUpdate();
@@ -207,18 +206,17 @@ public class OrderDaoImpl implements OrderDao {
             preparedStatement.setInt(2, numberOfRecords);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Order order = new Order();
                 int currentOrderId = resultSet.getInt(DB_ORDER_ID_FIELD);
-                order.setId(currentOrderId);
-                order.setUserId(resultSet.getInt(DB_ORDER_USER_ID_FIELD));
-                order.setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD));
-                order.setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD));
-                order.setPrice(resultSet.getBigDecimal(DB_ORDER_PRICE_FIELD));
                 List<Activity> activityList = findActivitiesByOrderId(currentOrderId);
-                for (Activity activity : activityList) {
-                    order.addActivity(activity);
-                }
-                orderList.add(order);
+                orderList.add(new OrderBuilder()
+                        .setId(currentOrderId)
+                        .setUserId(resultSet.getInt(DB_ORDER_USER_ID_FIELD))
+                        .setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD))
+                        .setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD))
+                        .setPrice(resultSet.getBigDecimal(DB_ORDER_PRICE_FIELD))
+                        .setPaid(resultSet.getBoolean(DB_ORDER_PAID_FIELD))
+                        .setActivityList(activityList)
+                        .create());
             }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Failed to find orders" + e.getMessage(), e);
@@ -246,18 +244,16 @@ public class OrderDaoImpl implements OrderDao {
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                Order order = new Order();
-                order.setId(id);
-                order.setUserId(resultSet.getInt(DB_ORDER_USER_ID_FIELD));
-                order.setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD));
-                order.setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD));
-                order.setPrice(resultSet.getBigDecimal(DB_ORDER_PRICE_FIELD));
-                order.setPaid(resultSet.getBoolean(DB_ORDER_PAID_FIELD));
                 List<Activity> activityList = findActivitiesByOrderId(id);
-                for (Activity activity : activityList) {
-                    order.addActivity(activity);
-                }
-                result = Optional.of(order);
+                result = Optional.of(new OrderBuilder()
+                        .setId(id)
+                        .setUserId(resultSet.getInt(DB_ORDER_USER_ID_FIELD))
+                        .setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD))
+                        .setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD))
+                        .setPrice(resultSet.getBigDecimal(DB_ORDER_PRICE_FIELD))
+                        .setPaid(resultSet.getBoolean(DB_ORDER_PAID_FIELD))
+                        .setActivityList(activityList)
+                        .create());
             }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Failed to find order by id" + e.getMessage(), e);
@@ -287,19 +283,17 @@ public class OrderDaoImpl implements OrderDao {
             preparedStatement.setInt(3, numberOfRecords);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Order order = new Order();
                 int currentOrderId = resultSet.getInt(DB_ORDER_ID_FIELD);
-                order.setId(currentOrderId);
-                order.setUserId(userId);
-                order.setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD));
-                order.setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD));
-                order.setPrice(resultSet.getBigDecimal(DB_ORDER_PRICE_FIELD));
-                order.setPaid(resultSet.getBoolean(DB_ORDER_PAID_FIELD));
                 List<Activity> activityList = findActivitiesByOrderId(currentOrderId);
-                for (Activity activity : activityList) {
-                    order.addActivity(activity);
-                }
-                orderList.add(order);
+                orderList.add(new OrderBuilder()
+                        .setId(currentOrderId)
+                        .setUserId(resultSet.getInt(DB_ORDER_USER_ID_FIELD))
+                        .setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD))
+                        .setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD))
+                        .setPrice(resultSet.getBigDecimal(DB_ORDER_PRICE_FIELD))
+                        .setPaid(resultSet.getBoolean(DB_ORDER_PAID_FIELD))
+                        .setActivityList(activityList)
+                        .create());
             }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Failed to find orders by user" + e.getMessage(), e);
@@ -327,64 +321,20 @@ public class OrderDaoImpl implements OrderDao {
             preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Order order = new Order();
                 int currentOrderId = resultSet.getInt(DB_ORDER_ID_FIELD);
-                order.setId(currentOrderId);
-                order.setUserId(userId);
-                order.setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD));
-                order.setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD));
-                order.setPrice(resultSet.getBigDecimal(DB_ORDER_PRICE_FIELD));
-                order.setPaid(resultSet.getBoolean(DB_ORDER_PAID_FIELD));
                 List<Activity> activityList = findActivitiesByOrderId(currentOrderId);
-                for (Activity activity : activityList) {
-                    order.addActivity(activity);
-                }
-                orderList.add(order);
+                orderList.add(new OrderBuilder()
+                        .setId(currentOrderId)
+                        .setUserId(userId)
+                        .setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD))
+                        .setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD))
+                        .setPrice(resultSet.getBigDecimal(DB_ORDER_PRICE_FIELD))
+                        .setPaid(resultSet.getBoolean(DB_ORDER_PAID_FIELD))
+                        .setActivityList(activityList)
+                        .create());
             }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Failed to find orders by user" + e.getMessage(), e);
-        } finally {
-            closeStatement(preparedStatement);
-            try {
-                pool.releaseConnection(connection);
-            } catch (PoolException e) {
-                logger.fatal("Can't release connection: " + e.getMessage(), e);
-                throw new RuntimeException(e);
-            }
-        }
-        return orderList;
-    }
-
-    @Override
-    public List<Order> findOrdersByUserAndStatus(User user, String status) {
-        ProxyConnection connection = null;
-        ResultSet resultSet;
-        PreparedStatement preparedStatement = null;
-        List<Order> orderList = new ArrayList<>();
-        try {
-            connection = pool.takeConnection();
-            preparedStatement = connection.prepareStatement(FIND_ORDERS_BY_USER_ID);
-            int userId = user.getId();
-            preparedStatement.setInt(1, userId);
-            preparedStatement.setString(1, status);
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                Order order = new Order();
-                int currentOrderId = resultSet.getInt(DB_ORDER_ID_FIELD);
-                order.setId(currentOrderId);
-                order.setUserId(userId);
-                order.setStatus(status);
-                order.setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD));
-                order.setPrice(resultSet.getBigDecimal(DB_ORDER_PRICE_FIELD));
-                order.setPaid(resultSet.getBoolean(DB_ORDER_PAID_FIELD));
-                List<Activity> activityList = findActivitiesByOrderId(currentOrderId);
-                for (Activity activity : activityList) {
-                    order.addActivity(activity);
-                }
-                orderList.add(order);
-            }
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to find orders by user and order status" + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
@@ -417,13 +367,13 @@ public class OrderDaoImpl implements OrderDao {
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Activity activity = new Activity();
-                activity.setId(resultSet.getInt(DB_ACTIVITY_ID_FIELD));
-                activity.setName(resultSet.getString(DB_ACTIVITY_NAME_FIELD));
-                activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim());
-                activity.setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD));
-                activity.setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD));
-                activityList.add(activity);
+                activityList.add(new ActivityBuilder()
+                        .setId(resultSet.getInt(DB_ACTIVITY_ID_FIELD))
+                        .setName(resultSet.getString(DB_ACTIVITY_NAME_FIELD))
+                        .setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim())
+                        .setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD))
+                        .setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD))
+                        .create());
             }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Failed to find activities by order id" + e.getMessage(), e);

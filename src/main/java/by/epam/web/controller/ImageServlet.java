@@ -41,6 +41,7 @@ public class ImageServlet extends HttpServlet {
     private static final String BACK_SLASH = "\"";
     private static final String HEADER_SPLITTER = ";";
     private static final String EMPTY = "";
+    private static final String FILENAME_PARAMETER = "filename";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -126,7 +127,7 @@ public class ImageServlet extends HttpServlet {
 
     private String getFileName(Part part) {
         for (String content : part.getHeader(CONTENT_DISPOSITION_HEADER).split(HEADER_SPLITTER)) {
-            if (content.trim().startsWith("filename")) {
+            if (content.trim().startsWith(FILENAME_PARAMETER)) {
                 return content.substring(
                         content.indexOf('=') + 1).trim().replace(BACK_SLASH, EMPTY);
             }

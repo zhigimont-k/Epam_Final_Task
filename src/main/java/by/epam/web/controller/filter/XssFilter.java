@@ -30,6 +30,8 @@ public class XssFilter implements Filter {
     }
 
     static class XssRequestWrapper extends HttpServletRequestWrapper {
+        private static final String EMPTY = "";
+        private static final String NULL_TERMINATOR = "\0";
         private static Pattern[] patterns = {
                 Pattern.compile("<script>(.*?)</script>", Pattern.CASE_INSENSITIVE),
                 Pattern.compile("src[\r\n]*=[\r\n]*\\\'(.*?)\\\'", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL),
@@ -50,41 +52,33 @@ public class XssFilter implements Filter {
         @Override
         public String[] getParameterValues(String parameter) {
             String[] values = super.getParameterValues(parameter);
-
             if (values == null) {
                 return new String[0];
             }
-
             int count = values.length;
             String[] encodedValues = new String[count];
             for (int i = 0; i < count; i++) {
                 encodedValues[i] = stripXss(values[i]);
             }
-
             return encodedValues;
         }
 
         @Override
         public Map<String, String[]> getParameterMap() {
             Map<String, String[]> parameterMap = super.getParameterMap();
-
             if (parameterMap == null) {
                 return new TreeMap<>();
             }
-
             Map<String, String[]> encodedParameterMap = new TreeMap<>();
-
             for(Map.Entry<String,String[]> entry : parameterMap.entrySet()) {
                 String key = stripXss(entry.getKey());
                 String[] values = entry.getValue();
                 String[] encodedValues = new String[values.length];
-
                 for (int i = 0; i < values.length; i++){
                     encodedValues[i] = stripXss(values[i]);
                 }
                 encodedParameterMap.put(key, encodedValues);
             }
-
             return encodedParameterMap;
         }
 
@@ -103,10 +97,9 @@ public class XssFilter implements Filter {
         private String stripXss(String value) {
             if (value != null) {
                 value = ESAPI.encoder().canonicalize(value);
-                value = value.replaceAll("\0", "");
-
+                value = value.replaceAll(NULL_TERMINATOR, EMPTY);
                 for (Pattern scriptPattern : patterns){
-                    value = scriptPattern.matcher(value).replaceAll("");
+                    value = scriptPattern.matcher(value).replaceAll(EMPTY);
                 }
             }
             return value;

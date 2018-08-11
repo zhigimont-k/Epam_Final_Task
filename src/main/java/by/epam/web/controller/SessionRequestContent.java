@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SessionRequestContent {
-    private static final String EMPTY = "";
     private Map<String, Object> requestAttributes = new HashMap<>();
     private Map<String, String[]> requestParameters = new HashMap<>();
     private Map<String, Object> sessionAttributes = new HashMap<>();
+    private static final String EMPTY = "";
 
     public SessionRequestContent(HttpServletRequest request) {
         extractValues(request);
@@ -36,11 +36,6 @@ public class SessionRequestContent {
     public Object getSessionAttribute(String attributeName) {
         return (sessionAttributes.get(attributeName) != null) ?
              sessionAttributes.get(attributeName) : EMPTY;
-    }
-
-    public Object getRequestAttribute(String attributeName) {
-        return (requestAttributes.get(attributeName) != null) ?
-        requestAttributes.get(attributeName) : new Object();
     }
 
     public void insertValues(HttpServletRequest request) {

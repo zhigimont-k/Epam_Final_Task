@@ -28,40 +28,28 @@ public class UpdateUserCommand implements Command {
             String userName = requestContent.getParameter(RequestParameter.USER_NAME);
             String password = requestContent.getParameter(RequestParameter.PASSWORD);
             String newPassword = requestContent.getParameter(RequestParameter.NEW_PASSWORD);
-            if (newPassword.isEmpty()){
-                service.updateUserName(user.getId(), userName);
-                Optional<User> found = service.findUserById(user.getId());
-                if (found.isPresent()){
+            if (service.findUserByLoginAndPassword(user.getLogin(), password).isPresent()) {
+                requestContent.setSessionAttribute(RequestParameter.AUTH_FAIL, false);
+                if (newPassword.isEmpty()) {
+                    service.updateUserName(user.getId(), userName);
+                    Optional<User> found = service.findUserById(user.getId());
                     requestContent.setSessionAttribute(RequestParameter.USER, found.get());
-                }
-            } else {
-                if (service.findUserByLoginAndPassword(user.getLogin(), password).isPresent()){
+                } else {
                     service.updateUser(user.getId(), newPassword, userName);
                     Optional<User> found = service.findUserById(user.getId());
-                    if (found.isPresent()){
-                        requestContent.removeSessionAttribute(RequestParameter.ILLEGAL_INPUT);
-                        requestContent.removeSessionAttribute(RequestParameter.AUTH_FAIL);
-                        requestContent.setSessionAttribute(RequestParameter.USER, found.get());
-
-                        router.setRedirect(true);
-                        router.setPage(PageAddress.VIEW_USER_INFO);
-                    }
-                } else {
-                    requestContent.setSessionAttribute(RequestParameter.AUTH_FAIL, true);
-                    router.setRedirect(true);
-                    router.setPage(PageAddress.VIEW_USER_INFO);
+                    requestContent.setSessionAttribute(RequestParameter.USER, found.get());
                 }
+                router.setRedirect(true);
+                router.setPage(PageAddress.VIEW_USER_INFO);
+            } else {
+                requestContent.setSessionAttribute(RequestParameter.AUTH_FAIL, true);
+                router.setRedirect(true);
+                router.setPage(PageAddress.VIEW_USER_INFO);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
-    }
-
-    private boolean validateParameters(String password,
-                                       String userName){
-        return UserValidator.getInstance().validatePassword(password) &&
-                UserValidator.getInstance().validateUserName(userName);
     }
 }

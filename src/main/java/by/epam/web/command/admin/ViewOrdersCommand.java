@@ -29,17 +29,14 @@ public class ViewOrdersCommand implements Command {
             if (NumberValidator.getInstance().validateId(pageNumberParameter)){
                 int pageNumber = Integer.parseInt(requestContent.getParameter
                         (RequestParameter.PAGE_NUMBER));
-
                 int numberOfRecords = service.countOrders();
                 int numberOfPages = (int) Math.ceil(numberOfRecords * 1.0 / RECORDS_PER_PAGE);
-
                 if (pageNumber > numberOfPages){
                     pageNumber = numberOfPages;
                 }
                 List<Order> orderList = service.findAllOrders(
                         (pageNumber - 1) * RECORDS_PER_PAGE,
                         RECORDS_PER_PAGE);
-
                 requestContent.setAttribute(RequestParameter.ORDER_LIST, orderList);
                 requestContent.setAttribute(RequestParameter.NUMBER_OF_PAGES, numberOfPages);
                 requestContent.setAttribute(RequestParameter.CURRENT_TABLE_PAGE_NUMBER, pageNumber);

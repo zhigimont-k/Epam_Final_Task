@@ -3,6 +3,7 @@ package by.epam.web.dao.impl;
 import by.epam.web.dao.DaoException;
 import by.epam.web.dao.ActivityDao;
 import by.epam.web.entity.Activity;
+import by.epam.web.entity.ActivityBuilder;
 import by.epam.web.pool.ConnectionPool;
 import by.epam.web.pool.PoolException;
 import by.epam.web.pool.ProxyConnection;
@@ -91,13 +92,13 @@ public class ActivityDaoImpl implements ActivityDao {
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                Activity activity = new Activity();
-                activity.setId(id);
-                activity.setName(resultSet.getString(DB_ACTIVITY_NAME_FIELD));
-                activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim());
-                activity.setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD));
-                activity.setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD));
-                result = Optional.of(activity);
+                result = Optional.of(new ActivityBuilder()
+                        .setId(id)
+                        .setName(resultSet.getString(DB_ACTIVITY_NAME_FIELD))
+                        .setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim())
+                        .setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD))
+                        .setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD))
+                        .create());
             }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Failed to find activity by id" + e.getMessage(), e);
@@ -125,13 +126,14 @@ public class ActivityDaoImpl implements ActivityDao {
             preparedStatement.setString(1, name);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                Activity activity = new Activity();
-                activity.setId(resultSet.getInt(DB_ACTIVITY_ID_FIELD));
-                activity.setName(name);
-                activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim());
-                activity.setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD));
-                activity.setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD));
-                result = Optional.of(activity);
+                result = Optional.of(new ActivityBuilder()
+                        .setId(resultSet.getInt(DB_ACTIVITY_ID_FIELD))
+                        .setName(name)
+                        .setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim())
+                        .setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD))
+                        .setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD))
+                        .create()
+                );
             }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Failed to find activity by name" + e.getMessage(), e);
@@ -158,13 +160,13 @@ public class ActivityDaoImpl implements ActivityDao {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(FIND_ALL_ACTIVITIES);
             while (resultSet.next()) {
-                Activity activity = new Activity();
-                activity.setId(resultSet.getInt(DB_ACTIVITY_ID_FIELD));
-                activity.setName(resultSet.getString(DB_ACTIVITY_NAME_FIELD));
-                activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim());
-                activity.setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD));
-                activity.setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD));
-                activityList.add(activity);
+                activityList.add(new ActivityBuilder()
+                        .setId(resultSet.getInt(DB_ACTIVITY_ID_FIELD))
+                        .setName(resultSet.getString(DB_ACTIVITY_NAME_FIELD))
+                        .setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim())
+                        .setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD))
+                        .setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD))
+                        .create());
             }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Failed to find activities" + e.getMessage(), e);
@@ -214,13 +216,13 @@ public class ActivityDaoImpl implements ActivityDao {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(FIND_AVAILABLE_ACTIVITIES);
             while (resultSet.next()) {
-                Activity activity = new Activity();
-                activity.setId(resultSet.getInt(DB_ACTIVITY_ID_FIELD));
-                activity.setName(resultSet.getString(DB_ACTIVITY_NAME_FIELD));
-                activity.setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim());
-                activity.setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD));
-                activity.setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD));
-                activityList.add(activity);
+                activityList.add(new ActivityBuilder()
+                        .setId(resultSet.getInt(DB_ACTIVITY_ID_FIELD))
+                        .setName(resultSet.getString(DB_ACTIVITY_NAME_FIELD))
+                        .setDescription(resultSet.getString(DB_ACTIVITY_DESCRIPTION_FIELD).trim())
+                        .setPrice(resultSet.getBigDecimal(DB_ACTIVITY_PRICE_FIELD))
+                        .setStatus(resultSet.getString(DB_ACTIVITY_STATUS_FIELD))
+                        .create());
             }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Failed to find available activities" + e.getMessage(), e);

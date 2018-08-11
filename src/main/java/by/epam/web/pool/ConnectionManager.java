@@ -16,17 +16,14 @@ class ConnectionManager {
     private static final String NUMERICAL_PATTERN = "^[1-9]\\d?$";
     static final int INITIAL_POOL_SIZE = 8;
     static final int MAX_POOL_SIZE = 32;
-
     private static final String BASE_NAME = "database";
     private static final String DATABASE_USER = BASE_NAME + ".user";
     private static final String DATABASE_PASSWORD = BASE_NAME + ".password";
     private static final String DATABASE_POOL_SIZE = BASE_NAME + ".poolSize";
     private static final String DATABASE_URL = BASE_NAME + ".url";
-
     private String url;
     private String user;
     private String password;
-
     private int poolSize;
 
     private ConnectionManager() {
@@ -56,12 +53,9 @@ class ConnectionManager {
         String poolSizeString = bundle.getString(DATABASE_POOL_SIZE);
         Pattern pattern = Pattern.compile(NUMERICAL_PATTERN);
         Matcher matcher = pattern.matcher(poolSizeString);
-
         poolSize = (matcher.matches() && Integer.parseInt(poolSizeString) <= MAX_POOL_SIZE)
                 ? Integer.parseInt(poolSizeString) : INITIAL_POOL_SIZE;
-
         logger.log(Level.INFO, "Initial connection pool size: " + poolSize);
-
         try {
             DriverManager.registerDriver(new com.mysql.jdbc.Driver());
         } catch (SQLException e) {

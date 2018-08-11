@@ -14,15 +14,14 @@
     <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
-
+    <fmt:setBundle basename="cbb_info" var="projectInfo"/>
     <fmt:message bundle="${locale}" key="locale.page.title.services" var="pageTitle"/>
-
-    <fmt:message bundle="${locale}" key="locale.service.label.name" var="serviceNameLabel"/>
-    <fmt:message bundle="${locale}" key="locale.service.label.description" var="serviceDescriptionLabel"/>
-    <fmt:message bundle="${locale}" key="locale.service.label.price" var="servicePriceLabel"/>
-    <fmt:message bundle="${locale}" key="locale.common.button.update" var="button"/>
-
-    <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
+    <fmt:message bundle="${locale}" key="locale.action.update" var="button"/>
+    <fmt:message bundle="${locale}" key="locale.action.edit" var="edit"/>
+    <fmt:message bundle="${locale}" key="locale.action.delete" var="delete"/>
+    <fmt:message bundle="${locale}" key="locale.status.available" var="available"/>
+    <fmt:message bundle="${locale}" key="locale.status.unavailable" var="unavailable"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
     <title>${activity.name} | ${projectName}</title>
 </head>
 <body>
@@ -30,18 +29,18 @@
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
 
 <div class="row">
-
     <div class="col-lg-2"><br/></div>
     <div class="col-lg-4">
         <input type="hidden" name="activityId" value="${activity.id}"/>
-        <br/>
-        ${serviceNameLabel}: ${activity.name}
-        <br/>
-        ${serviceDescriptionLabel}: ${activity.description}
-        <br/>
-        ${servicePriceLabel}: ${activity.price}
-        <br/>
-        Status: ${activity.status}
+        <h3 class="text-uppercase">${activity.name}</h3>
+        <p class="text-muted">${activity.description}</p>
+        <h3><strong>${activity.price}</strong></h3>
+        <c:if test="${activity.status eq 'available'}">
+            <p class="bg-success text-lowercase">${available}</p>
+        </c:if>
+        <c:if test="${activity.status eq 'unavailable'}">
+            <p class="bg-danger text-lowercase">${unavailable}</p>
+        </c:if>
         <br/><br/>
         <c:if test="${sessionScope.user.status == 'admin' || sessionScope.user.status == 'user'}">
             <jsp:include page="/WEB-INF/jsp/user/addReview.jsp"/>
@@ -62,7 +61,7 @@
                         <fmt:formatDate value="${review.creationDate}" type="both"
                                         dateStyle="short" timeStyle="short"/></p>
                     <h3><p class="text-danger"><strong>${review.mark}</strong></p></h3>
-                        <p><br/>${review.message}</p>
+                    <p><br/>${review.message}</p>
                 </div>
             </div>
             <br/>
@@ -70,15 +69,15 @@
                 <form name="reviewDeleteForm" method="POST" action="app">
                     <input type="hidden" name="command" value="deleteReview"/>
                     <input type="hidden" name="reviewId" value="${review.id}"/>
-                    <input type="submit" class="btn btn-link" value="delete"/>
+                    <input type="submit" class="btn btn-link" value="${delete}"/>
                 </form>
             </c:if> <c:if test="${sessionScope.user.id == review.userId}">
-                <form name="reviewEditForm" method="POST" action="app">
-                    <input type="hidden" name="command" value="editReview"/>
-                    <input type="hidden" name="reviewId" value="${review.id}"/>
-                    <input type="submit" class="btn btn-link" value="edit"/>
-                </form>
-            </c:if>
+            <form name="reviewEditForm" method="POST" action="app">
+                <input type="hidden" name="command" value="editReview"/>
+                <input type="hidden" name="reviewId" value="${review.id}"/>
+                <input type="submit" class="btn btn-link" value="${edit}"/>
+            </form>
+        </c:if>
         </c:forEach>
     </div>
 </div>

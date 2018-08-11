@@ -44,10 +44,4 @@ public class AddActivityCommand implements Command {
         }
         return router;
     }
-
-    private boolean validateActivity(String name, String description, String price) {
-        return ActivityValidator.getInstance().validateName(name) &&
-                ActivityValidator.getInstance().validateDescription(description) &&
-                ActivityValidator.getInstance().validatePrice(price);
-    }
 }

@@ -12,7 +12,6 @@ public class ChangeLocaleCommand implements Command {
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         String lang = requestContent.getParameter(RequestParameter.LANGUAGE);
-
         router.setRedirect(true);
         router.setPage(constructRedirectAddress(requestContent));
         requestContent.setSessionAttribute(RequestParameter.LOCAL, lang);

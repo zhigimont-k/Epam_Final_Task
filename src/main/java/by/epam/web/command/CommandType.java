@@ -13,21 +13,17 @@ public enum CommandType {
     LOGIN("login", new LoginCommand(), CommandAccessLevel.GUEST),
     RESET_PASSWORD("resetPassword", new ResetPasswordCommand(), CommandAccessLevel.GUEST),
     LOGOUT("logout", new LogoutCommand(), CommandAccessLevel.GUEST),
-
     CHANGE_LOCALE("locale", new ChangeLocaleCommand(), CommandAccessLevel.GUEST),
-
     VIEW_USERS("viewUsers", new ViewUsersCommand(), CommandAccessLevel.ADMIN),
     CHANGE_USER_STATUS("changeUserStatus", new ChangeUserStatusCommand(), CommandAccessLevel.ADMIN),
     UPDATE_USER("updateUser", new UpdateUserCommand(), CommandAccessLevel.USER),
     ADD_MONEY_TO_CARD("addMoneyToCard", new AddMoneyToCardCommand(), CommandAccessLevel.USER),
     VIEW_USER_INFO("viewUserInfo", new ViewUserInfoCommand(), CommandAccessLevel.USER),
-
     ADD_ACTIVITY("addActivity", new AddActivityCommand(), CommandAccessLevel.ADMIN),
     EDIT_ACTIVITY("editActivity", new EditActivityCommand(), CommandAccessLevel.ADMIN),
     UPDATE_ACTIVITY("updateActivity", new UpdateActivityCommand(), CommandAccessLevel.ADMIN),
     VIEW_ACTIVITY("viewActivity", new ViewActivityCommand(), CommandAccessLevel.GUEST),
     VIEW_ACTIVITIES("viewActivities", new ViewActivitiesCommand(), CommandAccessLevel.GUEST),
-
     CREATE_ORDER("createOrder", new CreateOrderCommand(), CommandAccessLevel.USER),
     VIEW_ORDER("viewOrder", new ViewOrderCommand(), CommandAccessLevel.USER),
     ADD_ORDER("addOrder", new AddOrderCommand(), CommandAccessLevel.USER),
@@ -36,7 +32,6 @@ public enum CommandType {
     CANCEL_ORDER("cancelOrder", new CancelOrderCommand(), CommandAccessLevel.USER),
     VIEW_USER_ORDERS("viewUserOrders", new ViewUserOrdersCommand(), CommandAccessLevel.USER),
     VIEW_ALL_ORDERS("viewAllOrders", new ViewOrdersCommand(), CommandAccessLevel.ADMIN),
-
     ADD_REVIEW("addReview", new AddReviewCommand(), CommandAccessLevel.USER),
     EDIT_REVIEW("editReview", new EditReviewCommand(), CommandAccessLevel.USER),
     UPDATE_REVIEW("updateReview", new UpdateReviewCommand(), CommandAccessLevel.USER),

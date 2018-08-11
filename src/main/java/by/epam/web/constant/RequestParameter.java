@@ -61,5 +61,6 @@ public final class RequestParameter {
     public static final String PHOTO = "photo";
     public static final String OPERATION_SUCCESS = "operationSuccess";
     public static final String OPERATION_FAIL = "operationFail";
+    public static final String NOT_ENOUGH_MONEY = "notEnoughMoney";
     private RequestParameter(){}
 }

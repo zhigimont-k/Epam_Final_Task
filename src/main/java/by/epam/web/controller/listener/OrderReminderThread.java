@@ -30,7 +30,6 @@ class OrderReminderThread implements Runnable {
                 Optional<User> userOptional = userDao.findUserByEmail(email);
                 if (userOptional.isPresent()) {
                     User user = userOptional.get();
-
                     userLoginList.add((user.getUserName() != null && !user.getUserName().isEmpty()) ?
                             user.getUserName() : user.getLogin());
                 }
