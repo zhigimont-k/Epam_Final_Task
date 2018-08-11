@@ -11,12 +11,13 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
+    <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
 
-    <fmt:message bundle="${locale}" key="locale.lang.text.chooseLang" var="chooseLang"/>
-    <fmt:message bundle="${locale}" key="locale.lang.text.english" var="eng"/>
-    <fmt:message bundle="${locale}" key="locale.lang.text.russian" var="rus"/>
+    <fmt:message bundle="${locale}" key="locale.action.changelanguage" var="chooseLanguage"/>
+    <fmt:message bundle="${locale}" key="locale.status.english" var="english"/>
+    <fmt:message bundle="${locale}" key="locale.status.russian" var="russian"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 
 
@@ -26,8 +27,9 @@
     <input type="hidden" name="command" value="locale"/>
     <input type="hidden" name="page" value="${pageContext.request.requestURL}"/>
     <input type="hidden" name="query" value="${pageContext.request.queryString}"/>
-    ${chooseLang}:
-    <button type="submit" name="lang" value="ru">${rus}</button> <button type="submit" name="lang" value="en">${eng}</button>
+    ${chooseLanguage}:
+    <button class="btn btn-link" type="submit" name="lang" value="ru">${russian}</button>
+    <button class="btn btn-link" type="submit" name="lang" value="en">${english}</button>
 </form>
 </body>
 </html>

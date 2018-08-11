@@ -10,6 +10,7 @@ import by.epam.web.service.OrderService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.controller.SessionRequestContent;
+import by.epam.web.service.UserService;
 import by.epam.web.validation.NumberValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -20,6 +21,7 @@ import java.util.List;
 public class PayForOrderCommand implements Command {
     private static Logger logger = LogManager.getLogger();
     private static OrderService service = ServiceFactory.getInstance().getOrderService();
+    private static UserService userService = ServiceFactory.getInstance().getUserService();
 
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
@@ -28,19 +30,17 @@ public class PayForOrderCommand implements Command {
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             String id = requestContent.getParameter(RequestParameter.ORDER_ID);
             int orderId = Integer.parseInt(id);
-            List<Order> userOrders = service.findOrdersByUser(user.getId());
-            boolean orderByUserExists = false;
-            for (Order order : userOrders){
-                if (order.getId() == orderId){
-                    orderByUserExists = true;
-                }
-            }
-            if (orderByUserExists){
+            if (service.findOrderById(orderId).get().getPrice().compareTo(
+                    userService.findMoneyByCardNumber(user.getCardNumber())
+            ) <= 0){
+                requestContent.setSessionAttribute("notEnoughMoney", false);
                 service.payForOrder(Integer.parseInt(id));
                 router.setRedirect(true);
                 router.setPage(PageAddress.VIEW_USER_ORDERS);
             } else {
-                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
+                requestContent.setSessionAttribute("notEnoughMoney", true);
+                router.setRedirect(true);
+                router.setPage(PageAddress.VIEW_USER_ORDERS);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);

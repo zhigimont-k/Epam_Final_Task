@@ -29,7 +29,7 @@ public final class PageAddress {
     public static final String USER_ORDERS_PAGE = "/WEB-INF/jsp/user/userOrders.jsp";
     public static final String ALL_ORDERS_PAGE = "/WEB-INF/jsp/admin/allOrders.jsp";
 
-    public static final String EDIT_REVIEW_PAGE = "/WEB-INF/jsp/user/editReview.jsp";
+    public static final String EDIT_REVIEW_PAGE = "/editReview";
 
     public static final String VIEW_ACTIVITIES = "app?command=viewActivities";
     public static final String VIEW_ALL_ORDERS = "app?command=viewAllOrders&pageNumber=1";

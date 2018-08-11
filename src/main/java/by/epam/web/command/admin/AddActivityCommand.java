@@ -32,12 +32,12 @@ public class AddActivityCommand implements Command {
                 router.setPage(PageAddress.ADD_ACTIVITY_PAGE);
             } else {
                 if (service.addActivity(name, description, price)) {
-                    requestContent.setAttribute(RequestParameter.OPERATION_SUCCESS, true);
+                    router.setRedirect(true);
+                    router.setPage(PageAddress.VIEW_ACTIVITIES);
                 } else {
-                    requestContent.setAttribute(RequestParameter.OPERATION_FAIL, true);
+                    logger.log(Level.ERROR, "Error while adding activity");
                 }
             }
-            router.setPage(PageAddress.ADD_ACTIVITY_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);

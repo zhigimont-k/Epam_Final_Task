@@ -14,24 +14,25 @@
     <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
-
+    <fmt:setBundle basename="cbb_info" var="projectInfo"/>
     <fmt:message bundle="${locale}" key="locale.page.title.registration" var="pageTitle"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.login" var="loginLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.password" var="passwordLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.showPassword" var="showPassword"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.username" var="userNameLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.email" var="emailLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.phonenumber" var="phoneNumberLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.button.signup" var="button"/>
-
-    <fmt:message bundle="${locale}" key="locale.user.text.haveAccountAlready" var="toLogin"/>
-    <fmt:message bundle="${locale}" key="locale.user.button.signin" var="signIn"/>
-
-    <fmt:message bundle="${locale}" key="locale.user.warning.login" var="loginWarning"/>
-    <fmt:message bundle="${locale}" key="locale.user.warning.email" var="emailWarning"/>
-    <fmt:message bundle="${locale}" key="locale.user.warning.phonenumber" var="phoneNumberWarning"/>
-
-    <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.name.full" var="projectNameFull"/>
+    <fmt:message bundle="${locale}" key="locale.table.login" var="loginLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.password" var="passwordLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.email" var="emailLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.phonenumber" var="phoneNumberLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.username" var="userNameLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.cardnumber" var="cardNumberLabel"/>
+    <fmt:message bundle="${locale}" key="locale.message.alreadyhaveaccount" var="haveAccountAlready"/>
+    <fmt:message bundle="${locale}" key="locale.message.forgotpassword" var="forgotPassword"/>
+    <fmt:message bundle="${locale}" key="locale.action.signin" var="signIn"/>
+    <fmt:message bundle="${locale}" key="locale.action.signup" var="signUp"/>
+    <fmt:message bundle="${locale}" key="locale.action.showpassword" var="showPassword"/>
+    <fmt:message bundle="${locale}" key="locale.message.cardnumberexists" var="cardExistsMessage"/>
+    <fmt:message bundle="${locale}" key="locale.message.emailexists" var="emailExistsMessage"/>
+    <fmt:message bundle="${locale}" key="locale.message.loginexists" var="loginExistsMessage"/>
+    <fmt:message bundle="${locale}" key="locale.message.phonenumberexists" var="phoneNumberExistsMessage"/>
     <title>${pageTitle} | ${projectName}</title>
 
     <script type="text/javascript" src="../js/inputScript.js"></script>
@@ -41,69 +42,108 @@
 <c:if test="${not empty sessionScope.user}">
     <jsp:forward page="/home"/>
 </c:if>
-<div id="custom-form">
-    <div>
-        <form name="registerForm" method="POST" action="app">
-            <input type="hidden" name="command" value="register"/>
-            <label>${loginLabel}*
-                <input type="text" name="login" maxlength="20" minlength="4"
-                       pattern="[\w^_]{4,20}" required/></label>
+
+<div class="container">
+    <div class="row centered-form center-block">
+        <div class="container col-md-4 col-md-offset-6">
+            <form name="registerForm" method="POST" action="app">
+                <input type="hidden" name="command" value="register"/>
+                <div class="form-group">
+                    <label>${loginLabel}*:
+                        <br/>
+                        <input type="text"
+                               name="login"
+                               maxlength="40"
+                               pattern="\w+{4, 40}"
+                               data-toggle="tooltip" title="hi"
+                               required/>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>${passwordLabel}*:
+                        <br/>
+                        <input type="password"
+                               name="password"
+                               id="passwordField"
+                               maxlength="32"
+                               required/>
+                    </label>
+                    <br/>
+                    <label><input type="checkbox"
+                                  onclick="togglePasswordVisibility()">
+                        ${showPassword}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>${emailLabel}*:
+                        <br/>
+                        <input type="email"
+                               name="email"
+                               maxlength="50"
+                               minlength="5"
+                               pattern="([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})"
+                               required/></label>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>${phoneNumberLabel}*:
+                        <br/>
+                        <input type="text"
+                               name="phoneNumber"
+                               maxlength="13"
+                               minlength="13"
+                               pattern="\+(\d{12})"
+                               required/>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>${userNameLabel}:<br/>
+                        <input type="text"
+                               name="userName"
+                               maxlength="40"
+                               minlength="2"
+                               pattern="[\p{L}\s]{2,40}"/>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Номер карты*:<br/>
+                        <input type="text"
+                               name="cardNumber"
+                               maxlength="16"
+                               minlength="16"
+                               pattern="\d{16}"
+                               required/>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-default">${signUp}</button>
+            </form>
             <c:if test="${loginExists == true}">
                 <div class="alert alert-danger alert-dismissible">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Warning!</strong> User with this login already exists.
+                    <strong>${loginExistsMessage}</strong>
                 </div>
             </c:if>
-            <br/>
-            <label>${passwordLabel}*
-                <br/>
-                <input type="password" name="password" id="passwordField" maxlength="32"
-                       pattern="[\w^_]{6,32}" required/></label>
-            <label><input type="checkbox" onclick="togglePasswordVisibility()">${showPassword}</label>
-            <br/>
-            <label>${emailLabel}*
-                <br/>
-                <input type="email" name="email" maxlength="50" minlength="5"
-                       pattern="([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})"
-                       required/></label>
             <c:if test="${emailExists == true}">
                 <div class="alert alert-danger alert-dismissible">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Warning!</strong> User with this email already exists.
+                    <strong>${emailExistsMessage}</strong>
                 </div>
             </c:if>
-            <br/>
-            <label>${phoneNumberLabel}*
-                <input type="text" name="phoneNumber" maxlength="13" minlength="13"
-                       pattern="\+(\d{12})" required/></label>
             <c:if test="${phoneNumberExists == true}">
                 <div class="alert alert-danger alert-dismissible">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Warning!</strong> User with this phone number already exists.
+                    <strong>${phoneNumberExistsMessage}</strong>
                 </div>
             </c:if>
-            <br/>
-            <label>${userNameLabel}
-                <input type="text" name="userName" maxlength="40" minlength="2"
-                       pattern="[\p{L}\s]{2,40}"/></label>
-            <br/>
-            <label>Номер карты*
-                <input type="text" name="cardNumber" maxlength="16" minlength="16"
-                       pattern="\d{16}" required/></label>
             <c:if test="${cardNumberExists == true}">
                 <div class="alert alert-danger alert-dismissible">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Warning!</strong> User with this card number already exists.
+                    <strong>${cardExistsMessage}</strong>
                 </div>
             </c:if>
-            <br/>
-            <input type="submit" value="${button}"/>
-            <c:if test="${illegalInput == true}">
-                Please check if your input is correct
-            </c:if>
-        </form>
-
-        ${toLogin} <a href="${pageContext.request.contextPath}/login">${signIn}</a>
+            <p>${haveAccountAlready} <a href="${pageContext.request.contextPath}/login">${signIn}</a></p>
+        </div>
     </div>
 </div>
 <jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>

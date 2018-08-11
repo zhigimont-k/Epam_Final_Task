@@ -14,19 +14,22 @@
     <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
-
-    <fmt:message bundle="${locale}" key="locale.page.title.auth" var="pageTitle"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.login" var="loginLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.password" var="passwordLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.showPassword" var="showPassword"/>
-    <fmt:message bundle="${locale}" key="locale.user.button.signin" var="button"/>
-
-    <fmt:message bundle="${locale}" key="locale.user.text.noAccountYet" var="toRegister"/>
-    <fmt:message bundle="${locale}" key="locale.user.button.signup" var="signUp"/>
-
-    <fmt:message bundle="${locale}" key="locale.user.warning.auth.fail" var="authFailMessage"/>
-
-    <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
+    <fmt:setBundle basename="cbb_info" var="projectInfo"/>
+    <fmt:message bundle="${locale}" key="locale.page.title.login" var="pageTitle"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.name.full" var="projectNameFull"/>
+    <fmt:message bundle="${locale}" key="locale.table.login" var="loginLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.password" var="passwordLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.email" var="emailLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.phonenumber" var="phoneNumberLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.username" var="userNameLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.cardnumber" var="cardNumberLabel"/>
+    <fmt:message bundle="${locale}" key="locale.message.authorizationfail" var="authFailMessage"/>
+    <fmt:message bundle="${locale}" key="locale.message.noaccountyet" var="noAccountYet"/>
+    <fmt:message bundle="${locale}" key="locale.message.forgotpassword" var="forgotPassword"/>
+    <fmt:message bundle="${locale}" key="locale.action.signup" var="signUp"/>
+    <fmt:message bundle="${locale}" key="locale.action.signin" var="signIn"/>
+    <fmt:message bundle="${locale}" key="locale.action.showpassword" var="showPassword"/>
     <title>${pageTitle} | ${projectName}</title>
     <script type="text/javascript" src="../js/inputScript.js"></script>
 </head>
@@ -48,7 +51,8 @@
                                name="login"
                                maxlength="40"
                                pattern="\w+{4, 40}"
-                               data-toggle="tooltip" title="hi"
+                               data-toggle="tooltip"
+                               title="hi"
                                required/>
                     </label>
                 </div>
@@ -58,17 +62,18 @@
                         <input type="password" name="password" id="passwordField" maxlength="32" required/>
                     </label>
                     <br/>
-                    <label><input type="checkbox" onclick="togglePasswordVisibility()">${showPassword}</label>
+                    <label><input type="checkbox" onclick="togglePasswordVisibility()">
+                        ${showPassword}</label>
                 </div>
-                <button type="submit" class="btn btn-default">${button}</button>
+                <button type="submit" class="btn btn-default">${signIn}</button>
             </form>
             <c:if test="${authFail == true}">
                 <div class="alert alert-danger alert-dismissible">
                         ${authFailMessage}
                 </div>
             </c:if>
-            <p>${toRegister} <a href="${pageContext.request.contextPath}/register">${signUp}</a></p>
-            <p><a href="${pageContext.request.contextPath}/resetPassword">Forgot your password?</a></p>
+            <p>${noAccountYet} <a href="${pageContext.request.contextPath}/register">${signUp}</a></p>
+            <p><a href="${pageContext.request.contextPath}/resetPassword">${forgotPassword}</a></p>
         </div>
     </div>
 </div>

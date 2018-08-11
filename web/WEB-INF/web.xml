@@ -115,6 +115,15 @@
         <url-pattern>/editService</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Edit review</servlet-name>
+        <jsp-file>/WEB-INF/jsp/user/editReview.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Edit review</servlet-name>
+        <url-pattern>/editReview</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>encodingFilter</filter-name>
         <filter-class>by.epam.web.controller.filter.EncodingFilter</filter-class>

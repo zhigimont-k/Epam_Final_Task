@@ -36,7 +36,9 @@
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
 
-
+<c:if test="${sessionScope.notEnoughMoney}">
+    You have little money on card.<br/>
+</c:if>
 <div class="container">
     <table class="table">
         <thead>
@@ -58,25 +60,31 @@
 
                 <td>${order.paid}</td>
 
-                <form name="orderForm" method="POST" action="app">
-                    <input type="hidden" name="orderId" value="${order.id}"/>
-                    <td><c:forEach var="activity" items="${order.activityList}">
-                        <a href="app?command=viewActivity&activityId=${activity.id}">${activity.name}</a>
-                        <br/>
-                    </c:forEach>
+                <input type="hidden" name="orderId" value="${order.id}"/>
+                <td><c:forEach var="activity" items="${order.activityList}">
+                    <a href="app?command=viewActivity&activityId=${activity.id}">${activity.name}</a>
+                    <br/>
+                </c:forEach>
+                </td>
+                <td>${order.price}</td>
+                <c:if test="${order.status ne 'cancelled' && order.status ne 'finished'}">
+                    <td>
+                        <form name="reviewEditForm" method="POST" action="app">
+                            <input type="hidden" name="orderId" value="${order.id}"/>
+                            <input type="hidden" name="command" value="cancelOrder"/>
+                            <input type="submit" class="btn btn-link" value="Cancel"/>
+                        </form>
                     </td>
-                    <td>${order.price}</td>
-                    <c:if test="${order.status ne 'cancelled' && order.status ne 'finished'}">
-                        <td>
-                            <a href="app?command=cancelOrder&orderId=${order.id}">${cancelBtn}</a>
-                        </td>
-                    </c:if>
-                    <c:if test="${order.paid eq false && order.status ne 'cancelled' && order.status ne 'finished'}">
-                        <td>
-                            <a href="app?command=payForOrder&orderId=${order.id}">pay</a>
-                        </td>
-                    </c:if>
-                </form>
+                </c:if>
+                <c:if test="${order.paid eq false && order.status ne 'cancelled' && order.status ne 'finished'}">
+                    <td>
+                        <form name="reviewEditForm" method="POST" action="app">
+                            <input type="hidden" name="orderId" value="${order.id}"/>
+                            <input type="hidden" name="command" value="payForOrder"/>
+                            <input type="submit" class="btn btn-link" value="Pay"/>
+                        </form>
+                    </td>
+                </c:if>
             </tr>
         </c:forEach>
         </tbody>

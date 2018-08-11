@@ -37,7 +37,7 @@ public class UpdateReviewCommand implements Command {
                     service.updateReview(Integer.parseInt(id), Integer.parseInt(newMark),
                             newMessage);
                     int activityId = found.get().getActivityId();
-                    requestContent.removeSessionAttribute(RequestParameter.REVIEW);
+                    requestContent.setSessionAttribute(RequestParameter.REVIEW, null);
                     router.setRedirect(true);
                     router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
                 } else {

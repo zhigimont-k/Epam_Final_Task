@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebFilter(filterName = "UserPageFilter",
-        urlPatterns = {"/addMoney", "/viewOrder"})
+        urlPatterns = {"/addMoney", "/viewOrder", "/editReview"})
 public class UserPageFilter implements Filter {
 
     @Override

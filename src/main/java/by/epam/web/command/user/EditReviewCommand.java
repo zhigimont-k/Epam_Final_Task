@@ -31,6 +31,7 @@ public class EditReviewCommand implements Command {
             if (found.isPresent()){
                 if (user.getId() == found.get().getUserId()){
                     requestContent.setSessionAttribute(RequestParameter.REVIEW, found.get());
+                    router.setRedirect(true);
                     router.setPage(PageAddress.EDIT_REVIEW_PAGE);
                 } else {
                     router.setPage(PageAddress.FORBIDDEN_ERROR_PAGE);

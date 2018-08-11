@@ -30,13 +30,15 @@ public class AddMoneyToCardCommand implements Command {
             String moneyToAdd = requestContent.getParameter(RequestParameter.MONEY);
             if (service.findUserByIdAndCard(user.getId(), cardNumber).isPresent()) {
                 if (service.addMoneyToCard(cardNumber, moneyToAdd)) {
-                    requestContent.setAttribute(RequestParameter.OPERATION_SUCCESS, true);
                     router.setRedirect(true);
+                    router.setPage(PageAddress.VIEW_USER_INFO);
+                } else {
+                    logger.log(Level.ERROR, "Encountered an error while adding money to card");
                 }
             } else {
                 requestContent.setAttribute(RequestParameter.NO_CARD_FOUND, true);
+                router.setPage(PageAddress.ADD_MONEY_PAGE);
             }
-            router.setPage(PageAddress.ADD_MONEY_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);

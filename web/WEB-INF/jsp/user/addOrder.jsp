@@ -11,6 +11,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
+    <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
 
@@ -45,12 +46,6 @@
         <input type="time" name="orderTime"
                min="09:00" max="18:00" required />
     </label>
-    <c:if test="${sessionScope.illegalOrderDate}">
-        Please input legal date.<br/>
-    </c:if>
-    <c:if test="${sessionScope.illegalOrderTime}">
-        Please input legal time.<br/>
-    </c:if>
     <br/>
     Choose services to be included in your order:
     <br/>
@@ -63,10 +58,9 @@
         Please choose at least one service.
     </c:if>
 
-    <br/>
     <input type="submit" value="Go to check"/>
-    <c:if test="${emptyActivityList == true}">
-        Please make sure that service list is not empty.
+    <c:if test="${sessionScope.illegalInput}">
+        Please make sure the time and date are valid and the service list is not empty.<br/>
     </c:if>
 </form>
 <jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>

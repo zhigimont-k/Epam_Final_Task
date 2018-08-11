@@ -11,6 +11,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
+    <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
 
@@ -25,7 +26,9 @@
     <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
-
+<c:if test="${empty sessionScope.user || sessionScope.user.status eq 'banned' || empty sessionScope.review}">
+    <jsp:forward page="${pageContext.request.contextPath}/home"/>
+</c:if>
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
 
 <div>

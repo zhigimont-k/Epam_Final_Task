@@ -7,9 +7,9 @@ public class MailComposer {
     private static final String BUNDLE_NAME = "message";
     private static ResourceBundle bundle;
     private static final String RESET_PASSWORD_MESSAGE_NAME = "message.cbb.password.reset.message";
-    private static final String RESET_PASSWORD_MESSAGE_THEME_NAME = "message.cbb.password.reset.message";
-    private static final String ORDER_REMINDER_MESSAGE_NAME = "message.cbb.password.reset.message";
-    private static final String ORDER_REMINDER_MESSAGE_THEME_NAME = "message.cbb.password.reset.message";
+    private static final String RESET_PASSWORD_MESSAGE_THEME_NAME = "message.cbb.password.reset.theme";
+    private static final String ORDER_REMINDER_MESSAGE_NAME = "message.cbb.order.reminder.message";
+    private static final String ORDER_REMINDER_MESSAGE_THEME_NAME = "message.cbb.order.reminder.theme";
 
 
     private MailComposer(){

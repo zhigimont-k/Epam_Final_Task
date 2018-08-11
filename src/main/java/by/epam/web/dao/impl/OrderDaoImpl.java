@@ -77,12 +77,19 @@ public class OrderDaoImpl implements OrderDao {
             "JOIN order_info " +
             "ON order_info.order_id = ? " +
             "SET paid = 0, money = money + order_price, order_info.order_time = order_info.order_time " +
-            "WHERE card.user_id = order_info.user_id AND paid = 1 AND order_status = 'confirmed'";
+            "WHERE card.user_id = order_info.user_id " +
+            "AND order_info.paid = 1 " +
+            "AND order_info.order_status = 'confirmed'";
     private static final String PAY_FOR_ORDER = "UPDATE card " +
             "JOIN order_info " +
             "ON order_info.order_id = ? " +
-            "SET paid = 1, money = money - order_price, order_info.order_time = order_info.order_time  " +
-            "WHERE card.user_id = order_info.user_id AND paid = 0 AND order_status = 'pending'";
+            "SET paid = 1, money = money - order_price, " +
+            "order_info.order_time = order_info.order_time," +
+            "order_info.order_status = 'confirmed'  " +
+            "WHERE card.user_id = order_info.user_id " +
+            "AND paid = 0 " +
+            "AND (order_status = 'pending' " +
+            "OR order_status = 'confirmed')";
     private static final String COUNT_ORDERS = "SELECT DISTINCT COUNT(*) FROM order_info";
     private static final String COUNT_USER_ORDERS = "SELECT DISTINCT COUNT(*) FROM order_info " +
             "WHERE user_id = ?";
@@ -155,15 +162,15 @@ public class OrderDaoImpl implements OrderDao {
         try {
             connection = pool.takeConnection();
             connection.setAutoCommit(false);
-            preparedStatement = connection.prepareStatement(UPDATE_ORDER_STATUS);
-            preparedStatement.setString(1, status);
-            preparedStatement.setInt(2, id);
-            preparedStatement.executeUpdate();
             if (Order.Status.CANCELLED.getName().equalsIgnoreCase(status)) {
                 preparedStatement = connection.prepareStatement(RETURN_ORDER_MONEY);
                 preparedStatement.setInt(1, id);
                 preparedStatement.executeUpdate();
             }
+            preparedStatement = connection.prepareStatement(UPDATE_ORDER_STATUS);
+            preparedStatement.setString(1, status);
+            preparedStatement.setInt(2, id);
+            preparedStatement.executeUpdate();
             connection.commit();
             connection.setAutoCommit(true);
         } catch (SQLException e) {
@@ -436,7 +443,7 @@ public class OrderDaoImpl implements OrderDao {
     public List<String> findEmailsForUpcomingOrders() {
         ProxyConnection connection = null;
         ResultSet resultSet;
-        Statement statement = null;
+        Statement statement;
         PreparedStatement preparedStatement = null;
         List<String> emailList = new ArrayList<>();
         List<Integer> orderIdList = new ArrayList<>();
@@ -472,24 +479,10 @@ public class OrderDaoImpl implements OrderDao {
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.takeConnection();
-            connection.setAutoCommit(false);
             preparedStatement = connection.prepareStatement(PAY_FOR_ORDER);
             preparedStatement.setInt(1, orderId);
             preparedStatement.executeUpdate();
-            preparedStatement = connection.prepareStatement(UPDATE_ORDER_STATUS);
-            preparedStatement.setString(1, Order.Status.CONFIRMED.getName());
-            preparedStatement.setInt(2, orderId);
-            connection.commit();
-            connection.setAutoCommit(true);
         } catch (SQLException e) {
-            try {
-                if (connection != null) {
-                    connection.rollback();
-                    logger.log(Level.INFO, "Encountered an error, made a rollback");
-                }
-            } catch (SQLException ex) {
-                logger.log(Level.ERROR, "Couldn't rollback connection: " + e.getMessage(), e);
-            }
             logger.log(Level.ERROR, "Failed to pay for order: " + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
