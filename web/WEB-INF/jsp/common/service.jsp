@@ -19,6 +19,7 @@
     <fmt:message bundle="${locale}" key="locale.action.update" var="button"/>
     <fmt:message bundle="${locale}" key="locale.action.edit" var="edit"/>
     <fmt:message bundle="${locale}" key="locale.action.delete" var="delete"/>
+    <fmt:message bundle="${locale}" key="locale.currency.byn" var="byn"/>
     <fmt:message bundle="${locale}" key="locale.status.available" var="available"/>
     <fmt:message bundle="${locale}" key="locale.status.unavailable" var="unavailable"/>
     <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
@@ -34,7 +35,7 @@
         <input type="hidden" name="activityId" value="${activity.id}"/>
         <h3 class="text-uppercase">${activity.name}</h3>
         <p class="text-muted">${activity.description}</p>
-        <h3><strong>${activity.price}</strong></h3>
+        <h3><strong>${activity.price} ${byn}</strong></h3>
         <c:if test="${activity.status eq 'available'}">
             <p class="bg-success text-lowercase">${available}</p>
         </c:if>

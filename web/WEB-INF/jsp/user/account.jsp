@@ -33,6 +33,7 @@
     <fmt:message bundle="${locale}" key="locale.status.user" var="user"/>
     <fmt:message bundle="${locale}" key="locale.status.banneduser" var="banned"/>
     <fmt:message bundle="${locale}" key="locale.action.update" var="submit"/>
+    <fmt:message bundle="${locale}" key="locale.currency.byn" var="byn"/>
 
     <fmt:message bundle="${locale}" key="locale.message.authorizationfail" var="authFailMessage"/>
 
@@ -111,7 +112,7 @@
                 </div>
                 <div class="form-group">
                     ${moneyLabel}:<br/>
-                    ${money}
+                    ${money} ${byn}
                 </div>
 
                 <button type="submit" class="btn btn-default">${button}</button>

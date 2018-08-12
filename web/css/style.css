@@ -2,10 +2,10 @@ html, body {
     min-height: 100%;
     height: auto !important;
     width: auto;
+    background-color: #eeeeee;
 }
 
 body {
-    background-color: #eeeeee;
     font-family: "Helvetica";
     position: relative;
     margin: 0;
@@ -17,7 +17,7 @@ main {
     margin: 0 auto;
     bottom: 64px;
     max-width: inherit;
-    width: 94%;
+    width: 100%;
 }
 
 footer {
@@ -55,17 +55,21 @@ textarea {
     resize: horizontal;
 }
 
-.bg {
-    background-image: url("../images/header.jpg");
-    height: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-
 .service-card{
     background-image: url("../images/card-bg.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+.jumbotron {
+    width:auto;
+    margin-bottom: 0px;
+    background-image: url("../images/header.jpg");
+    background-position: 0% 25%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: white;
+    text-transform: uppercase;
+    text-shadow: 2px 2px #FF0000;
 }

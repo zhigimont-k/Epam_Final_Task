@@ -21,20 +21,14 @@
 </head>
 <body>
 <main>
-    <c:if test="${empty sessionScope.user}">
-        <jsp:forward page="${pageContext.request.contextPath}/login"/>
-    </c:if>
-
     <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
     <jsp:include page="/WEB-INF/jsp/page_structure/welcomePanel.jsp"/>
-
-    <div id="header">
-        <div id="header-title">${projectNameFull}</div>
-        <div id="header-text">
-        </div>
+    <div class="jumbotron">
+        <h1 class="text-uppercase text-danger">${projectNameFull}</h1>
+        <p>Bootstrap is the most popular HTML, CSS, and JS framework for developing
+            responsive, mobile-first projects on the web.</p>
     </div>
 </main>
-<div class="bg"></div>
 <jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>
 </body>
 </html>

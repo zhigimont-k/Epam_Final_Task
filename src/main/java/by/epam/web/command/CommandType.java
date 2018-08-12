@@ -12,7 +12,7 @@ public enum CommandType {
     REGISTER("register", new RegisterCommand(), CommandAccessLevel.GUEST),
     LOGIN("login", new LoginCommand(), CommandAccessLevel.GUEST),
     RESET_PASSWORD("resetPassword", new ResetPasswordCommand(), CommandAccessLevel.GUEST),
-    LOGOUT("logout", new LogoutCommand(), CommandAccessLevel.GUEST),
+    LOGOUT("logout", new LogoutCommand(), CommandAccessLevel.USER),
     CHANGE_LOCALE("locale", new ChangeLocaleCommand(), CommandAccessLevel.GUEST),
     VIEW_USERS("viewUsers", new ViewUsersCommand(), CommandAccessLevel.ADMIN),
     CHANGE_USER_STATUS("changeUserStatus", new ChangeUserStatusCommand(), CommandAccessLevel.ADMIN),

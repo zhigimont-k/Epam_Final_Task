@@ -29,6 +29,7 @@ public class AddMoneyToCardCommand implements Command {
             String cardNumber = requestContent.getParameter(RequestParameter.CARD_NUMBER);
             String moneyToAdd = requestContent.getParameter(RequestParameter.MONEY);
             if (service.findUserByIdAndCard(user.getId(), cardNumber).isPresent()) {
+                requestContent.setSessionAttribute(RequestParameter.NO_CARD_FOUND, false);
                 if (service.addMoneyToCard(cardNumber, moneyToAdd)) {
                     router.setRedirect(true);
                     router.setPage(PageAddress.VIEW_USER_INFO);

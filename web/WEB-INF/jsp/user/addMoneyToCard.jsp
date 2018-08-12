@@ -14,20 +14,17 @@
     <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
+    <fmt:setBundle basename="cbb_info" var="projectInfo"/>
 
-    <fmt:message bundle="${locale}" key="locale.page.title.auth" var="pageTitle"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.login" var="loginLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.password" var="passwordLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.button.signin" var="button"/>
+    <fmt:message bundle="${locale}" key="locale.action.add.money" var="pageTitle"/>
+    <fmt:message bundle="${locale}" key="locale.table.cardnumber" var="cardNumberLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.money.add" var="moneyLabel"/>
+    <fmt:message bundle="${locale}" key="locale.action.add.money" var="button"/>
+    <fmt:message bundle="${locale}" key="locale.message.cardnotfound" var="cardNotFoundMessage"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
+    <fmt:message bundle="${locale}" key="locale.currency.byn" var="byn"/>
 
-    <fmt:message bundle="${locale}" key="locale.user.text.noAccountYet" var="toRegister"/>
-    <fmt:message bundle="${locale}" key="locale.user.button.signup" var="signUp"/>
-
-    <fmt:message bundle="${locale}" key="locale.user.warning.auth.fail" var="authFailMessage"/>
-
-    <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
-
-    <title>Add money | ${projectName}</title>
+    <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
 
@@ -35,31 +32,40 @@
 <c:if test="${empty sessionScope.user}">
     <jsp:forward page="/home"/>
 </c:if>
-<div id="custom-form">
-    <div>
-        <form name="addMoneyForm" method="POST" action="app">
-            <input type="hidden" name="command" value="addMoneyToCard"/>
-            <label>Card number:
-                <input type="text" name="cardNumber" maxlength="16" minlength="16" required/></label>
-            <br/>
-            <label>Amount of money:
-                <input type="text" name="money" minlength="1" maxlength="6" required/></label>
-            <br/>
-            <c:if test="${noCardFound == true}">
+<div class="container">
+    <div class="row centered-form center-block">
+        <div class="container col-md-4 col-md-offset-6">
+            <form name="addMoneyForm" method="POST" action="app">
+                <input type="hidden" name="command" value="addMoneyToCard"/>
+
+                <div class="form-group">
+                    <label>${cardNumberLabel}:<br/>
+                        <input type="text"
+                               name="cardNumber"
+                               maxlength="16"
+                               minlength="16"
+                               pattern="\d{16}"
+                               required/>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>${moneyLabel}:<br/>
+                        <input type="text"
+                               name="money"
+                               minlength="1"
+                               maxlength="6"
+                               pattern="d{1,6}"
+                               required/>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-default">${signIn}</button>
+            </form>
+            <c:if test="${sessionScope.noCardFound == true}">
                 <div class="alert alert-danger alert-dismissible">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Warning!</strong> Can't add money to this card. Please check the card number.
+                        ${cardNotFoundMessage}
                 </div>
             </c:if>
-            <c:if test="${operationSuccess == true}">
-                <div class="alert alert-success alert-dismissible">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Done!</strong> Added money to the card.
-                </div>
-            </c:if>
-            <input type="submit" value="Add"/>
-            <br/>
-        </form>
+        </div>
     </div>
 </div>
 <footer>

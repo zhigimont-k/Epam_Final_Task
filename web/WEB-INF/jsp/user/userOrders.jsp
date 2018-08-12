@@ -26,6 +26,8 @@
     <fmt:message bundle="${locale}" key="locale.common.button.cancel" var="cancelBtn"/>
 
     <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
+    <fmt:message bundle="${locale}" key="locale.currency.byn" var="byn"/>
+    <jsp:useBean id="now" class="java.util.Date"/>
 
     <title>${pageTitle} | ${projectName}</title>
 </head>
@@ -67,18 +69,20 @@
                 </c:forEach>
                 </td>
                 <td>${order.price}</td>
-                <c:if test="${order.status ne 'cancelled' && order.status ne 'finished'}">
+                <c:if test="${order.status ne 'cancelled' && order.status ne 'finished' ||
+                ${now} < order.dateTime}">
                     <td>
-                        <form name="reviewEditForm" method="POST" action="app">
+                        <form name="cancelOrderForm" method="POST" action="app">
                             <input type="hidden" name="orderId" value="${order.id}"/>
                             <input type="hidden" name="command" value="cancelOrder"/>
                             <input type="submit" class="btn btn-link" value="Cancel"/>
                         </form>
                     </td>
                 </c:if>
-                <c:if test="${order.paid eq false && order.status ne 'cancelled' && order.status ne 'finished'}">
+                <c:if test="${order.paid eq false && order.status ne 'cancelled' &&
+                order.status ne 'finished'}">
                     <td>
-                        <form name="reviewEditForm" method="POST" action="app">
+                        <form name="payForOrderForm" method="POST" action="app">
                             <input type="hidden" name="orderId" value="${order.id}"/>
                             <input type="hidden" name="command" value="payForOrder"/>
                             <input type="submit" class="btn btn-link" value="Pay"/>

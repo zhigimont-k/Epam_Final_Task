@@ -23,6 +23,7 @@
     <fmt:message bundle="${locale}" key="locale.user.warning.login" var="loginWarning"/>
     <fmt:message bundle="${locale}" key="locale.user.warning.email" var="emailWarning"/>
     <fmt:message bundle="${locale}" key="locale.user.warning.phonenumber" var="phoneNumberWarning"/>
+    <fmt:message bundle="${locale}" key="locale.currency.byn" var="byn"/>
 
 </head>
 <body>

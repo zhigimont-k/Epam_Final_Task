@@ -30,6 +30,7 @@
     <fmt:message bundle="${locale}" key="locale.action.signup" var="signUp"/>
     <fmt:message bundle="${locale}" key="locale.action.signin" var="signIn"/>
     <fmt:message bundle="${locale}" key="locale.action.showpassword" var="showPassword"/>
+    <fmt:message bundle="${locale}" key="locale.message.userIsBanned" var="userIsBanned"/>
     <title>${pageTitle} | ${projectName}</title>
     <script type="text/javascript" src="../js/inputScript.js"></script>
 </head>
@@ -43,6 +44,11 @@
     <div class="container">
         <div class="row centered-form center-block">
             <div class="container col-md-4 col-md-offset-6">
+                <c:if test="${sessionScope.userIsBanned}">
+                    <div class="alert alert-danger">
+                            ${userIsBanned}
+                    </div>
+                </c:if>
                 <form name="loginForm" method="POST" action="app">
                     <input type="hidden" name="command" value="login"/>
                     <div class="form-group">

@@ -30,6 +30,7 @@ public interface OrderDao extends AbstractDao<Order> {
      * @throws DaoException if SQLException occurs
      */
     void changeOrderStatus(int orderId, String status) throws DaoException;
+    void cancelOrder(int orderId);
 
     /**
      * Looks for order by id

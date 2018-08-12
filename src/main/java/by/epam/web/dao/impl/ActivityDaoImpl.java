@@ -183,29 +183,6 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public void changeActivityStatus(int id, String status) {
-        ProxyConnection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = pool.takeConnection();
-            preparedStatement = connection.prepareStatement(UPDATE_ACTIVITY_STATUS);
-            preparedStatement.setString(1, status);
-            preparedStatement.setInt(2, id);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to change activity status" + e.getMessage(), e);
-        } finally {
-            closeStatement(preparedStatement);
-            try {
-                pool.releaseConnection(connection);
-            } catch (PoolException e) {
-                logger.fatal("Can't release connection: " + e.getMessage(), e);
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    @Override
     public List<Activity> findAvailableActivities() {
         ProxyConnection connection = null;
         ResultSet resultSet;

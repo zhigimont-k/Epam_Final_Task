@@ -18,6 +18,7 @@
     <fmt:message bundle="${locale}" key="locale.page.title.services" var="pageTitle"/>
     <fmt:message bundle="${locale}" key="locale.status.available" var="available"/>
     <fmt:message bundle="${locale}" key="locale.status.unavailable" var="unavailable"/>
+    <fmt:message bundle="${locale}" key="locale.currency.byn" var="byn"/>
     <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
     <title>${pageTitle} | ${projectName}</title>
 </head>
@@ -41,7 +42,7 @@
                                 </div>
                                 <div class="panel-body">
                                         ${activity.description}
-                                    <h4>${activity.price}</h4>
+                                    <h4>${activity.price} ${byn}</h4>
                                 </div>
                                 <c:if test="${sessionScope.user.status == 'admin'}">
                                     <form name="activityListForm" method="POST" action="app">

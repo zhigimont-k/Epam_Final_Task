@@ -28,7 +28,12 @@ public class LoginCommand implements Command {
             Optional<User> found = service.findUserByLoginAndPassword(login, password);
             if (found.isPresent()) {
                 User user = found.get();
-                requestContent.setSessionAttribute(RequestParameter.USER, user);
+                if (User.Status.BANNED.getName().equalsIgnoreCase(user.getStatus())) {
+                    requestContent.setSessionAttribute(RequestParameter.USER_IS_BANNED, true);
+                } else {
+                    requestContent.setSessionAttribute(RequestParameter.USER_IS_BANNED, false);
+                    requestContent.setSessionAttribute(RequestParameter.USER, user);
+                }
                 router.setRedirect(true);
                 router.setPage(PageAddress.HOME_PAGE);
             } else {

@@ -39,7 +39,8 @@ public class OrderDaoImpl implements OrderDao {
             "(order_id, service_id) " +
             "VALUES (?, ?)";
     private static final String CANCEL_ORDER = "UPDATE order_info " +
-            "SET order_status = 'cancelled', order_time = order_time WHERE order_id = ?";
+            "SET order_status = 'cancelled', order_time = order_time " +
+            "WHERE order_id = ? AND DATE(order_time) >= CURRENT_DATE";
     private static final String UPDATE_ORDER_STATUS = "UPDATE order_info " +
             "SET order_status = ?, order_time = order_time WHERE order_id = ?";
     private static final String FIND_ALL_ORDERS = "SELECT order_info.order_id, " +
@@ -160,15 +161,35 @@ public class OrderDaoImpl implements OrderDao {
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.takeConnection();
-            connection.setAutoCommit(false);
-            if (Order.Status.CANCELLED.getName().equalsIgnoreCase(status)) {
-                preparedStatement = connection.prepareStatement(RETURN_ORDER_MONEY);
-                preparedStatement.setInt(1, id);
-                preparedStatement.executeUpdate();
-            }
             preparedStatement = connection.prepareStatement(UPDATE_ORDER_STATUS);
             preparedStatement.setString(1, status);
             preparedStatement.setInt(2, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to change order status" + e.getMessage(), e);
+        } finally {
+            closeStatement(preparedStatement);
+            try {
+                pool.releaseConnection(connection);
+            } catch (PoolException e) {
+                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Override
+    public void cancelOrder(int id) {
+        ProxyConnection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = pool.takeConnection();
+            connection.setAutoCommit(false);
+            preparedStatement = connection.prepareStatement(RETURN_ORDER_MONEY);
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+            preparedStatement = connection.prepareStatement(CANCEL_ORDER);
+            preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
             connection.commit();
             connection.setAutoCommit(true);
@@ -192,6 +213,7 @@ public class OrderDaoImpl implements OrderDao {
             }
         }
     }
+
 
     @Override
     public List<Order> findAllOrders(int startPosition, int numberOfRecords) {
@@ -309,44 +331,6 @@ public class OrderDaoImpl implements OrderDao {
         return orderList;
     }
 
-    @Override
-    public List<Order> findOrdersByUser(int userId) {
-        ProxyConnection connection = null;
-        ResultSet resultSet;
-        PreparedStatement preparedStatement = null;
-        List<Order> orderList = new ArrayList<>();
-        try {
-            connection = pool.takeConnection();
-            preparedStatement = connection.prepareStatement(FIND_ORDERS_BY_USER_ID);
-            preparedStatement.setInt(1, userId);
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                int currentOrderId = resultSet.getInt(DB_ORDER_ID_FIELD);
-                List<Activity> activityList = findActivitiesByOrderId(currentOrderId);
-                orderList.add(new OrderBuilder()
-                        .setId(currentOrderId)
-                        .setUserId(userId)
-                        .setStatus(resultSet.getString(DB_ORDER_STATUS_FIELD))
-                        .setDateTime(resultSet.getTimestamp(DB_ORDER_TIME_FIELD))
-                        .setPrice(resultSet.getBigDecimal(DB_ORDER_PRICE_FIELD))
-                        .setPaid(resultSet.getBoolean(DB_ORDER_PAID_FIELD))
-                        .setActivityList(activityList)
-                        .create());
-            }
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to find orders by user" + e.getMessage(), e);
-        } finally {
-            closeStatement(preparedStatement);
-            try {
-                pool.releaseConnection(connection);
-            } catch (PoolException e) {
-                logger.fatal("Can't release connection: " + e.getMessage(), e);
-                throw new RuntimeException(e);
-            }
-        }
-        return orderList;
-    }
-
     private BigDecimal calculateOrderPrice(List<Activity> activityList) {
         BigDecimal totalPrice = BigDecimal.ZERO;
         for (Activity activity : activityList) {
@@ -413,7 +397,7 @@ public class OrderDaoImpl implements OrderDao {
                     preparedStatement.executeUpdate();
                 }
             } else {
-                logger.log(Level.INFO, "No confirmed order to remind of");
+                logger.log(Level.INFO, "No confirmed orders to remind of");
             }
             connection.commit();
             connection.setAutoCommit(true);

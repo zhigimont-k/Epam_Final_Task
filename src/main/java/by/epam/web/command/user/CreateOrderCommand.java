@@ -24,7 +24,7 @@ public class CreateOrderCommand implements Command {
         PageRouter router = new PageRouter();
         try {
             List<Activity> activityList = service.findAvailableActivities();
-            requestContent.setAttribute(RequestParameter.ACTIVITY_LIST, activityList);
+            requestContent.setSessionAttribute(RequestParameter.ACTIVITY_LIST, activityList);
             router.setPage(PageAddress.ADD_ORDER_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);

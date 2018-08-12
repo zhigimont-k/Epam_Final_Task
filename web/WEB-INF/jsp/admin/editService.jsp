@@ -22,6 +22,7 @@
     <fmt:message bundle="${locale}" key="locale.table.name" var="serviceNameLabel"/>
     <fmt:message bundle="${locale}" key="locale.table.description" var="serviceDescriptionLabel"/>
     <fmt:message bundle="${locale}" key="locale.table.price" var="servicePriceLabel"/>
+    <fmt:message bundle="${locale}" key="locale.currency.byn" var="byn"/>
     <fmt:message bundle="${locale}" key="locale.table.status" var="statusLabel"/>
     <fmt:message bundle="${locale}" key="locale.status.available" var="available"/>
     <fmt:message bundle="${locale}" key="locale.status.unavailable" var="unavailable"/>
@@ -74,7 +75,7 @@
                                minlength="1"
                                pattern="\d{1,10}"
                                value="${sessionScope.activity.price}"
-                               required/>
+                               required/> ${byn}
                     </label>
                 </div>
                 <div class="form-group">

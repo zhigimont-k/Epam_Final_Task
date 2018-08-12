@@ -63,7 +63,11 @@ public class OrderService {
 
     public void changeOrderStatus(int id, String status) throws ServiceException {
         try {
-            orderDao.changeOrderStatus(id, status);
+            if (Order.Status.CANCELLED.getName().equalsIgnoreCase(status)){
+                orderDao.cancelOrder(id);
+            } else {
+                orderDao.changeOrderStatus(id, status);
+            }
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
