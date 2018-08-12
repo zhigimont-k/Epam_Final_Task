@@ -13,43 +13,54 @@
     <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
-    <fmt:message bundle="${locale}" key="locale.page.title.users" var="pageTitle"/>
+    <fmt:setBundle basename="cbb_info" var="projectInfo"/>
+    <fmt:message bundle="${locale}" key="locale.page.title.allorders" var="pageTitle"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
 
-    <fmt:message bundle="${locale}" key="locale.user.label.login" var="login"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.username" var="userName"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.status" var="status"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.email" var="email"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.phonenumber" var="phoneNumber"/>
-    <fmt:message bundle="${locale}" key="locale.user.role.admin" var="adminRole"/>
-    <fmt:message bundle="${locale}" key="locale.user.role.user" var="userRole"/>
-    <fmt:message bundle="${locale}" key="locale.user.role.banned" var="bannedRole"/>
-    <fmt:message bundle="${locale}" key="locale.common.button.cancel" var="cancelBtn"/>
-
-    <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
+    <fmt:message bundle="${locale}" key="locale.table.id" var="idLabel"/>
     <fmt:message bundle="${locale}" key="locale.currency.byn" var="byn"/>
+    <fmt:message bundle="${locale}" key="locale.table.time" var="timeLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.status" var="statusLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.services" var="servicesLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.price" var="priceLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.paid" var="paidLabel"/>
+    <fmt:message bundle="${locale}" key="locale.status.yes" var="yes"/>
+    <fmt:message bundle="${locale}" key="locale.status.no" var="no"/>
+    <fmt:message bundle="${locale}" key="locale.message.notenoughmoney" var="notEnoughMoneyMessage"/>
+    <fmt:message bundle="${locale}" key="locale.action.cancel" var="cancelLabel"/>
+    <fmt:message bundle="${locale}" key="locale.status.pending" var="pending"/>
+    <fmt:message bundle="${locale}" key="locale.status.confirmed" var="confirmed"/>
+    <fmt:message bundle="${locale}" key="locale.status.cancelled" var="cancelled"/>
+    <fmt:message bundle="${locale}" key="locale.status.finished" var="finished"/>
+    <fmt:message bundle="${locale}" key="locale.action.cancel" var="cancelButton"/>
+    <fmt:message bundle="${locale}" key="locale.action.pay" var="payButton"/>
+
+    <title>${pageTitle} | ${projectName}</title>
     <jsp:useBean id="now" class="java.util.Date"/>
 
     <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
-<c:if test="${empty sessionScope.user || sessionScope.user.status== 'banned'}">
+<c:if test="${empty sessionScope.user || sessionScope.user.status == 'banned'}">
     <jsp:forward page="${pageContext.request.contextPath}/home"/>
 </c:if>
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-
-<c:if test="${sessionScope.notEnoughMoney}">
-    You have little money on card.<br/>
+<c:if test="${sessionScope.notEnoughMoney == true}">
+    <div class="alert alert-danger alert-dismissible">
+            ${notEnoughMoneyMessage}
+    </div>
 </c:if>
 <div class="container">
     <table class="table">
         <thead>
         <tr>
-            <th>id</th>
-            <th>time</th>
-            <th>status</th>
-            <th>services</th>
-            <th>price</th>
+            <th>${idLabel}</th>
+            <th>${timeLabel}</th>
+            <th>${statusLabel}</th>
+            <th>${paidLabel}</th>
+            <th>${servicesLabel}</th>
+            <th>${priceLabel}</th>
         </tr>
         </thead>
         <tbody>
@@ -58,34 +69,53 @@
                 <td>${order.id}</td>
                 <td><fmt:formatDate value="${order.dateTime}" type="both"
                                     dateStyle="short" timeStyle="short"/></td>
-                <td>${order.status}</td>
-
-                <td>${order.paid}</td>
-
-                <input type="hidden" name="orderId" value="${order.id}"/>
+                <td>
+                    <c:if test="${order.status eq 'pending'}">
+                        ${pending}
+                    </c:if>
+                    <c:if test="${order.status eq 'cancelled'}">
+                        ${cancelled}
+                    </c:if>
+                    <c:if test="${order.status eq 'confirmed'}">
+                        ${confirmed}
+                    </c:if>
+                    <c:if test="${order.status eq 'finished'}">
+                        ${finished}
+                    </c:if>
+                </td>
+                <td>
+                    <c:if test="${order.paid eq true}">
+                        ${yes}
+                    </c:if>
+                    <c:if test="${order.paid eq false}">
+                        ${no}
+                    </c:if>
+                </td>
                 <td><c:forEach var="activity" items="${order.activityList}">
-                    <a href="app?command=viewActivity&activityId=${activity.id}">${activity.name}</a>
+                    <a href="app?command=viewActivity&activityId=${activity.id}">
+                            ${activity.name}
+                    </a>
                     <br/>
                 </c:forEach>
                 </td>
-                <td>${order.price}</td>
-                <c:if test="${order.status ne 'cancelled' && order.status ne 'finished' ||
-                ${now} < order.dateTime}">
+                <td>${order.price} ${byn}</td>
+                <c:if test="${order.status ne 'cancelled' && order.status ne 'finished' &&
+                now < order.dateTime}">
                     <td>
                         <form name="cancelOrderForm" method="POST" action="app">
                             <input type="hidden" name="orderId" value="${order.id}"/>
                             <input type="hidden" name="command" value="cancelOrder"/>
-                            <input type="submit" class="btn btn-link" value="Cancel"/>
+                            <input type="submit" class="btn btn-link" value="${cancelButton}"/>
                         </form>
                     </td>
                 </c:if>
                 <c:if test="${order.paid eq false && order.status ne 'cancelled' &&
-                order.status ne 'finished'}">
+                order.status ne 'finished' && now < order.dateTime}">
                     <td>
                         <form name="payForOrderForm" method="POST" action="app">
                             <input type="hidden" name="orderId" value="${order.id}"/>
                             <input type="hidden" name="command" value="payForOrder"/>
-                            <input type="submit" class="btn btn-link" value="Pay"/>
+                            <input type="submit" class="btn btn-link" value="${payButton}"/>
                         </form>
                     </td>
                 </c:if>
@@ -113,7 +143,6 @@
         <li><a href="app?command=viewUserOrders&pageNumber=${currentPage + 1}">&raquo;</a></li>
     </c:if>
 </ul>
-
 <jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>
 </body>
 </html>

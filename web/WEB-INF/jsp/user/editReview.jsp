@@ -14,15 +14,14 @@
     <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
+    <fmt:setBundle basename="cbb_info" var="projectInfo"/>
 
-    <fmt:message bundle="${locale}" key="locale.page.title.services" var="pageTitle"/>
-
-    <fmt:message bundle="${locale}" key="locale.service.label.name" var="serviceNameLabel"/>
-    <fmt:message bundle="${locale}" key="locale.service.label.description" var="serviceDescriptionLabel"/>
-    <fmt:message bundle="${locale}" key="locale.service.label.price" var="servicePriceLabel"/>
-    <fmt:message bundle="${locale}" key="locale.common.button.update" var="button"/>
-
-    <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
+    <fmt:message bundle="${locale}" key="locale.action.add.review" var="pageTitle"/>
+    <fmt:message bundle="${locale}" key="locale.action.add.review" var="editReview"/>
+    <fmt:message bundle="${locale}" key="locale.table.mark" var="markLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.message" var="messageLabel"/>
+    <fmt:message bundle="${locale}" key="locale.action.update" var="button"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
     <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
@@ -30,24 +29,40 @@
     <jsp:forward page="${pageContext.request.contextPath}/home"/>
 </c:if>
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-
-<div>
-    <form name="reviewEditForm" method="POST" action="app">
-        <input type="hidden" name="command" value="updateReview"/>
-        <input type="hidden" name="reviewId" value="${sessionScope.review.id}"/>
-        <label>Mark:
-            <br/>
-            <input type="number" value="${sessionScope.review.mark}" name="reviewMark" max="10" min="1" required/>
-        </label>
-
-        <br/>
-        <label>Comment:
-            <br/>
-            <textarea name="reviewMessage" maxlength="280" cols="30" rows="10">${sessionScope.review.message}</textarea>
-        </label>
-        <br/>
-        <input type="submit" value="${button}"/>
-    </form>
+<div class="container">
+    <div class="row centered-form center-block">
+        <div class="container col-md-4 col-md-offset-6">
+            <h3>${editReview}:</h3>
+            <form name="reviewEditForm" method="POST" action="app">
+                <input type="hidden" name="command" value="updateReview"/>
+                <input type="hidden" name="reviewId" value="${sessionScope.review.id}"/>
+                <div class="form-group">
+                    <label>${markLabel}:
+                        <br/>
+                        <input type="number"
+                               value="${sessionScope.review.mark}"
+                               name="reviewMark"
+                               max="10"
+                               min="1"
+                               required/>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>${messageLabel}:
+                        <br/>
+                        <textarea name="reviewMessage"
+                                  maxlength="280" cols="10"
+                                  rows="10"
+                                  class="form-control noresize"
+                                  required>
+                            ${sessionScope.review.message}
+                        </textarea>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-default">${button}</button>
+            </form>
+        </div>
+    </div>
 </div>
 <jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>
 </body>

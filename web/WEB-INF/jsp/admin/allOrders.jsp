@@ -23,6 +23,7 @@
     <fmt:message bundle="${locale}" key="locale.table.status" var="statusLabel"/>
     <fmt:message bundle="${locale}" key="locale.table.services" var="servicesLabel"/>
     <fmt:message bundle="${locale}" key="locale.table.price" var="priceLabel"/>
+    <fmt:message bundle="${locale}" key="locale.action.changestatus" var="button"/>
     <fmt:message bundle="${locale}" key="locale.action.changestatus" var="changeStatusLabel"/>
     <fmt:message bundle="${locale}" key="locale.status.pending" var="pending"/>
     <fmt:message bundle="${locale}" key="locale.status.confirmed" var="confirmed"/>
@@ -88,7 +89,7 @@
                             <option value="confirmed">${confirmed}</option>
                             <option value="finished">${confirmed}</option>
                         </select>
-                        <input type="submit" value="Submit">
+                        <input type="submit" value="${button}">
                     </form>
                 </td>
             </tr>

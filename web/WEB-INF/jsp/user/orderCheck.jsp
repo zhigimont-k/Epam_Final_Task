@@ -14,16 +14,18 @@
     <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
+    <fmt:setBundle basename="cbb_info" var="projectInfo"/>
 
-    <fmt:message bundle="${locale}" key="locale.service.label.name" var="serviceNameLabel"/>
-    <fmt:message bundle="${locale}" key="locale.service.label.description" var="serviceDescriptionLabel"/>
-    <fmt:message bundle="${locale}" key="locale.service.label.price" var="servicePriceLabel"/>
-    <fmt:message bundle="${locale}" key="locale.common.button.add" var="button"/>
-
-    <fmt:message bundle="${locale}" key="locale.user.warning.login" var="loginWarning"/>
-    <fmt:message bundle="${locale}" key="locale.user.warning.email" var="emailWarning"/>
-    <fmt:message bundle="${locale}" key="locale.user.warning.phonenumber" var="phoneNumberWarning"/>
+    <fmt:message bundle="${locale}" key="locale.page.title.addorder" var="pageTitle"/>
+    <fmt:message bundle="${locale}" key="locale.table.time" var="timeLabel"/>
+    <fmt:message bundle="${locale}" key="locale.action.checkorder" var="checkOrder"/>
+    <fmt:message bundle="${locale}" key="locale.table.price" var="priceLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.services" var="servicesLabel"/>
+    <fmt:message bundle="${locale}" key="locale.action.confirm" var="button"/>
     <fmt:message bundle="${locale}" key="locale.currency.byn" var="byn"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
+
+    <title>${pageTitle} | ${projectName}</title>
 
 </head>
 <body>
@@ -32,32 +34,40 @@
 <c:if test="${empty sessionScope.user && sessionScope.user.status == 'banned'}">
     <jsp:forward page="${pageContext.request.contextPath}/home"/>
 </c:if>
-
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-<form name="orderCheckForm" method="POST" action="app">
-    <input type="hidden" name="command" value="addOrder"/>
-   Order info:<br/>
 
-    Time: ${sessionScope.order.dateTime}
-    <input type="hidden" name="orderTime" value="${sessionScope.order.dateTime}"/>
-    <br/>
-    Services:<br/>
-    <table>
-    <c:forEach var="activity" items="${sessionScope.order.activityList}">
-        <tr>
-            <input type="hidden" name="activityId" value="${activity.id}"/>
-                <td>${activity.name}</td>
-                <td>${activity.description}</td>
-                <td>${activity.price}</td>
-        </tr>
-    </c:forEach>
-    </table>
-    <br/>
-    Price: ${sessionScope.order.price}
-
-    <br/>
-    <input type="submit" value="Confirm order"/>
-</form>
+<div class="container">
+    <div class="row centered-form center-block">
+        <div class="container col-md-4 col-md-offset-6">
+            <h3>${checkOrder}:</h3>
+            <form name="orderCheckForm" method="POST" action="app">
+                <input type="hidden" name="command" value="addOrder"/>
+                <div class="form-group">
+                    <label>${timeLabel}:
+                        <br/>
+                        <fmt:formatDate value="${sessionScope.order.dateTime}" type="both"
+                                        dateStyle="short" timeStyle="short"/>
+                    </label>
+                </div>
+                <div class="form-group">
+                    ${servicesLabel}:
+                    <br/>
+                    <c:forEach var="activity" items="${sessionScope.order.activityList}">
+                        <input type="hidden" name="activityId" value="${activity.id}"/>
+                        ${activity.name} (${activity.price} ${byn})<br/>
+                    </c:forEach>
+                </div>
+                <div class="form-group">
+                    <label>${priceLabel}:
+                        <br/>
+                        ${sessionScope.order.price}
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-default">${button}</button>
+            </form>
+        </div>
+    </div>
+</div>
 <jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>
 </body>
 </html>

@@ -38,7 +38,6 @@ public class ViewOrderCommand implements Command {
             BigDecimal orderPrice = new BigDecimal(BigInteger.ZERO);
             List<Activity> activityList = new ArrayList<>();
             if (validateOrder(date, time, activityIdList)){
-                logger.log(Level.INFO, "valid order");
                 requestContent.setSessionAttribute(RequestParameter.ILLEGAL_INPUT, false);
                 ActivityService activityService = ServiceFactory.getInstance().getActivityService();
                 for (String activityId : activityIdList) {
@@ -61,7 +60,6 @@ public class ViewOrderCommand implements Command {
                 router.setRedirect(true);
                 router.setPage(PageAddress.VIEW_ORDER_PAGE);
             } else {
-                logger.log(Level.INFO, "invalid order");
                 requestContent.setSessionAttribute(RequestParameter.ILLEGAL_INPUT, true);
                 router.setPage(PageAddress.ADD_ORDER_PAGE);
             }

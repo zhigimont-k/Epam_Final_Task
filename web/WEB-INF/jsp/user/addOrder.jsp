@@ -22,10 +22,10 @@
     <fmt:message bundle="${locale}" key="locale.table.services" var="servicesLabel"/>
     <fmt:message bundle="${locale}" key="locale.message.orderwarning" var="orderWarning"/>
     <fmt:message bundle="${locale}" key="locale.action.add" var="button"/>
-    <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
     <fmt:message bundle="${projectInfo}" key="cbb.working.hours.start" var="minHours"/>
     <fmt:message bundle="${projectInfo}" key="cbb.working.hours.end" var="maxHours"/>
     <fmt:message bundle="${locale}" key="locale.currency.byn" var="byn"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
 
     <jsp:useBean id="now" class="java.util.Date"/>
 
@@ -80,7 +80,7 @@
                 <div class="form-group">
                     <c:forEach var="activity" items="${sessionScope.activityList}">
                         <label><input type="checkbox" name="activityId" value="${activity.id}">
-                                ${activity.name}<br></label>
+                                ${activity.name} (${activity.price} ${byn})<br></label>
                         <br/>
                     </c:forEach>
                 </div>
