@@ -19,6 +19,7 @@ public class AddActivityCommand implements Command {
     private static Logger logger = LogManager.getLogger();
     private static ActivityService service = ServiceFactory.getInstance().getActivityService();
 
+
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();

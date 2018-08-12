@@ -21,7 +21,9 @@ public class CopyrightTag extends TagSupport {
             result.append(" ");
             result.append(projectName);
             result.append(". ");
-            result.append(message);
+            if (message != null){
+                result.append(message);
+            }
             pageContext.getOut().write(result.toString());
         } catch (IOException e) {
             throw new JspException(e.getMessage());

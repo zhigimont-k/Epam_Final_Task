@@ -14,15 +14,19 @@
     <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
+    <fmt:setBundle basename="cbb_info" var="projectInfo"/>
 
-    <fmt:message bundle="${locale}" key="locale.page.title.services" var="pageTitle"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
+    <fmt:message bundle="${locale}" key="locale.page.title.editservice" var="pageTitle"/>
 
-    <fmt:message bundle="${locale}" key="locale.service.label.name" var="serviceNameLabel"/>
-    <fmt:message bundle="${locale}" key="locale.service.label.description" var="serviceDescriptionLabel"/>
-    <fmt:message bundle="${locale}" key="locale.service.label.price" var="servicePriceLabel"/>
-    <fmt:message bundle="${locale}" key="locale.common.button.update" var="button"/>
-
-    <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
+    <fmt:message bundle="${locale}" key="locale.table.name" var="serviceNameLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.description" var="serviceDescriptionLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.price" var="servicePriceLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.status" var="statusLabel"/>
+    <fmt:message bundle="${locale}" key="locale.status.available" var="available"/>
+    <fmt:message bundle="${locale}" key="locale.status.unavailable" var="unavailable"/>
+    <fmt:message bundle="${locale}" key="locale.message.serviceexists" var="serviceExists"/>
+    <fmt:message bundle="${locale}" key="locale.action.update" var="button"/>
     <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
@@ -32,44 +36,69 @@
 
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
 
-<div>
-    <form name="activityEditForm" method="POST" action="app">
-        <input type="hidden" name="command" value="updateActivity"/>
-        <input type="hidden" name="activityId" value="${sessionScope.activity.id}"/>
-        <label>${serviceNameLabel}
-            <br/>
-            <input type="text" value="${sessionScope.activity.name}" name="activityName"
-                   maxlength="20" minlength="4" required/>
-        </label>
-        <br/>
-        <label>${serviceDescriptionLabel}
-            <br/>
-            <textarea name="activityDescription" cols="30" rows="10" required>
-                ${sessionScope.activity.description}
-            </textarea>
-        </label>
-        <br/>
-        <label>${servicePriceLabel}
-            <br/>
-            <input type="text" value="${sessionScope.activity.price}"
-                   name="activityPrice" maxlength="5" minlength="1" required/>
-        </label>
-
-        Status:
-        <select name="activityStatus">
-            <option value="available">available</option>
-            <option value="unavailable">unavailable</option>
-        </select>
-
-        <br/>
-        <input type="submit" value="${button}"/>
-        <c:if test="${sessionScope.dataExists == true}">
-            <div class="alert alert-danger alert-dismissible">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Fail!</strong> Activity with this name already exists.
-            </div>
-        </c:if>
-    </form>
+<div class="container">
+    <div class="row centered-form center-block">
+        <div class="container col-md-4 col-md-offset-6">
+            <h3>${pageTitle}:</h3>
+            <form name="activityEditForm" method="POST" action="app">
+                <input type="hidden" name="command" value="updateActivity"/>
+                <input type="hidden" name="activityId" value="${sessionScope.activity.id}"/>
+                <div class="form-group">
+                    <label>${serviceNameLabel}:
+                        <br/>
+                        <input type="text" name="activityName"
+                               maxlength="40"
+                               minlength="2"
+                               value="${sessionScope.activity.name}"
+                               pattern="[\p{L}\s]{2,40}" required/>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>${serviceDescriptionLabel}:
+                        <br/>
+                        <textarea name="activityDescription"
+                                  maxlength="280"
+                                  cols="30"
+                                  rows="10"
+                                  class="form-control noresize"
+                                  required>${sessionScope.activity.description}
+                        </textarea>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>${servicePriceLabel}:
+                        <br/>
+                        <input type="text"
+                               name="activityPrice"
+                               maxlength="10"
+                               minlength="1"
+                               pattern="\d{1,10}"
+                               value="${sessionScope.activity.price}"
+                               required/>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <br/>
+                    <label>${statusLabel}:
+                        <select name="activityStatus">
+                            <label>
+                                <option value="available">available</option>
+                            </label>
+                            <label>
+                                <option value="unavailable">unavailable</option>
+                            </label>
+                        </select>
+                </div>
+                <button type="submit" class="btn btn-default">${button}</button>
+            </form>
+            <c:if test="${sessionScope.dataExists == true}">
+                <div class="alert alert-danger alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>${serviceExists}</strong>
+                </div>
+            </c:if>
+        </div>
+    </div>
 </div>
 <jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>
 </body>

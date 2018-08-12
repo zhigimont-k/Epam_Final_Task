@@ -14,17 +14,18 @@
     <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
+    <fmt:setBundle basename="cbb_info" var="projectInfo"/>
 
-    <fmt:message bundle="${locale}" key="locale.service.label.name" var="serviceNameLabel"/>
-    <fmt:message bundle="${locale}" key="locale.service.label.description" var="serviceDescriptionLabel"/>
-    <fmt:message bundle="${locale}" key="locale.service.label.price" var="servicePriceLabel"/>
-    <fmt:message bundle="${locale}" key="locale.common.button.add" var="button"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
+    <fmt:message bundle="${locale}" key="locale.action.add.service" var="addService"/>
+    <fmt:message bundle="${locale}" key="locale.table.name" var="serviceNameLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.description" var="serviceDescriptionLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.price" var="servicePriceLabel"/>
+    <fmt:message bundle="${locale}" key="locale.action.add" var="button"/>
 
-    <fmt:message bundle="${locale}" key="locale.user.warning.login" var="loginWarning"/>
-    <fmt:message bundle="${locale}" key="locale.user.warning.email" var="emailWarning"/>
-    <fmt:message bundle="${locale}" key="locale.user.warning.phonenumber" var="phoneNumberWarning"/>
+    <fmt:message bundle="${locale}" key="locale.message.serviceexists" var="serviceExists"/>
 
-    <title>Add service | Cat Beauty Bar</title>
+    <title>${addService} | ${projectName}</title>
 </head>
 <body>
 
@@ -32,38 +33,53 @@
     <jsp:forward page="${pageContext.request.contextPath}/home"/>
 </c:if>
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-<div id="custom-form">
-    <div>
-        <form name="addServiceForm" method="POST" action="app">
-            <input type="hidden" name="command" value="addActivity"/>
-            Add a service:<br/>
-            <label>${serviceNameLabel}
-                <br/>
-                <input type="text" name="activityName" maxlength="40" minlength="2"
-                       pattern="[\p{L}\s]{2,40}" required/>
-            </label>
-            <br/>
-            <label>${serviceDescriptionLabel}
-                <br/>
-                <textarea name="activityDescription" maxlength="280" cols="30"
-                          rows="10" required></textarea>
-            </label>
-            <br/>
-            <label>${servicePriceLabel}
-                <br/>
-                <input type="text" name="activityPrice" maxlength="10" minlength="1"
-                       pattern="\d{1,10}" required/>
-            </label>
 
-            <br/>
-            <input type="submit" value="${button}"/>
+<div class="container">
+    <div class="row centered-form center-block">
+        <div class="container col-md-4 col-md-offset-6">
+            <h3>${addService}:</h3>
+            <form name="addServiceForm" method="POST" action="app">
+                <input type="hidden" name="command" value="addActivity"/>
+                <div class="form-group">
+                    <label>${serviceNameLabel}:
+                        <br/>
+                        <input type="text" name="activityName"
+                               maxlength="40"
+                               minlength="2"
+                               pattern="[\p{L}\s]{2,40}" required/>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>${serviceDescriptionLabel}:
+                        <br/>
+                        <textarea name="activityDescription"
+                                  maxlength="280"
+                                  cols="30"
+                                  rows="10"
+                                  class="form-control noresize"
+                                  required></textarea>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>${servicePriceLabel}:
+                        <br/>
+                        <input type="text"
+                               name="activityPrice"
+                               maxlength="10"
+                               minlength="1"
+                               pattern="\d{1,10}"
+                               required/>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-default">${button}</button>
+            </form>
             <c:if test="${dataExists == true}">
                 <div class="alert alert-danger alert-dismissible">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Fail!</strong> Activity with this name already exists.
+                    <strong>${serviceExists}</strong>
                 </div>
             </c:if>
-        </form>
+        </div>
     </div>
 </div>
 </body>

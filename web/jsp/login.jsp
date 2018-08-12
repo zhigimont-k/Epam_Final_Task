@@ -34,50 +34,51 @@
     <script type="text/javascript" src="../js/inputScript.js"></script>
 </head>
 <body>
-
-<jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-<c:if test="${not empty sessionScope.user}">
-    <jsp:forward page="${pageContext.request.contextPath}/home"/>
-</c:if>
-<div class="container">
-    <div class="row centered-form center-block">
-        <div class="container col-md-4 col-md-offset-6">
-            <form name="loginForm" method="POST" action="app">
-                <input type="hidden" name="command" value="login"/>
-                <div class="form-group">
-                    <label>${loginLabel}:
+<main>
+    <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
+    <div class="bg"></div>
+    <c:if test="${not empty sessionScope.user}">
+        <jsp:forward page="${pageContext.request.contextPath}/home"/>
+    </c:if>
+    <div class="container">
+        <div class="row centered-form center-block">
+            <div class="container col-md-4 col-md-offset-6">
+                <form name="loginForm" method="POST" action="app">
+                    <input type="hidden" name="command" value="login"/>
+                    <div class="form-group">
+                        <label>${loginLabel}:
+                            <br/>
+                            <input type="text"
+                                   name="login"
+                                   maxlength="40"
+                                   pattern="\w+{4, 40}"
+                                   data-toggle="tooltip"
+                                   title="hi"
+                                   required/>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>${passwordLabel}:
+                            <br/>
+                            <input type="password" name="password" id="passwordField" maxlength="32" required/>
+                        </label>
                         <br/>
-                        <input type="text"
-                               name="login"
-                               maxlength="40"
-                               pattern="\w+{4, 40}"
-                               data-toggle="tooltip"
-                               title="hi"
-                               required/>
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>${passwordLabel}:
-                        <br/>
-                        <input type="password" name="password" id="passwordField" maxlength="32" required/>
-                    </label>
-                    <br/>
-                    <label><input type="checkbox" onclick="togglePasswordVisibility()">
-                        ${showPassword}</label>
-                </div>
-                <button type="submit" class="btn btn-default">${signIn}</button>
-            </form>
-            <c:if test="${authFail == true}">
-                <div class="alert alert-danger alert-dismissible">
-                        ${authFailMessage}
-                </div>
-            </c:if>
-            <p>${noAccountYet} <a href="${pageContext.request.contextPath}/register">${signUp}</a></p>
-            <p><a href="${pageContext.request.contextPath}/resetPassword">${forgotPassword}</a></p>
+                        <label><input type="checkbox" onclick="togglePasswordVisibility()">
+                            ${showPassword}</label>
+                    </div>
+                    <button type="submit" class="btn btn-default">${signIn}</button>
+                </form>
+                <c:if test="${authFail == true}">
+                    <div class="alert alert-danger alert-dismissible">
+                            ${authFailMessage}
+                    </div>
+                </c:if>
+                <p>${noAccountYet} <a href="${pageContext.request.contextPath}/register">${signUp}</a></p>
+                <p><a href="${pageContext.request.contextPath}/resetPassword">${forgotPassword}</a></p>
+            </div>
         </div>
     </div>
-</div>
-
+</main>
 <jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>
 </body>
 </html>

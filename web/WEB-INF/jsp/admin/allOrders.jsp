@@ -13,18 +13,22 @@
     <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
-    <fmt:message bundle="${locale}" key="locale.page.title.users" var="pageTitle"/>
+    <fmt:setBundle basename="cbb_info" var="projectInfo"/>
+    <fmt:message bundle="${locale}" key="locale.page.title.allorders" var="pageTitle"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
 
-    <fmt:message bundle="${locale}" key="locale.user.label.login" var="login"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.username" var="userName"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.status" var="status"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.email" var="email"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.phonenumber" var="phoneNumber"/>
-    <fmt:message bundle="${locale}" key="locale.user.role.admin" var="adminRole"/>
-    <fmt:message bundle="${locale}" key="locale.user.role.user" var="userRole"/>
-    <fmt:message bundle="${locale}" key="locale.user.role.banned" var="bannedRole"/>
+    <fmt:message bundle="${locale}" key="locale.table.id" var="idLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.time" var="timeLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.status" var="statusLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.services" var="servicesLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.price" var="priceLabel"/>
+    <fmt:message bundle="${locale}" key="locale.action.changestatus" var="changeStatusLabel"/>
+    <fmt:message bundle="${locale}" key="locale.status.pending" var="pending"/>
+    <fmt:message bundle="${locale}" key="locale.status.confirmed" var="confirmed"/>
+    <fmt:message bundle="${locale}" key="locale.status.cancelled" var="cancelled"/>
+    <fmt:message bundle="${locale}" key="locale.status.finished" var="finished"/>
 
-    <title>${pageTitle} | Cat Beauty Bar</title>
+    <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
 <c:if test="${sessionScope.user.status ne 'admin'}">
@@ -37,40 +41,55 @@
     <table class="table">
         <thead>
         <tr>
-            <th>id</th>
-            <th>time</th>
-            <th>status</th>
-            <th>services</th>
-            <th>price</th>
-            <th>change status</th>
+            <th>${idLabel}</th>
+            <th>${timeLabel}</th>
+            <th>${statusLabel}</th>
+            <th>${servicesLabel}</th>
+            <th>${priceLabel}</th>
+            <th>${changeStatusLabel}</th>
         </tr>
         </thead>
         <tbody>
         <c:forEach var="order" items="${orderList}">
             <tr>
-                <form name="orderForm" method="POST" action="app">
-                    <input type="hidden" name="orderId" value="${order.id}"/>
-                    <td>${order.id}</td>
-                    <td><fmt:formatDate value="${order.dateTime}" type="both"
-                                        dateStyle="short" timeStyle="short"/></td>
-                    <td>${order.status}</td>
-                    <td><c:forEach var="activity" items="${order.activityList}">
-                        <a href="app?command=viewActivity&activityId=${activity.id}">${activity.name}</a>
-                        <br/>
-                    </c:forEach>
-                    </td>
-                    <td>${order.price}</td>
-                    <td>
+                <td>${order.id}</td>
+                <td><fmt:formatDate value="${order.dateTime}" type="both"
+                                    dateStyle="short" timeStyle="short"/></td>
+                <td>
+                    <c:if test="${order.status eq 'pending'}">
+                        ${pending}
+                    </c:if>
+                    <c:if test="${order.status eq 'cancelled'}">
+                        ${cancelled}
+                    </c:if>
+                    <c:if test="${order.status eq 'confirmed'}">
+                        ${confirmed}
+                    </c:if>
+                    <c:if test="${order.status eq 'finished'}">
+                        ${finished}
+                    </c:if>
+                </td>
+                <td><c:forEach var="activity" items="${order.activityList}">
+                    <a href="app?command=viewActivity&activityId=${activity.id}">
+                            ${activity.name}
+                    </a>
+                    <br/>
+                </c:forEach>
+                </td>
+                <td>${order.price}</td>
+                <td>
+                    <form name="orderForm" method="POST" action="app">
+                        <input type="hidden" name="orderId" value="${order.id}"/>
                         <input type="hidden" name="command" value="changeOrderStatus"/>
                         <select name="orderStatus">
-                            <option value="pending">pending</option>
-                            <option value="cancelled">cancelled</option>
-                            <option value="confirmed">confirmed</option>
-                            <option value="finished">finished</option>
+                            <option value="pending">${pending}</option>
+                            <option value="cancelled">${cancelled}</option>
+                            <option value="confirmed">${confirmed}</option>
+                            <option value="finished">${confirmed}</option>
                         </select>
                         <input type="submit" value="Submit">
-                    </td>
-                </form>
+                    </form>
+                </td>
             </tr>
         </c:forEach>
         </tbody>

@@ -14,26 +14,31 @@
     <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
+    <fmt:setBundle basename="cbb_info" var="projectInfo"/>
 
+    <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
     <fmt:message bundle="${locale}" key="locale.page.title.account" var="pageTitle"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.login" var="loginLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.password.old" var="oldPasswordLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.password.new" var="newPasswordLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.showPassword" var="showPassword"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.username" var="userNameLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.email" var="emailLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.phonenumber" var="phoneNumberLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.status" var="statusLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.role.admin" var="admin"/>
-    <fmt:message bundle="${locale}" key="locale.user.role.user" var="user"/>
-    <fmt:message bundle="${locale}" key="locale.user.role.banned" var="banned"/>
 
-    <fmt:message bundle="${locale}" key="locale.user.warning.auth.fail" var="authFailMessage"/>
+    <fmt:message bundle="${locale}" key="locale.table.login" var="loginLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.oldpassword" var="oldPasswordLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.newpassword" var="newPasswordLabel"/>
+    <fmt:message bundle="${locale}" key="locale.action.showpassword" var="showPassword"/>
+    <fmt:message bundle="${locale}" key="locale.table.username" var="userNameLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.email" var="emailLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.phonenumber" var="phoneNumberLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.cardnumber" var="cardNumberLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.money" var="moneyLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.status" var="statusLabel"/>
+    <fmt:message bundle="${locale}" key="locale.status.admin" var="admin"/>
+    <fmt:message bundle="${locale}" key="locale.status.user" var="user"/>
+    <fmt:message bundle="${locale}" key="locale.status.banneduser" var="banned"/>
+    <fmt:message bundle="${locale}" key="locale.action.update" var="submit"/>
 
-    <fmt:message bundle="${locale}" key="locale.common.button.update" var="button"/>
+    <fmt:message bundle="${locale}" key="locale.message.authorizationfail" var="authFailMessage"/>
 
-    <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
-    <script type="text/javascript" src="../../../js/inputScript.js"></script>
+    <fmt:message bundle="${locale}" key="locale.action.update" var="button"/>
+
+    <script type="text/javascript" src="${pageContext.request.contextPath}/inputScript.js"></script>
 
     <title>${pageTitle} | ${projectName}</title>
 </head>
@@ -44,61 +49,97 @@
     <jsp:forward page="${pageContext.request.contextPath}/login"/>
 </c:if>
 
-<div class="col-lg-2"><br/></div>
-<div class="col-lg-4">
-    <form name="updateUserForm" method="POST" action="app">
-        <input type="hidden" name="command" value="updateUser"/>
-        ${loginLabel}: ${sessionScope.user.login}
-        <br/>
-        <label>${passwordLabel}
-            <br/>
-            <input type="password" name="password" id="passwordField" maxlength="32"
-                   pattern="[\w^_]{6,32}" required/></label>
-        <label><input type="checkbox" onclick="togglePasswordVisibility()">${showPassword}</label>
-        <br/>
+<div class="container">
+    <div class="col-lg-2"><br/></div>
+    <div class="col-lg-4">
+        <div class="container col-md-4 col-md-offset-6">
+            <form name="registerForm" method="POST" action="app">
+                <input type="hidden" name="command" value="register"/>
+                <div class="form-group">
+                    ${loginLabel}:
+                    <br/>
+                    ${sessionScope.user.login}
+                </div>
+                <div class="form-group">
+                    <label>${oldPasswordLabel}*:
+                        <br/>
+                        <input type="password"
+                               name="password"
+                               id="passwordField"
+                               maxlength="32"
+                               minlength="6"
+                               pattern="[\w^_]{6,32}"
+                               required/></label>
+                    <br/>
+                    <label><input type="checkbox"
+                                  onclick="togglePasswordVisibility()">
+                        ${showPassword}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>${newPasswordLabel}*:
+                        <br/>
+                        <input type="password"
+                               name="newPassword"
+                               id="newPasswordField"
+                               maxlength="32"
+                               minlength="6"
+                               pattern="[\w^_]{6,32}"/></label>
+                    <br/>
+                    <label><input type="checkbox"
+                                  onclick="toggleNewPasswordVisibility()">
+                        ${showPassword}
+                    </label>
+                </div>
+                <div class="form-group">
+                    ${emailLabel}*:
+                    <br/>
+                    ${sessionScope.user.email}
+                </div>
+                <div class="form-group">
+                    ${phoneNumberLabel}*:
+                    <br/>
+                    ${sessionScope.user.phoneNumber}
+                </div>
+                <div class="form-group">
+                    ${userNameLabel}:<br/>
+                    ${sessionScope.user.userName}
+                </div>
+                <div class="form-group">
+                    ${cardNumberLabel}:<br/>
+                    ${sessionScope.user.cardNumber}
+                </div>
+                <div class="form-group">
+                    ${moneyLabel}:<br/>
+                    ${money}
+                </div>
 
-        <label>${newPasswordLabel}:
-            <br/>
-            <input type="password" name="newPassword" id="newPasswordField" maxlength="32"
-                   pattern="[\w^_]{6,32}"/></label>
-        <label><input type="checkbox" onclick="toggleNewPasswordVisibility()">${showPassword}</label>
+                <button type="submit" class="btn btn-default">${button}</button>
+            </form>
+            <c:if test="${authFail == true}">
+                <div class="alert alert-danger alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>${authFailMessage}</strong>
+                </div>
+            </c:if>
+        </div>
+    </div>
+
+    <div class="col-lg-1"><br/></div>
+    <div class="col-lg-4">
+        <img src="image?userId=${sessionScope.user.id}" height="200px"
+             onerror="this.style.display='none'"/>
         <br/>
-        <br/>
-        ${emailLabel}: ${sessionScope.user.email}
-        <br/>
-        ${phoneNumberLabel}: ${sessionScope.user.phoneNumber}
-        <br/>
-        Card number: ${sessionScope.user.cardNumber}
-        <br/>
-        Money on card: ${money}
-        <br/>
-        <label>${userNameLabel}:
-            <input type="text" name="userName" minlength="2" maxlength="40"
-                   value="${sessionScope.user.userName}"
-                   pattern="[\p{L}\s]{2,40}"/></label>
-        <br/>
-        <br/>
-        <input type="submit" value="${button}"/>
-        <br/>
-        <c:if test="${sessionScope.authFail == true}">
-            ${authFailMessage}
-        </c:if>
-        <c:if test="${sessionScope.illegalInput == true}">
-            Please check if your input is correct
-        </c:if>
-    </form>
+        <form name="updateUserForm" method="POST" action="image" enctype="multipart/form-data">
+            <input type="hidden" name="userId" value="${sessionScope.user.id}"/>
+            <input type="file" name="photo" size="50" required/><br><br>
+            <input type="submit" value="${submit}">
+        </form>
+    </div>
 </div>
-<div class="col-lg-4">
-    <img src="image?userId=${sessionScope.user.id}" height="200px"
-         onerror="this.style.display='none'"/>
-    <br/>
-    <form name="updateUserForm" method="POST" action="image" enctype="multipart/form-data">
-        <input type="hidden" name="userId" value="${sessionScope.user.id}"/>
-        <input type="file" name="photo" size="50" placeholder="Upload Your Image" required/><br><br>
-        <input type="submit" value="Save">
-    </form>
-</div>
-<div class="col-lg-2"><br/></div>
-<jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>
+<div class="col-lg-1"><br/></div>
+<footer>
+    <jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>
+</footer>
 </body>
 </html>

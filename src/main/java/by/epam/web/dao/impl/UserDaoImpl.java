@@ -376,7 +376,6 @@ public class UserDaoImpl implements UserDao {
                         .setPhoneNumber(resultSet.getString(DB_PHONE_NUMBER_FIELD))
                         .setUserName(resultSet.getString(DB_USER_NAME_FIELD))
                         .setStatus(resultSet.getString(DB_USER_STATUS_FIELD))
-                        .setCardNumber(resultSet.getString(DB_CARD_NUMBER_FIELD))
                         .create());
             }
         } catch (SQLException e) {

@@ -15,10 +15,6 @@
 
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
-
-    <fmt:message bundle="${locale}" key="locale.user.button.signup" var="signUp"/>
-    <fmt:message bundle="${locale}" key="locale.user.button.signin" var="loginLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.button.logout" var="logout"/>
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/page_structure/navigation.jsp"/>

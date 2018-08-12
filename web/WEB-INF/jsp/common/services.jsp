@@ -22,16 +22,17 @@
     <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
-
-<jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-<div class="container">
-    <div class="row col-xs-offset-1">
-        <%--<div class="panel-group">--%>
+<main>
+    <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
+    <div class="container">
+        <div class="row col-xs-offset-1">
+            <%--<div class="panel-group">--%>
             <c:forEach var="activity" items="${activityList}">
                 <div class="col-md-3">
                     <c:choose>
                         <c:when test="${activity.status == 'available'}">
-                            <div class="panel panel-success">
+                            <div class="panel panel-success"
+                                 style="background-image: url(${pageContext.request.contextPath}/images/card-bg.jpg);">
                                 <div class="panel-heading">
                                     <a href="app?command=viewActivity&activityId=${activity.id}">
                                             ${activity.name}
@@ -79,9 +80,10 @@
                     </c:choose>
                 </div>
             </c:forEach>
-        <%--</div>--%>
+            <%--</div>--%>
+        </div>
     </div>
-</div>
+</main>
 <jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>
 </body>
 </html>

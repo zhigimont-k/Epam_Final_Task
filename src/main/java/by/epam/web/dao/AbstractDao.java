@@ -11,6 +11,12 @@ import java.sql.Statement;
 public interface AbstractDao<T extends Entity> {
     Logger logger = LogManager.getLogger();
 
+    /**
+     * Closes given statement
+     *
+     * @param statement
+     * statement to close
+     */
     default void closeStatement(Statement statement) {
         if (statement != null) {
             try {

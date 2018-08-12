@@ -14,22 +14,22 @@
     <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
+    <fmt:setBundle basename="cbb_info" var="projectInfo"/>
 
-    <fmt:message bundle="${locale}" key="locale.service.label.name" var="serviceNameLabel"/>
-    <fmt:message bundle="${locale}" key="locale.service.label.description" var="serviceDescriptionLabel"/>
-    <fmt:message bundle="${locale}" key="locale.service.label.price" var="servicePriceLabel"/>
-    <fmt:message bundle="${locale}" key="locale.common.button.add" var="button"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
+    <fmt:message bundle="${locale}" key="locale.page.title.error404" var="pageTitle"/>
+    <fmt:message bundle="${locale}" key="locale.message.error404" var="errorMessage"/>
+    <fmt:message bundle="${locale}" key="locale.message.error404.home" var="errorLink"/>
 
-    <fmt:message bundle="${locale}" key="locale.user.warning.login" var="loginWarning"/>
-    <fmt:message bundle="${locale}" key="locale.user.warning.email" var="emailWarning"/>
-    <fmt:message bundle="${locale}" key="locale.user.warning.phonenumber" var="phoneNumberWarning"/>
-
-    <title>404 | Cat Beauty Bar</title>
+    <title>${pageTitle} | ${projectName}</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
-<img src="${pageContext.request.contextPath}/images/cat404.png" alt="" height="150"><h2>404 error</h2><br/>
-Oops, something went wrong.<br/>
-<a href="${pageContext.request.contextPath}/home">Go back, perhaps?</a>
+<div class="container">
+    <img src="${pageContext.request.contextPath}/images/cat404.png" alt="" height="150">
+    <h2>${pageTitle}</h2><br/>
+    ${errorMessage}<br/>
+    <a href="${pageContext.request.contextPath}/home">${errorLink}</a>
+</div>
 </body>
 </html>

@@ -399,18 +399,34 @@ public class OrderDaoImpl implements OrderDao {
         List<Integer> orderIdList = new ArrayList<>();
         try {
             connection = pool.takeConnection();
+            connection.setAutoCommit(false);
             statement = connection.createStatement();
             resultSet = statement.executeQuery(FIND_EMAILS_FOR_UPCOMING_ORDERS);
             while (resultSet.next()) {
                 emailList.add(resultSet.getString(DB_USER_EMAIL_FIELD));
                 orderIdList.add(resultSet.getInt(DB_ORDER_ID_FIELD));
             }
-            preparedStatement = connection.prepareStatement(SET_ORDER_REMINDED);
-            for (int orderId : orderIdList) {
-                preparedStatement.setInt(1, orderId);
-                preparedStatement.executeUpdate();
+            if (!emailList.isEmpty()){
+                preparedStatement = connection.prepareStatement(SET_ORDER_REMINDED);
+                for (int orderId : orderIdList) {
+                    preparedStatement.setInt(1, orderId);
+                    preparedStatement.executeUpdate();
+                }
+            } else {
+                logger.log(Level.INFO, "No confirmed order to remind of");
             }
+            connection.commit();
+            connection.setAutoCommit(true);
+
         } catch (SQLException e) {
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                    logger.log(Level.INFO, "Encountered an error, made a rollback");
+                }
+            } catch (SQLException ex) {
+                logger.log(Level.ERROR, "Couldn't rollback connection: " + e.getMessage(), e);
+            }
             logger.log(Level.ERROR, "Failed to find emails for upcoming orders" + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);

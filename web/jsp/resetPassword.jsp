@@ -16,19 +16,14 @@
     <fmt:setBundle basename="locale.locale" var="locale"/>
     <fmt:setBundle basename="cbb_info" var="cbb"/>
 
-    <fmt:message bundle="${locale}" key="locale.page.title.auth" var="pageTitle"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.login" var="loginLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.password" var="passwordLabel"/>
-    <fmt:message bundle="${locale}" key="locale.user.button.signin" var="button"/>
+    <fmt:message bundle="${locale}" key="locale.action.resetpassword" var="pageTitle"/>
+    <fmt:message bundle="${locale}" key="locale.table.email" var="emailLabel"/>
+    <fmt:message bundle="${locale}" key="locale.action.resetpassword" var="button"/>
+    <fmt:message bundle="${locale}" key="locale.message.emailnotfound" var="emailNotFoundMessage"/>
+    <fmt:message bundle="${locale}" key="locale.message.newpasswordsent" var="resetPasswordSuccess"/>
+    <fmt:message bundle="${cbb}" key="cbb.name.short" var="projectName"/>
 
-    <fmt:message bundle="${locale}" key="locale.user.text.noAccountYet" var="toRegister"/>
-    <fmt:message bundle="${locale}" key="locale.user.button.signup" var="signUp"/>
-
-    <fmt:message bundle="${locale}" key="locale.user.warning.auth.fail" var="authFailMessage"/>
-
-    <fmt:message bundle="${cbb}" key="cbb.name.full" var="projectName"/>
-
-    <title>PasswordReset | ${projectName}</title>
+    <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
 
@@ -36,28 +31,38 @@
 <c:if test="${not empty sessionScope.user}">
     <jsp:forward page="/home"/>
 </c:if>
-<div id="custom-form">
-    <div>
-        <form name="resetPasswordForm" method="POST" action="app">
-            <input type="hidden" name="command" value="resetPassword"/>
-            <label>E-mail:
-                <input type="email" name="email" maxlength="35" required/></label>
-            <br/>
+
+<div class="container">
+    <div class="row centered-form center-block">
+        <div class="container col-md-4 col-md-offset-6">
+            <form name="resetPasswordForm" method="POST" action="app">
+                <input type="hidden" name="command" value="resetPassword"/>
+                <div class="form-group">
+                    <label>${emailLabel}*:
+                        <br/>
+                        <input type="email"
+                               name="email"
+                               maxlength="50"
+                               minlength="5"
+                               pattern="([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})"
+                               required/></label>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-default">${button}</button>
+            </form>
             <c:if test="${noEmailFound == true}">
                 <div class="alert alert-danger alert-dismissible">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Warning!</strong> No user with this email found.
+                    <strong>${emailNotFoundMessage}</strong>
                 </div>
-                <c:if test="${operationSuccess == true}">
-                    <div class="alert alert-success alert-dismissible">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong>Done!</strong> Check your email to get the new password.
-                    </div>
-                </c:if>
             </c:if>
-            <input type="submit" value="Reset password"/>
-            <br/>
-        </form>
+            <c:if test="${sessionScope.operationSuccess == true}">
+                <div class="alert alert-success alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>${resetPasswordSuccess}</strong>
+                </div>
+            </c:if>
+        </div>
     </div>
 </div>
 <jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>

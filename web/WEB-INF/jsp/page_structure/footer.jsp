@@ -17,16 +17,27 @@
     <fmt:setBundle basename="locale.locale" var="locale"/>
     <fmt:setBundle basename="cbb_info" var="projectInfo"/>
 
+    <fmt:message bundle="${locale}" key="locale.contacts.email" var="email"/>
+    <fmt:message bundle="${locale}" key="locale.contacts.github" var="github"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.contacts.email" var="emailLink"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.contacts.github" var="githubLink"/>
     <fmt:message bundle="${projectInfo}" key="cbb.name.full" var="fullName"/>
     <fmt:message bundle="${projectInfo}" key="cbb.year" var="year"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+          integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+          crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
-<footer class="footer">
-    <div class="container">
-        <span class="text-muted">
-            <cbb:copyright projectName="Cat Beauty Bar" message="All rights reserved." year="2018"/></span>
-    </div>
+<footer>
+    <p class="text-center text-muted text-lowercase">
+        <span class="glyphicon glyphicon-envelope"></span> <a href="mailto:${emailLink}">${email}</a>
+        <i class="fab fa-github"></i> <a href="${githubLink}">${github}</a>
+        <br/>
+    </p>
+    <p class="text-center text-uppercase text-muted">
+        <cbb:copyright projectName="Cat Beauty Bar" year="2018"/>
+    </p>
 </footer>
 </body>
 </html>

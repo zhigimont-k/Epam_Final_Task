@@ -19,8 +19,6 @@
     <fmt:message bundle="${locale}" key="locale.status.english" var="english"/>
     <fmt:message bundle="${locale}" key="locale.status.russian" var="russian"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
-
-
 </head>
 <body>
 <form name="changeLangForm" method="POST" action="app">

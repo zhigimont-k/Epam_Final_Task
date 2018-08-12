@@ -38,114 +38,116 @@
     <script type="text/javascript" src="../js/inputScript.js"></script>
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-<c:if test="${not empty sessionScope.user}">
-    <jsp:forward page="/home"/>
-</c:if>
+<main>
+    <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
+    <c:if test="${not empty sessionScope.user}">
+        <jsp:forward page="/home"/>
+    </c:if>
 
-<div class="container">
-    <div class="row centered-form center-block">
-        <div class="container col-md-4 col-md-offset-6">
-            <form name="registerForm" method="POST" action="app">
-                <input type="hidden" name="command" value="register"/>
-                <div class="form-group">
-                    <label>${loginLabel}*:
+    <div class="container">
+        <div class="row centered-form center-block">
+            <div class="container col-md-4 col-md-offset-6">
+                <form name="registerForm" method="POST" action="app">
+                    <input type="hidden" name="command" value="register"/>
+                    <div class="form-group">
+                        <label>${loginLabel}*:
+                            <br/>
+                            <input type="text"
+                                   name="login"
+                                   maxlength="40"
+                                   pattern="\w+{4, 40}"
+                                   data-toggle="tooltip" title="hi"
+                                   required/>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>${passwordLabel}*:
+                            <br/>
+                            <input type="password"
+                                   name="password"
+                                   id="passwordField"
+                                   maxlength="32"
+                                   required/>
+                        </label>
                         <br/>
-                        <input type="text"
-                               name="login"
-                               maxlength="40"
-                               pattern="\w+{4, 40}"
-                               data-toggle="tooltip" title="hi"
-                               required/>
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>${passwordLabel}*:
-                        <br/>
-                        <input type="password"
-                               name="password"
-                               id="passwordField"
-                               maxlength="32"
-                               required/>
-                    </label>
-                    <br/>
-                    <label><input type="checkbox"
-                                  onclick="togglePasswordVisibility()">
-                        ${showPassword}
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>${emailLabel}*:
-                        <br/>
-                        <input type="email"
-                               name="email"
-                               maxlength="50"
-                               minlength="5"
-                               pattern="([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})"
-                               required/></label>
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>${phoneNumberLabel}*:
-                        <br/>
-                        <input type="text"
-                               name="phoneNumber"
-                               maxlength="13"
-                               minlength="13"
-                               pattern="\+(\d{12})"
-                               required/>
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>${userNameLabel}:<br/>
-                        <input type="text"
-                               name="userName"
-                               maxlength="40"
-                               minlength="2"
-                               pattern="[\p{L}\s]{2,40}"/>
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>Номер карты*:<br/>
-                        <input type="text"
-                               name="cardNumber"
-                               maxlength="16"
-                               minlength="16"
-                               pattern="\d{16}"
-                               required/>
-                    </label>
-                </div>
+                        <label><input type="checkbox"
+                                      onclick="togglePasswordVisibility()">
+                            ${showPassword}
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>${emailLabel}*:
+                            <br/>
+                            <input type="email"
+                                   name="email"
+                                   maxlength="50"
+                                   minlength="5"
+                                   pattern="([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})"
+                                   required/></label>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>${phoneNumberLabel}*:
+                            <br/>
+                            <input type="text"
+                                   name="phoneNumber"
+                                   maxlength="13"
+                                   minlength="13"
+                                   pattern="\+(\d{12})"
+                                   required/>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>${userNameLabel}:<br/>
+                            <input type="text"
+                                   name="userName"
+                                   maxlength="40"
+                                   minlength="2"
+                                   pattern="[\p{L}\s]{2,40}"/>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>${cardNumberLabel}*:<br/>
+                            <input type="text"
+                                   name="cardNumber"
+                                   maxlength="16"
+                                   minlength="16"
+                                   pattern="\d{16}"
+                                   required/>
+                        </label>
+                    </div>
 
-                <button type="submit" class="btn btn-default">${signUp}</button>
-            </form>
-            <c:if test="${loginExists == true}">
-                <div class="alert alert-danger alert-dismissible">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>${loginExistsMessage}</strong>
-                </div>
-            </c:if>
-            <c:if test="${emailExists == true}">
-                <div class="alert alert-danger alert-dismissible">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>${emailExistsMessage}</strong>
-                </div>
-            </c:if>
-            <c:if test="${phoneNumberExists == true}">
-                <div class="alert alert-danger alert-dismissible">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>${phoneNumberExistsMessage}</strong>
-                </div>
-            </c:if>
-            <c:if test="${cardNumberExists == true}">
-                <div class="alert alert-danger alert-dismissible">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>${cardExistsMessage}</strong>
-                </div>
-            </c:if>
-            <p>${haveAccountAlready} <a href="${pageContext.request.contextPath}/login">${signIn}</a></p>
+                    <button type="submit" class="btn btn-default">${signUp}</button>
+                </form>
+                <c:if test="${loginExists == true}">
+                    <div class="alert alert-danger alert-dismissible">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>${loginExistsMessage}</strong>
+                    </div>
+                </c:if>
+                <c:if test="${emailExists == true}">
+                    <div class="alert alert-danger alert-dismissible">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>${emailExistsMessage}</strong>
+                    </div>
+                </c:if>
+                <c:if test="${phoneNumberExists == true}">
+                    <div class="alert alert-danger alert-dismissible">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>${phoneNumberExistsMessage}</strong>
+                    </div>
+                </c:if>
+                <c:if test="${cardNumberExists == true}">
+                    <div class="alert alert-danger alert-dismissible">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>${cardExistsMessage}</strong>
+                    </div>
+                </c:if>
+                <p>${haveAccountAlready} <a href="${pageContext.request.contextPath}/login">${signIn}</a></p>
+            </div>
         </div>
     </div>
-</div>
+</main>
 <jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>
 </body>
 </html>

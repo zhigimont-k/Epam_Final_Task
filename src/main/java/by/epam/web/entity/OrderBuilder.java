@@ -24,9 +24,6 @@ public class OrderBuilder {
         return this;
     }
 
-
-
-
     public OrderBuilder setStatus(Order.Status status) {
         this.status = status;
         return this;

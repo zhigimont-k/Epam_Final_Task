@@ -13,18 +13,23 @@
     <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
+    <fmt:setBundle basename="cbb_info" var="projectInfo"/>
+
+    <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
     <fmt:message bundle="${locale}" key="locale.page.title.users" var="pageTitle"/>
 
-    <fmt:message bundle="${locale}" key="locale.user.label.login" var="login"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.username" var="userName"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.status" var="status"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.email" var="email"/>
-    <fmt:message bundle="${locale}" key="locale.user.label.phonenumber" var="phoneNumber"/>
-    <fmt:message bundle="${locale}" key="locale.user.role.admin" var="adminRole"/>
-    <fmt:message bundle="${locale}" key="locale.user.role.user" var="userRole"/>
-    <fmt:message bundle="${locale}" key="locale.user.role.banned" var="bannedRole"/>
+    <fmt:message bundle="${locale}" key="locale.table.id" var="idLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.login" var="loginLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.username" var="userNameLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.status" var="statusLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.email" var="emailLabel"/>
+    <fmt:message bundle="${locale}" key="locale.table.phonenumber" var="phoneNumberLabel"/>
+    <fmt:message bundle="${locale}" key="locale.status.admin" var="adminRole"/>
+    <fmt:message bundle="${locale}" key="locale.status.user" var="userRole"/>
+    <fmt:message bundle="${locale}" key="locale.status.banneduser" var="bannedRole"/>
+    <fmt:message bundle="${locale}" key="locale.action.changestatus" var="changeStatus"/>
 
-    <title>${pageTitle} | Cat Beauty Bar</title>
+    <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
 <c:if test="${sessionScope.user.status ne 'admin'}">
@@ -38,13 +43,13 @@
     <table class="table">
         <thead>
         <tr>
-            <th>id</th>
-            <th>${login}</th>
-            <th>${userName}</th>
-            <th>${status}</th>
-            <th>${email}</th>
-            <th>${phoneNumber}</th>
-            <th>Change status</th>
+            <th>${idLabel}</th>
+            <th>${loginLabel}</th>
+            <th>${userNameLabel}</th>
+            <th>${statusLabel}</th>
+            <th>${emailLabel}</th>
+            <th>${phoneNumberLabel}</th>
+            <th>${changeStatus}</th>
         </tr>
         </thead>
         <tbody>
@@ -77,7 +82,7 @@
                             <option value="admin">${adminRole}</option>
                             <option value="banned">${bannedRole}</option>
                         </select>
-                        <input type="submit" value="Submit"></td>
+                        <input type="submit" value="${changeStatus}"></td>
                 </form>
             </tr>
         </c:forEach>

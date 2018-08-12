@@ -1,6 +1,7 @@
 <%@ page isErrorPage="true" isELIgnored="false" contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <html>
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -13,30 +14,22 @@
     <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
+    <fmt:setBundle basename="cbb_info" var="projectInfo"/>
 
-    <fmt:message bundle="${locale}" key="locale.error.text" var="errorText"/>
-    <fmt:message bundle="${locale}" key="locale.page.title.error" var="pageTitle"/>
+    <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
+    <fmt:message bundle="${locale}" key="locale.page.title.error500" var="pageTitle"/>
+    <fmt:message bundle="${locale}" key="locale.message.error500" var="errorMessage"/>
+    <fmt:message bundle="${locale}" key="locale.message.error500.home" var="errorLink"/>
 
-    <fmt:message bundle="${locale}" key="locale.basic.projectname" var="projectName"/>
     <title>${pageTitle} | ${projectName}</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
-<div>
-    <img src="${pageContext.request.contextPath}/images/cat500.png" alt="" height="150"><h2>Error 500</h2>
-    Something went awfully wrong, oops.<br/>
-    Here's the report:<br/>
-    Request from ${pageContext.errorData.requestURI} failed
-    <br/>
-    Servlet name: ${pageContext.errorData.servletName}
-    <br/>
-    Status code: ${pageContext.errorData.statusCode}
-    <br/>
-    Exception: ${pageContext.exception}
-    <br/>
-    Message from exception: ${pageContext.exception.message}
-    <br/>
-    <a href="${pageContext.request.contextPath}/home">What in the world is this? I'm going home</a>
+<div class="container">
+    <img src="${pageContext.request.contextPath}/images/cat500.png" alt="" height="150">
+    <h2>${pageTitle}</h2><br/>
+    ${errorMessage}<br/>
+    <a href="${pageContext.request.contextPath}/home">${errorLink}</a>
 </div>
 </body>
 </html>
