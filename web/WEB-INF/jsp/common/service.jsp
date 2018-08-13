@@ -57,12 +57,14 @@
                          onerror="this.style.display='none'">
                 </div>
                 <div class="media-body">
-                    <h4 class="media-heading">${review.userLogin}</h4>
-                    <p class="text-muted">
-                        <fmt:formatDate value="${review.creationDate}" type="both"
-                                        dateStyle="short" timeStyle="short"/></p>
-                    <h3><p class="text-danger"><strong>${review.mark}</strong></p></h3>
-                    <p><br/>${review.message}</p>
+                    <div class="media-heading">
+                        <h4>${review.userLogin}</h4>
+                        <p class="text-muted">
+                            <fmt:formatDate value="${review.creationDate}" type="both"
+                                            dateStyle="short" timeStyle="short"/></p>
+                        <h3 class="text-danger"><strong>${review.mark}</strong></h3>
+                    </div>
+                    <p>${review.message}</p>
                 </div>
             </div>
             <br/>

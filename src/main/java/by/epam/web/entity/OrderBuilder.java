@@ -13,6 +13,7 @@ public class OrderBuilder {
     private Timestamp dateTime;
     private BigDecimal price;
     private boolean paid;
+    private String userLogin;
 
     public OrderBuilder setId(int id) {
         this.id = id;
@@ -58,6 +59,11 @@ public class OrderBuilder {
         return this;
     }
 
+    public OrderBuilder setUserLogin(String userLogin) {
+        this.userLogin = userLogin;
+        return this;
+    }
+
     public Order create(){
         Order order = new Order();
         order.setId(id);
@@ -66,6 +72,7 @@ public class OrderBuilder {
         order.setPrice(price);
         order.setDateTime(dateTime);
         order.setPaid(paid);
+        order.setUserLogin(userLogin);
         for (Activity activity : activityList){
             order.addActivity(activity);
         }

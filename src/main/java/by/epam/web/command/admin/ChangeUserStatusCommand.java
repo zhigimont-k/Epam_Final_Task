@@ -26,7 +26,7 @@ public class ChangeUserStatusCommand implements Command {
         PageRouter router = new PageRouter();
         try {
 
-            int id = Integer.parseInt(requestContent.getParameter(RequestParameter.USER_ID));
+            String id = requestContent.getParameter(RequestParameter.USER_ID);
             String status = requestContent.getParameter(RequestParameter.USER_STATUS);
             service.changeUserStatus(id, status);
             router.setRedirect(true);

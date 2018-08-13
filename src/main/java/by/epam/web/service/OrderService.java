@@ -8,6 +8,7 @@ import by.epam.web.dao.impl.UserDaoImpl;
 import by.epam.web.entity.Activity;
 import by.epam.web.entity.Order;
 import by.epam.web.entity.User;
+import by.epam.web.validation.OrderValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +23,8 @@ public class OrderService {
     OrderService() {
     }
 
-    public void addOrder(int userId, Timestamp time, List<Activity> activityList) throws ServiceException {
+    public void addOrder(int userId, Timestamp time, List<Activity> activityList)
+            throws ServiceException {
         Order order;
         try {
             order = new Order();
@@ -45,9 +47,22 @@ public class OrderService {
         }
     }
 
-    public List<Order> findOrdersByUser(int userId, int startPosition, int numberOfRecords) throws ServiceException {
+    public List<Order> findOrdersByUser(int userId, int startPosition, int numberOfRecords)
+            throws ServiceException {
         try {
             return orderDao.findOrdersByUser(userId, startPosition, numberOfRecords);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public boolean orderExists(int userId, Timestamp timestamp) throws ServiceException {
+        try {
+            Optional<Order> found = orderDao.findOrderByUserAndTime(userId, timestamp);
+            if (found.isPresent()){
+                return !Order.Status.CANCELLED.getName().equalsIgnoreCase(found.get().getStatus());
+            }
+            return false;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -63,19 +78,34 @@ public class OrderService {
 
     public void changeOrderStatus(int id, String status) throws ServiceException {
         try {
-            if (Order.Status.CANCELLED.getName().equalsIgnoreCase(status)){
-                orderDao.cancelOrder(id);
-            } else {
-                orderDao.changeOrderStatus(id, status);
-            }
+            orderDao.changeOrderStatus(id, status);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
+    public void cancelOrder(int id) throws ServiceException {
+        try {
+            Optional<Order> orderOptional = orderDao.findOrderById(id);
+            if (orderOptional.isPresent() &&
+                    OrderValidator.getInstance().validateOrderTimeAfterNow
+                            (orderOptional.get().getDateTime())) {
+                orderDao.cancelOrder(id);
+            }
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+
+    }
+
     public void payForOrder(int orderId) throws ServiceException {
         try {
-            orderDao.payForOrder(orderId);
+            Optional<Order> orderOptional = orderDao.findOrderById(orderId);
+            if (orderOptional.isPresent() &&
+                    OrderValidator.getInstance().validateOrderTimeAfterNow
+                            (orderOptional.get().getDateTime())) {
+                orderDao.payForOrder(orderId);
+            }
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

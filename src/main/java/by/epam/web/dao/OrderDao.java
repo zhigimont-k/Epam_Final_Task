@@ -7,6 +7,7 @@ import by.epam.web.entity.Order;
 import by.epam.web.entity.User;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,7 @@ public interface OrderDao extends AbstractDao<Order> {
      * @throws DaoException if SQLException occurs
      */
     void changeOrderStatus(int orderId, String status) throws DaoException;
-    void cancelOrder(int orderId);
+    void cancelOrder(int orderId) throws DaoException;
 
     /**
      * Looks for order by id
@@ -66,8 +67,12 @@ public interface OrderDao extends AbstractDao<Order> {
      * @return
      * @throws DaoException if SQLException occurs
      */
-    List<Order> findOrdersByUser(int userId, int startPosition, int numberOfRecords) throws DaoException;
+    List<Order> findOrdersByUser(int userId, int startPosition, int numberOfRecords)
+            throws DaoException;
 
+
+    Optional<Order> findOrderByUserAndTime(int userId, Timestamp timestamp)
+            throws DaoException;
     /**
      * Returns list of activities of given order
      *
@@ -118,5 +123,5 @@ public interface OrderDao extends AbstractDao<Order> {
     /**
      * Finds pending orders with expired time and sets their status to canceled
      */
-    void cancelUnconfirmedOutdatedOrders();
+    void cancelUnconfirmedOutdatedOrders() throws DaoException;
 }

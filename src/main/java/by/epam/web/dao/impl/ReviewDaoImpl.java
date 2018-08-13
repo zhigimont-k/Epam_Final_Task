@@ -48,7 +48,8 @@ public class ReviewDaoImpl implements ReviewDao {
             "WHERE review.review_id = ?";
 
     @Override
-    public void addReview(int userId, int activityId, int mark, String message) {
+    public void addReview(int userId, int activityId, int mark, String message)
+            throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -58,10 +59,10 @@ public class ReviewDaoImpl implements ReviewDao {
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, activityId);
             preparedStatement.setInt(3, mark);
-            preparedStatement.setString(4, message);
+            preparedStatement.setString(4, message.trim());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to add review" + e.getMessage(), e);
+            throw new DaoException("Failed to add review" + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
@@ -74,18 +75,18 @@ public class ReviewDaoImpl implements ReviewDao {
     }
 
     @Override
-    public void updateReview(int id, int mark, String message) {
+    public void updateReview(int id, int mark, String message) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = pool.takeConnection();
             preparedStatement = connection.prepareStatement(UPDATE_REVIEW);
             preparedStatement.setInt(1, mark);
-            preparedStatement.setString(2, message);
+            preparedStatement.setString(2, message.trim());
             preparedStatement.setInt(3, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to update review" + e.getMessage(), e);
+            throw new DaoException("Failed to update review" + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
@@ -98,7 +99,7 @@ public class ReviewDaoImpl implements ReviewDao {
     }
 
     @Override
-    public Optional<Review> findReviewById(int id) {
+    public Optional<Review> findReviewById(int id) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -115,11 +116,11 @@ public class ReviewDaoImpl implements ReviewDao {
                         .setActivityId(resultSet.getInt(DB_REVIEW_ACTIVITY_ID_FIELD))
                         .setCreationDate(resultSet.getTimestamp(DB_REVIEW_CREATION_DATE_FIELD))
                         .setMark(resultSet.getInt(DB_REVIEW_MARK_FIELD))
-                        .setMessage(resultSet.getString(DB_REVIEW_MESSAGE_FIELD))
+                        .setMessage(resultSet.getString(DB_REVIEW_MESSAGE_FIELD).trim())
                         .create());
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to find review by id" + e.getMessage(), e);
+            throw new DaoException("Failed to find review by id" + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
@@ -133,7 +134,7 @@ public class ReviewDaoImpl implements ReviewDao {
     }
 
     @Override
-    public List<Review> findReviewsByActivityId(int activityId) {
+    public List<Review> findReviewsByActivityId(int activityId) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -150,11 +151,11 @@ public class ReviewDaoImpl implements ReviewDao {
                         .setActivityId(activityId)
                         .setCreationDate(resultSet.getTimestamp(DB_REVIEW_CREATION_DATE_FIELD))
                         .setMark(resultSet.getInt(DB_REVIEW_MARK_FIELD))
-                        .setMessage(resultSet.getString(DB_REVIEW_MESSAGE_FIELD))
+                        .setMessage(resultSet.getString(DB_REVIEW_MESSAGE_FIELD).trim())
                         .create());
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to find review by activity id" + e.getMessage(), e);
+            throw new DaoException("Failed to find review by activity id" + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
@@ -168,7 +169,7 @@ public class ReviewDaoImpl implements ReviewDao {
     }
 
     @Override
-    public void deleteReviewById(int id) {
+    public void deleteReviewById(int id) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -177,7 +178,7 @@ public class ReviewDaoImpl implements ReviewDao {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to find review by user id" + e.getMessage(), e);
+            throw new DaoException("Failed to find review by user id" + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {

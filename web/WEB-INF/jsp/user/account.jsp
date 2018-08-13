@@ -4,14 +4,6 @@
 
 <html>
 <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-          crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-            crossorigin="anonymous"></script>
-    <script src="${pageContext.request.contextPath}/js/support/jquery-3.3.1.min.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
     <fmt:setBundle basename="cbb_info" var="projectInfo"/>
@@ -39,9 +31,52 @@
 
     <fmt:message bundle="${locale}" key="locale.action.update" var="button"/>
 
-    <script type="text/javascript" src="${pageContext.request.contextPath}/inputScript.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/inputScript.js"></script>
 
     <title>${pageTitle} | ${projectName}</title>
+
+    <script>
+        function validateFileUpload() {
+            var MAX_SIZE = 16177215;
+            var fuData = document.getElementById('fileChooser');
+            var FileUploadPath = fuData.value;
+
+
+            if (FileUploadPath == '') {
+                alert("Please upload an image");
+
+            } else {
+                var Extension = FileUploadPath.substring(FileUploadPath.lastIndexOf('.') + 1).toLowerCase();
+
+
+                if (Extension == "gif" || Extension == "png" || Extension == "bmp"
+                    || Extension == "jpeg" || Extension == "jpg") {
+
+
+                    if (fuData.files && fuData.files[0]) {
+
+                        var size = fuData.files[0].size;
+
+                        if (size > MAX_SIZE) {
+                            alert("Maximum file size exceeds");
+                            return;
+                        } else {
+                            var reader = new FileReader();
+
+                            reader.onload = function (e) {
+                                $('#blah').attr('src', e.target.result);
+                            }
+
+                            reader.readAsDataURL(fuData.files[0]);
+                        }
+                    }
+                }
+                else {
+                    alert("Photo only allows file types of GIF, PNG, JPG, JPEG and BMP. ");
+                }
+            }
+        }
+    </script>
 </head>
 <body>
 
@@ -134,7 +169,9 @@
         <form name="updateUserForm" method="POST" action="image" enctype="multipart/form-data">
             <input type="hidden" name="userId" value="${sessionScope.user.id}"/>
             <input type="file" name="photo" size="50" required/><br><br>
-            <input type="submit" value="${submit}">
+            <input type="submit"
+                   value="${submit}"
+                   onsubmit="validateFileUpload()">
         </form>
     </div>
 </div>

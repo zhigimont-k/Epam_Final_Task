@@ -24,8 +24,7 @@ public class DeleteReviewCommand implements Command {
         PageRouter router = new PageRouter();
         try {
             ReviewService service = ServiceFactory.getInstance().getReviewService();
-            int reviewId = Integer.parseInt(requestContent.getParameter
-                    (RequestParameter.REVIEW_ID));
+            String reviewId = requestContent.getParameter(RequestParameter.REVIEW_ID);
             Optional<Review> found = service.findReviewById(reviewId);
             if (found.isPresent()) {
                 int activityId = found.get().getActivityId();

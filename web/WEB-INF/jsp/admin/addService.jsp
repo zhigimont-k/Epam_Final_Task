@@ -38,6 +38,12 @@
     <div class="row centered-form center-block">
         <div class="container col-md-4 col-md-offset-6">
             <h3>${addService}:</h3>
+            <c:if test="${dataExists == true}">
+                <div class="alert alert-danger alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>${serviceExists}</strong>
+                </div>
+            </c:if>
             <form name="addServiceForm" method="POST" action="app">
                 <input type="hidden" name="command" value="addActivity"/>
                 <div class="form-group">
@@ -73,12 +79,6 @@
                 </div>
                 <button type="submit" class="btn btn-default">${button}</button>
             </form>
-            <c:if test="${dataExists == true}">
-                <div class="alert alert-danger alert-dismissible">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>${serviceExists}</strong>
-                </div>
-            </c:if>
         </div>
     </div>
 </div>

@@ -26,6 +26,7 @@ public class Order extends Entity {
     private Timestamp dateTime;
     private BigDecimal price;
     private boolean paid;
+    private String userLogin;
 
     public int getId() {
         return id;
@@ -131,6 +132,14 @@ public class Order extends Entity {
         this.paid = paid;
     }
 
+    public String getUserLogin() {
+        return userLogin;
+    }
+
+    public void setUserLogin(String userLogin) {
+        this.userLogin = userLogin;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
@@ -140,6 +149,8 @@ public class Order extends Entity {
                 ", status=" + status +
                 ", dateTime=" + dateTime +
                 ", price=" + price +
+                ", paid=" + paid +
+                ", userLogin=" + userLogin +
                 '}';
     }
 

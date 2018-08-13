@@ -63,5 +63,6 @@ public final class RequestParameter {
     public static final String OPERATION_FAIL = "operationFail";
     public static final String NOT_ENOUGH_MONEY = "notEnoughMoney";
     public static final String USER_IS_BANNED = "userIsBanned";
+    public static final String ORDER_EXISTS = "orderExists";
     private RequestParameter(){}
 }

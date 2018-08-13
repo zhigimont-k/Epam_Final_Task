@@ -17,18 +17,18 @@ public class ActivityService {
     }
 
     public boolean addActivity(String name, String description, String price) throws ServiceException {
-        if (!ActivityValidator.getInstance().validateActivity(name, description, price)) {
-            return false;
-        }
-        Activity activity;
         try {
+            if (!ActivityValidator.getInstance().validateActivity(name, description, price)) {
+                return false;
+            }
+            Activity activity;
             activity = new Activity();
             activity.setName(name);
             activity.setDescription(description);
             activity.setPrice(new BigDecimal(price));
             activityDao.addActivity(activity);
             return true;
-        } catch (DaoException e) {
+        } catch (DaoException e){
             throw new ServiceException(e);
         }
     }
@@ -45,16 +45,16 @@ public class ActivityService {
     public boolean activityExists(int activityId, String activityName) throws ServiceException {
         try {
             List<Activity> allActivities = activityDao.findAllActivities();
-            for (Activity activity : allActivities){
+            for (Activity activity : allActivities) {
                 if (activity.getName().equalsIgnoreCase(activityName) &&
-                        activity.getId() != activityId){
+                        activity.getId() != activityId) {
                     return true;
                 }
             }
-            return false;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
+        return false;
     }
 
     public List<Activity> findAllActivities() throws ServiceException {
@@ -71,6 +71,7 @@ public class ActivityService {
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
+
     }
 
     public boolean updateActivity(int id, String name, String description, String price,

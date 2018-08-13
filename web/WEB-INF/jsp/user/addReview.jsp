@@ -20,37 +20,30 @@
     <fmt:message bundle="${locale}" key="locale.action.add.review" var="button"/>
 </head>
 <body>
-<div class="container">
-    <div class="row centered-form center-block">
-        <div class="container col-md-4 col-md-offset-6">
-            <h3>${addReview}:</h3>
-            <form name="addReviewForm" method="POST" action="app">
-                <input type="hidden" name="activityId" value="${activity.id}"/>
-                <input type="hidden" name="command" value="addReview"/>
-                <div class="form-group">
-                    <label>${markLabel}:
-                        <br/>
-                        <input type="number"
-                               name="reviewMark"
-                               max="10"
-                               min="1"
-                               required/>
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>${messageLabel}:
-                        <br/>
-                        <textarea name="reviewMessage"
-                                  maxlength="280" cols="10"
-                                  rows="10"
-                                  class="form-control noresize"
-                                  required></textarea>
-                    </label>
-                </div>
-                <button type="submit" class="btn btn-default">${button}</button>
-            </form>
-        </div>
+<h3>${addReview}:</h3>
+<form name="addReviewForm" method="POST" action="app">
+    <input type="hidden" name="activityId" value="${activity.id}"/>
+    <input type="hidden" name="command" value="addReview"/>
+    <div class="form-group">
+        <label>${markLabel}:
+            <br/>
+            <input type="number"
+                   name="reviewMark"
+                   max="10"
+                   min="1"
+                   required/>
+        </label>
     </div>
-</div>
+    <div class="form-group">
+        <label>${messageLabel}:
+            <br/>
+            <textarea name="reviewMessage"
+                      maxlength="280" cols="10"
+                      rows="10"
+                      class="form-control noresize"></textarea>
+        </label>
+    </div>
+    <button type="submit" class="btn btn-default">${button}</button>
+</form>
 </body>
 </html>

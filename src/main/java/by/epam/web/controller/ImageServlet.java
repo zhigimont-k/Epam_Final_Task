@@ -28,6 +28,8 @@ import java.sql.Statement;
 public class ImageServlet extends HttpServlet {
     private static Logger logger = LogManager.getLogger();
     private static ConnectionPool pool = ConnectionPool.getInstance();
+    private static final int IMAGE_NAME_MAX_LENTH = 160;
+    private static final int IMAGE_MAX_SIZE = 16177215;
     private static final String FIND_IMAGE_BY_USER_ID = "SELECT image, image_name " +
             "FROM user WHERE user_id = ?";
     private static final String UPDATE_USER_IMAGE = "UPDATE user " +
@@ -63,7 +65,7 @@ public class ImageServlet extends HttpServlet {
             response.setHeader(CONTENT_TYPE_HEADER, contentType);
             response.setHeader(CONTENT_LENGTH_HEADER, String.valueOf(imageData.length));
             response.setHeader(CONTENT_DISPOSITION_HEADER,
-                    CONTENT_DISPOSITION_HEADER_VALUE+ imageFileName + BACK_SLASH);
+                    CONTENT_DISPOSITION_HEADER_VALUE + imageFileName + BACK_SLASH);
             response.getOutputStream().write(imageData);
 
         } catch (PoolException e) {
@@ -90,18 +92,21 @@ public class ImageServlet extends HttpServlet {
         String fileName = getFileName(filePart);
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
-        if (filePart != null) {
-            logger.log(Level.INFO, filePart.getName());
-            logger.log(Level.INFO, filePart.getSize());
-            logger.log(Level.INFO, filePart.getContentType());
-            inputStream = filePart.getInputStream();
+        if (filePart.getSize() == 0 || filePart.getSize() > IMAGE_MAX_SIZE) {
+            logger.log(Level.ERROR, "File size is too big or empty");
+            return;
         }
+        logger.log(Level.INFO, filePart.getName());
+        logger.log(Level.INFO, filePart.getSize());
+        logger.log(Level.INFO, filePart.getContentType());
+        inputStream = filePart.getInputStream();
         try {
+            if (inputStream == null) {
+                return;
+            }
             connection = pool.takeConnection();
             preparedStatement = connection.prepareStatement(UPDATE_USER_IMAGE);
-            if (inputStream != null) {
-                preparedStatement.setBlob(1, inputStream);
-            }
+            preparedStatement.setBlob(1, inputStream);
             preparedStatement.setString(2, fileName);
             preparedStatement.setInt(3, userId);
             int row = preparedStatement.executeUpdate();
@@ -128,8 +133,12 @@ public class ImageServlet extends HttpServlet {
     private String getFileName(Part part) {
         for (String content : part.getHeader(CONTENT_DISPOSITION_HEADER).split(HEADER_SPLITTER)) {
             if (content.trim().startsWith(FILENAME_PARAMETER)) {
-                return content.substring(
+                String result = content.substring(
                         content.indexOf('=') + 1).trim().replace(BACK_SLASH, EMPTY);
+                if (result.length() > IMAGE_NAME_MAX_LENTH) {
+                    result = result.substring(result.length() - IMAGE_NAME_MAX_LENTH);
+                }
+                return result;
             }
         }
         return EMPTY;

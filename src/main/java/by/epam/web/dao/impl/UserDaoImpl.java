@@ -81,7 +81,7 @@ public class UserDaoImpl implements UserDao {
             "WHERE user.user_id = ? AND card.card_number = ?";
 
     @Override
-    public User register(User user) throws DaoException {
+    public User register(User user) throws DaoException{
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -94,7 +94,8 @@ public class UserDaoImpl implements UserDao {
             String phoneNumber = user.getPhoneNumber();
             String userName = user.getUserName();
             String cardNumber = user.getCardNumber();
-            preparedStatement = connection.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement = connection.prepareStatement(INSERT_USER,
+                    Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, password);
             preparedStatement.setString(3, email);
@@ -106,8 +107,6 @@ public class UserDaoImpl implements UserDao {
                 int userId = resultSet.getInt(1);
                 user.setId(userId);
                 user.setStatus(User.Status.USER);
-            } else {
-                throw new DaoException("Couldn't retrieve new user's ID");
             }
             preparedStatement = connection.prepareStatement(ADD_CARD);
             preparedStatement.setString(1, cardNumber);
@@ -124,7 +123,7 @@ public class UserDaoImpl implements UserDao {
             } catch (SQLException ex) {
                 logger.log(Level.ERROR, "Couldn't rollback connection: " + e.getMessage(), e);
             }
-            logger.log(Level.ERROR, "Failed to register user" + e.getMessage(), e);
+            throw new DaoException("Failed to register user" + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
@@ -138,7 +137,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean propertyExists(UniqueUserInfo property, String value) {
+    public boolean propertyExists(UniqueUserInfo property, String value) throws DaoException{
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet;
@@ -162,7 +161,7 @@ public class UserDaoImpl implements UserDao {
             resultSet = preparedStatement.executeQuery();
             return resultSet.next();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Couldn't check uniqueness: " + e.getMessage(), e);
+            throw new DaoException("Couldn't check uniqueness: " + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
@@ -172,11 +171,11 @@ public class UserDaoImpl implements UserDao {
                 throw new RuntimeException(e);
             }
         }
-        return false;
     }
 
     @Override
-    public Optional<User> findUserByLoginAndPassword(String login, String password) {
+    public Optional<User> findUserByLoginAndPassword(String login, String password)
+            throws DaoException{
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -200,7 +199,7 @@ public class UserDaoImpl implements UserDao {
                         .create());
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to find user by login and password: " + e.getMessage(), e);
+            throw new DaoException("Failed to find user by login and password: " + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
@@ -214,7 +213,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> findUserById(int id) {
+    public Optional<User> findUserById(int id) throws DaoException{
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -237,7 +236,7 @@ public class UserDaoImpl implements UserDao {
                         .create());
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to find user by id: " + e.getMessage(), e);
+            throw new DaoException("Failed to find user by id: " + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
@@ -251,7 +250,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> findAllUsers() {
+    public List<User> findAllUsers() throws DaoException{
         ProxyConnection connection = null;
         ResultSet resultSet;
         Statement statement = null;
@@ -272,7 +271,7 @@ public class UserDaoImpl implements UserDao {
                         .create());
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to find users: " + e.getMessage(), e);
+            throw new DaoException("Failed to find users: " + e.getMessage(), e);
         } finally {
             closeStatement(statement);
             try {
@@ -286,7 +285,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void changeUserStatus(int userId, String status) {
+    public void changeUserStatus(int userId, String status) throws DaoException{
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -296,7 +295,7 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setInt(2, userId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to change user status: " + e.getMessage(), e);
+            throw new DaoException("Failed to change user status: " + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
@@ -309,7 +308,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void updateUser(int id, String password, String userName) {
+    public void updateUser(int id, String password, String userName) throws DaoException{
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -321,7 +320,7 @@ public class UserDaoImpl implements UserDao {
             logger.log(Level.INFO, preparedStatement);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to update user: " + e.getMessage(), e);
+            throw new DaoException("Failed to update user: " + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
@@ -334,7 +333,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void updateUserName(int id, String userName) {
+    public void updateUserName(int id, String userName) throws DaoException{
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -344,7 +343,7 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setInt(2, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to change user name: " + e.getMessage(), e);
+            throw new DaoException("Failed to change user name: " + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
@@ -357,7 +356,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> findUserByEmail(String email) {
+    public Optional<User> findUserByEmail(String email) throws DaoException{
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -379,7 +378,7 @@ public class UserDaoImpl implements UserDao {
                         .create());
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to find user by email: " + e.getMessage(), e);
+            throw new DaoException("Failed to find user by email: " + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
@@ -392,7 +391,7 @@ public class UserDaoImpl implements UserDao {
         return result;
     }
 
-    public void addMoneyToCard(String cardNumber, BigDecimal amount) {
+    public void addMoneyToCard(String cardNumber, BigDecimal amount) throws DaoException{
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -402,7 +401,7 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(2, cardNumber);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to add money to card: " + e.getMessage(), e);
+            throw new DaoException("Failed to add money to card: " + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
@@ -415,7 +414,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public BigDecimal findMoneyByCardNumber(String cardNumber) {
+    public BigDecimal findMoneyByCardNumber(String cardNumber) throws DaoException{
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         BigDecimal money = BigDecimal.ZERO;
@@ -428,7 +427,7 @@ public class UserDaoImpl implements UserDao {
                 money = money.add(resultSet.getBigDecimal(DB_CARD_MONEY_FIELD));
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to find money: " + e.getMessage(), e);
+            throw new DaoException("Failed to find money: " + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
@@ -442,7 +441,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> findUserByIdAndCardNumber(int userId, String cardNumber) {
+    public Optional<User> findUserByIdAndCardNumber(int userId, String cardNumber)
+            throws DaoException{
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -466,7 +466,7 @@ public class UserDaoImpl implements UserDao {
                         .create());
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to find user by login and password: " + e.getMessage(), e);
+            throw new DaoException("Failed to find user by login and password: " + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {

@@ -31,12 +31,12 @@ public class UpdateUserCommand implements Command {
             if (service.findUserByLoginAndPassword(user.getLogin(), password).isPresent()) {
                 requestContent.setSessionAttribute(RequestParameter.AUTH_FAIL, false);
                 if (newPassword.isEmpty()) {
-                    service.updateUserName(user.getId(), userName);
-                    Optional<User> found = service.findUserById(user.getId());
+                    service.updateUserName(String.valueOf(user.getId()), userName);
+                    Optional<User> found = service.findUserById(String.valueOf(user.getId()));
                     requestContent.setSessionAttribute(RequestParameter.USER, found.get());
                 } else {
-                    service.updateUser(user.getId(), newPassword, userName);
-                    Optional<User> found = service.findUserById(user.getId());
+                    service.updateUser(String.valueOf(user.getId()), newPassword, userName);
+                    Optional<User> found = service.findUserById(String.valueOf(user.getId()));
                     requestContent.setSessionAttribute(RequestParameter.USER, found.get());
                 }
                 router.setRedirect(true);

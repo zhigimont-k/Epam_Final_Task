@@ -5,9 +5,12 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,6 +24,7 @@ public class OrderValidator {
     private static final String DATE_FORMAT_REGEX = "\\d{4}-\\d{2}-\\d{2}";
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private static final String TIME_FORMAT_REGEX = "\\d{2}:\\d{2}";
+    private static final String UTC = "UTC";
     private static LocalTime minTime;
     private static LocalTime maxTime;
     private static final LocalTime DEFAULT_TIME = LocalTime.parse("00:00");
@@ -96,6 +100,15 @@ public class OrderValidator {
             }
         }
         return result;
+    }
+
+    //////?????????????????????????
+    public boolean validateOrderTimeAfterNow(Timestamp timestamp){
+        LocalDate orderTime = timestamp.toInstant()
+                .atZone(ZoneId.of(UTC))
+                .toLocalDate();
+        LocalDate now = LocalDate.now();
+        return orderTime.isAfter(now);
     }
 
     private boolean validateWorkingHours(String time) {

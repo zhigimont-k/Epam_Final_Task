@@ -16,8 +16,8 @@ import java.util.Properties;
 
 public class MailSenderThread extends Thread {
     private static Logger logger = LogManager.getLogger();
-    private static final String FROM_MAIL = "catbeautysalonmeow@gmail.com";
     private static final String MAIL_PROPERTIES_PATH = "mail.properties";
+    private static final String SENDER_NAME = "mail.sender.name";
     private static final String HOST = "mail.smtps.host";
     private static final String PORT = "mail.smtp.port";
     private static final String USER = "smtps.auth.user";
@@ -32,7 +32,6 @@ public class MailSenderThread extends Thread {
 
     public MailSenderThread(String mailTo, String mailSubject, String mailContent) {
         this.mailTo = mailTo;
-        this.mailFrom = FROM_MAIL;
         this.mailSubject = mailSubject;
         this.mailContent = mailContent;
     }
@@ -56,7 +55,8 @@ public class MailSenderThread extends Thread {
             buildMailSession();
             Message message = new MimeMessage(mailSession);
             message.setFrom(new InternetAddress(mailFrom));
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(mailTo));
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(
+                    properties.getProperty(SENDER_NAME)));
             message.setSubject(mailSubject);
             message.setContent(mailContent, CONTENT_VALUE);
             message.setSentDate(new Date());

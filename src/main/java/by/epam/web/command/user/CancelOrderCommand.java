@@ -30,7 +30,7 @@ public class CancelOrderCommand implements Command {
             Optional<Order> found = service.findOrderById(Integer.parseInt(id));
             if (found.isPresent()) {
                 if (user.getId() == found.get().getUserId()) {
-                    service.changeOrderStatus(Integer.parseInt(id), Order.Status.CANCELLED.getName());
+                    service.cancelOrder(Integer.parseInt(id));
                     router.setRedirect(true);
                     router.setPage(PageAddress.VIEW_USER_ORDERS);
                 } else {

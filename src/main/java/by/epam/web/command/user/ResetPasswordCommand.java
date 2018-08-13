@@ -32,7 +32,8 @@ public class ResetPasswordCommand implements Command {
             Optional<User> found = service.findUserByEmail(email);
             if (found.isPresent()) {
                 String newPassword = PasswordGenerator.generatePassword();
-                service.updateUser(found.get().getId(), newPassword, found.get().getUserName());
+                service.updateUser(String.valueOf(found.get().getId()), newPassword,
+                        found.get().getUserName());
                 found.get().setPassword(newPassword);
                 requestContent.setSessionAttribute(RequestParameter.OPERATION_SUCCESS,
                         true);

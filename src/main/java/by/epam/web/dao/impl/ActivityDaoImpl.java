@@ -54,7 +54,7 @@ public class ActivityDaoImpl implements ActivityDao {
             "WHERE service_id = ?";
 
     @Override
-    public void addActivity(Activity activity) {
+    public void addActivity(Activity activity) throws DaoException{
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -68,7 +68,7 @@ public class ActivityDaoImpl implements ActivityDao {
             preparedStatement.setBigDecimal(3, price);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to add activity: " + e.getMessage(), e);
+            throw new DaoException("Failed to add activity: " + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
@@ -81,7 +81,7 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public Optional<Activity> findActivityById(int id) {
+    public Optional<Activity> findActivityById(int id) throws DaoException{
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -101,7 +101,7 @@ public class ActivityDaoImpl implements ActivityDao {
                         .create());
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to find activity by id" + e.getMessage(), e);
+            throw new DaoException("Failed to find activity by id" + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
@@ -115,7 +115,7 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public Optional<Activity> findActivityByName(String name) {
+    public Optional<Activity> findActivityByName(String name) throws DaoException{
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -136,7 +136,7 @@ public class ActivityDaoImpl implements ActivityDao {
                 );
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to find activity by name" + e.getMessage(), e);
+            throw new DaoException("Failed to find activity by name" + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
@@ -150,7 +150,7 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public List<Activity> findAllActivities() {
+    public List<Activity> findAllActivities() throws DaoException{
         ProxyConnection connection = null;
         ResultSet resultSet;
         Statement statement = null;
@@ -169,7 +169,7 @@ public class ActivityDaoImpl implements ActivityDao {
                         .create());
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to find activities" + e.getMessage(), e);
+            throw new DaoException("Failed to find activities" + e.getMessage(), e);
         } finally {
             closeStatement(statement);
             try {
@@ -183,7 +183,7 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public List<Activity> findAvailableActivities() {
+    public List<Activity> findAvailableActivities() throws DaoException{
         ProxyConnection connection = null;
         ResultSet resultSet;
         Statement statement = null;
@@ -202,7 +202,7 @@ public class ActivityDaoImpl implements ActivityDao {
                         .create());
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to find available activities" + e.getMessage(), e);
+            throw new DaoException("Failed to find available activities" + e.getMessage(), e);
         } finally {
             closeStatement(statement);
             try {
@@ -217,7 +217,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     @Override
     public void updateActivity(int id, String name, String description,
-                               BigDecimal price, String status) {
+                               BigDecimal price, String status) throws DaoException{
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -230,7 +230,7 @@ public class ActivityDaoImpl implements ActivityDao {
             preparedStatement.setInt(5, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to update activity:  " + e.getMessage(), e);
+            throw new DaoException("Failed to update activity:  " + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {

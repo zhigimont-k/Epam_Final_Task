@@ -47,9 +47,15 @@
                 <li><a href="${pageContext.request.contextPath}/login">${signIn}</a></li>
             </c:if>
             <c:if test="${sessionScope.user ne null && sessionScope.user.status ne 'banned'}">
-                <li><a href="app?command=viewUserOrders&pageNumber=1">${myOrders}</a></li>
-                <li><a href="app?command=viewUserInfo">${accountPage}</a></li>
-                <li><a href="${pageContext.request.contextPath}/addMoney">${addMoney}</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">${accountPage}
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="app?command=viewUserOrders&pageNumber=1">${myOrders}</a></li>
+                        <li><a href="app?command=viewUserInfo">${accountPage}</a></li>
+                        <li><a href="${pageContext.request.contextPath}/addMoney">${addMoney}</a></li>
+                    </ul>
+                </li>
             </c:if>
             <c:if test="${sessionScope.user ne null && sessionScope.user.status == 'admin'}">
                 <li><a href="${pageContext.request.contextPath}/addService">${addService}</a></li>
@@ -59,15 +65,13 @@
             <c:if test="${sessionScope.user ne null && sessionScope.user.status ne 'banned'}">
                 <li><a href="app?command=createOrder">${addOrder}</a></li>
             </c:if>
-            <c:if test="${sessionScope.user ne null}">
+
         </ul>
-        <ul class="nav navbar-nav navbar-right text-uppercase">
-            <li><form name="reviewEditForm" method="POST" action="app">
-                <input type="hidden" name="command" value="logout"/>
-                <input type="submit" class="btn btn-link" value="${logout}"/>
-            </form></li>
-            </c:if>
-        </ul>
+        <c:if test="${sessionScope.user ne null}">
+            <ul class="nav navbar-nav navbar-right text-uppercase">
+                <li><a href="app?command=logout">${logout}</a></li>
+            </ul>
+        </c:if>
     </div>
 </nav>
 </body>

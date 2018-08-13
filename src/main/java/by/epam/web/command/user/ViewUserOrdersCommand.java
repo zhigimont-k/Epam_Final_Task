@@ -39,7 +39,6 @@ public class ViewUserOrdersCommand implements Command {
                 List<Order> orderList = service.findOrdersByUser(user.getId(),
                         (pageNumber - 1) * RECORDS_PER_PAGE,
                         RECORDS_PER_PAGE);
-                logger.log(Level.INFO, orderList);
                 requestContent.setAttribute(RequestParameter.ORDER_LIST, orderList);
                 requestContent.setAttribute(RequestParameter.NUMBER_OF_PAGES, numberOfPages);
                 requestContent.setAttribute(RequestParameter.CURRENT_TABLE_PAGE_NUMBER, pageNumber);
