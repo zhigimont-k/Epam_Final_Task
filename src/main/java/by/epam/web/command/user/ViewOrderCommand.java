@@ -34,6 +34,7 @@ public class ViewOrderCommand implements Command {
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
         try {
             int userId = ((User) requestContent.getSessionAttribute(RequestParameter.USER)).getId();
             String date = requestContent.getParameter(RequestParameter.ORDER_DATE);
@@ -41,8 +42,6 @@ public class ViewOrderCommand implements Command {
             String[] activityIdList = requestContent.getParameters(RequestParameter.ACTIVITY_ID);
             BigDecimal orderPrice = new BigDecimal(BigInteger.ZERO);
             List<Activity> activityList = new ArrayList<>();
-//            logger.log(Level.INFO, "order exists: "+service.orderExists
-//                    (userId, Timestamp.valueOf(getUTCTimestamp(date, time))));
             if (service.orderExists(userId, buildTimestamp(date, time))) {
                 requestContent.setSessionAttribute(RequestParameter.ORDER_EXISTS, true);
                 router.setRedirect(true);
@@ -81,26 +80,6 @@ public class ViewOrderCommand implements Command {
         if (StringUtils.countMatches(orderTime, ":") == 1) {
             orderTime += ":00";
         }
-        logger.log(Level.INFO, "order time before adding to db: "+orderTime);
         return Timestamp.valueOf(orderTime.replace("T", " "));
-    }
-
-
-    private static String getUTCTimestamp(String date, String time) {
-        String orderTime = date + " " + time;
-        if (StringUtils.countMatches(orderTime, ":") == 1) {
-            orderTime += ":00";
-        }
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
-
-        final TimeZone utc = TimeZone.getTimeZone("UTC");
-        dateFormatter.setTimeZone(utc);
-
-        return dateFormatter.format(LocalDateTime.parse(orderTime));
-    }
-
-    public static Date dateToUTC(Date date){
-        return new Date(date.getTime() -
-                Calendar.getInstance().getTimeZone().getOffset(date.getTime()));
     }
 }

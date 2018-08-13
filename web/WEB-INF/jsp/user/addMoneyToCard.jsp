@@ -46,7 +46,7 @@
                                name="money"
                                minlength="1"
                                maxlength="6"
-                               pattern="d{1,6}"
+                               pattern="\d{1,6}"
                                required/>
                     </label>
                 </div>

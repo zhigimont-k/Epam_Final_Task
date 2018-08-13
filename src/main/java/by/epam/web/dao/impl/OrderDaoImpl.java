@@ -62,7 +62,8 @@ public class OrderDaoImpl implements OrderDao {
     private static final String FIND_ORDER_BY_USER_ID_AND_TIME = "SELECT order_info.order_id, " +
             "order_info.user_id, order_info.order_status, order_info.order_time, order_info.order_price, order_info.paid " +
             "FROM order_info " +
-            "WHERE order_info.user_id = ? AND order_info.order_time = ?";
+            "WHERE order_info.user_id = ? AND " +
+            "CONVERT_TZ(?, @@session.time_zone, '+00:00') = order_info.order_time";
     private static final String FIND_ORDERS_BY_USER_ID_LIMITED = FIND_ORDERS_BY_USER_ID +
             "LIMIT ?,? ";
     private static final String FIND_ACTIVITIES_BY_ORDER_ID = "SELECT service.service_id, " +
@@ -365,7 +366,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public List<Activity> findActivitiesByOrderId(int id) throws DaoException{
+    public List<Activity> findActivitiesByOrderId(int id) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -399,7 +400,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public List<String> findEmailsForUpcomingOrders() throws DaoException{
+    public List<String> findEmailsForUpcomingOrders() throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         Statement statement;
@@ -449,7 +450,7 @@ public class OrderDaoImpl implements OrderDao {
         return emailList;
     }
 
-    public void payForOrder(int orderId) throws DaoException{
+    public void payForOrder(int orderId) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -471,7 +472,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public int countOrders() throws DaoException{
+    public int countOrders() throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         Statement statement = null;
@@ -498,7 +499,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public int countUserOrders(int userId) throws DaoException{
+    public int countUserOrders(int userId) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -526,7 +527,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public void cancelUnconfirmedOutdatedOrders() throws DaoException{
+    public void cancelUnconfirmedOutdatedOrders() throws DaoException {
         ProxyConnection connection = null;
         Statement statement = null;
         try {
@@ -570,7 +571,7 @@ public class OrderDaoImpl implements OrderDao {
             }
             return Optional.empty();
         } catch (SQLException e) {
-            throw new DaoException("Failed to find order by id" + e.getMessage(), e);
+            throw new DaoException("Failed to find order by user id and time: " + e.getMessage(), e);
         } finally {
             closeStatement(preparedStatement);
             try {
