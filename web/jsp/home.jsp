@@ -14,19 +14,29 @@
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
     <fmt:setBundle basename="cbb_info" var="projectInfo"/>
+
+    <fmt:message bundle="${locale}" key="locale.action.signin" var="signIn"/>
+    <fmt:message bundle="${locale}" key="locale.action.signup" var="signUp"/>
     <fmt:message bundle="${locale}" key="locale.page.title.home" var="pageTitle"/>
     <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
     <fmt:message bundle="${projectInfo}" key="cbb.name.full" var="projectNameFull"/>
     <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
-<main>
-    <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
-    <jsp:include page="/WEB-INF/jsp/page_structure/welcomePanel.jsp"/>
-    <div class="jumbotron">
-        <h1 class="text-uppercase text-danger">${projectNameFull}</h1>
-        <p>Bootstrap is the most popular HTML, CSS, and JS framework for developing
-            responsive, mobile-first projects on the web.</p>
+<jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
+<main class="home">
+    <div class="container">
+        <h1 class="text-uppercase">${projectNameFull}</h1>
+        <h4>
+            <jsp:include page="/WEB-INF/jsp/page_structure/welcomePanel.jsp"/>
+            Bootstrap is the most popular HTML, CSS, and JS framework for developing
+            responsive, mobile-first projects on the web.
+        </h4>
+        <br/>
+        <c:if test="${empty sessionScope.user}">
+            <a href="${pageContext.request.contextPath}/login" class="btn btn-danger">${signIn}</a>
+            <a href="${pageContext.request.contextPath}/register" class="btn btn-default">${signUp}</a>
+        </c:if>
     </div>
 </main>
 <jsp:include page="/WEB-INF/jsp/page_structure/footer.jsp"/>

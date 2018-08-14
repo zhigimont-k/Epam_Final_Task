@@ -8,6 +8,7 @@ import by.epam.web.dao.impl.UserDaoImpl;
 import by.epam.web.entity.Activity;
 import by.epam.web.entity.Order;
 import by.epam.web.entity.User;
+import by.epam.web.validation.NumberValidator;
 import by.epam.web.validation.OrderValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -18,30 +19,39 @@ import java.util.List;
 import java.util.Optional;
 
 public class OrderService {
+    private static Logger logger = LogManager.getLogger();
     private static final OrderDao orderDao = new OrderDaoImpl();
 
     OrderService() {
     }
 
-    public void addOrder(int userId, Timestamp time, List<Activity> activityList)
+    public boolean addOrder(String userId, Timestamp time, List<Activity> activityList)
             throws ServiceException {
+        if (!NumberValidator.getInstance().validateId(userId) ||
+                !OrderValidator.getInstance().validateOrderTimeAfterNow(time) ||
+                activityList.isEmpty()) {
+            return false;
+        }
         Order order;
         try {
             order = new Order();
-            order.setUserId(userId);
+            order.setUserId(Integer.parseInt(userId));
             order.setDateTime(time);
             for (Activity activity : activityList) {
                 order.addActivity(activity);
             }
             orderDao.addOrder(order);
+            return true;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    public Optional<Order> findOrderById(int id) throws ServiceException {
+    public Optional<Order> findOrderById(String id) throws ServiceException {
         try {
-            return orderDao.findOrderById(id);
+            return (NumberValidator.getInstance().validateId(id)) ?
+                    orderDao.findOrderById(Integer.parseInt(id)) :
+                    Optional.empty();
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -59,7 +69,8 @@ public class OrderService {
     public boolean orderExists(int userId, Timestamp timestamp) throws ServiceException {
         try {
             Optional<Order> found = orderDao.findOrderByUserAndTime(userId, timestamp);
-            if (found.isPresent()){
+            if (found.isPresent()) {
+                logger.log(Level.INFO, "order: "+found.get());
                 return !Order.Status.CANCELLED.getName().equalsIgnoreCase(found.get().getStatus());
             }
             return false;

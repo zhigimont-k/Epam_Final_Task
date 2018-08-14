@@ -21,13 +21,22 @@ public class CancelOrderCommand implements Command {
     private static Logger logger = LogManager.getLogger();
     private static OrderService service = ServiceFactory.getInstance().getOrderService();
 
+    /**
+     * Retrieves user and cancelled order's ID from request and session parameters and
+     * cancels order
+     *
+     * @param requestContent
+     * Request and session parameters and attributes
+     * @return
+     * Address of the next page
+     */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             String id = requestContent.getParameter(RequestParameter.ORDER_ID);
-            Optional<Order> found = service.findOrderById(Integer.parseInt(id));
+            Optional<Order> found = service.findOrderById(id);
             if (found.isPresent()) {
                 if (user.getId() == found.get().getUserId()) {
                     service.cancelOrder(Integer.parseInt(id));

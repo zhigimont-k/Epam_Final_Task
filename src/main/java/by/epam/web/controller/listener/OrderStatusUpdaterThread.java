@@ -11,6 +11,10 @@ class OrderStatusUpdaterThread implements Runnable {
     private static Logger logger = LogManager.getLogger();
     private static final OrderDao orderDao = new OrderDaoImpl();
 
+    /**
+     * Cancels outdated orders that have 'pending' status
+     *
+     */
     @Override
     public void run() {
         logger.log(Level.INFO, "Cancelling unconfirmed outdated orders...");

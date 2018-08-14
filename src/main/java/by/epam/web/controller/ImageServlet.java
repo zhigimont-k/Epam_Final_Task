@@ -45,6 +45,13 @@ public class ImageServlet extends HttpServlet {
     private static final String EMPTY = "";
     private static final String FILENAME_PARAMETER = "filename";
 
+    /**
+     * Retrieves user's ID from request and returns an image of that user from the database
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int userId = Integer.parseInt(request.getParameter(RequestParameter.USER_ID));
@@ -84,6 +91,15 @@ public class ImageServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Retrieves image from request and adds it to database if it isn't empty and it's size doesn't
+     * exceed maximum image size
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int userId = Integer.parseInt(request.getParameter(RequestParameter.USER_ID));
@@ -130,6 +146,15 @@ public class ImageServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Retrieves file name from part
+     * If it's too long, shortens it to acceptable length
+     *
+     * @param part
+     * Part to retrieve file name of
+     * @return
+     * File name
+     */
     private String getFileName(Part part) {
         for (String content : part.getHeader(CONTENT_DISPOSITION_HEADER).split(HEADER_SPLITTER)) {
             if (content.trim().startsWith(FILENAME_PARAMETER)) {

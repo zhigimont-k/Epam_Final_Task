@@ -20,6 +20,16 @@ public class AddActivityCommand implements Command {
     private static ActivityService service = ServiceFactory.getInstance().getActivityService();
 
 
+    /**
+     * Retrieves necessary parameters from request, checks if activity
+     * with the same name already exists
+     * Adds new activity if it does not, shows error message if it does
+     *
+     * @param requestContent
+     * Request and session parameters and attributes
+     * @return
+     * Address of the next page
+     */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();

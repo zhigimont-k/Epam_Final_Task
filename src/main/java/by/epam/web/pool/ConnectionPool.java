@@ -41,6 +41,13 @@ public class ConnectionPool {
         return instance;
     }
 
+    /**
+     * Creates connections containers and creates available connections
+     * If available connections number is smaller than initial pool size, tries to create missing
+     * connections
+     * If no connections were created, throws runtime exception
+     *
+     */
     private void initPool() {
         availableConnections = new LinkedBlockingQueue<>();
         unavailableConnections = new ArrayDeque<>();
@@ -69,6 +76,14 @@ public class ConnectionPool {
         }
     }
 
+    /**
+     * If no connections are currently available but number of connections doesn't exceed the maximum,
+     * creates a new connection
+     * Moves connection from available to unavailable and returns it
+     *
+     * @return
+     * @throws PoolException
+     */
     public ProxyConnection takeConnection() throws PoolException {
         ProxyConnection connection = null;
         if (availableConnections.isEmpty() &&
@@ -86,6 +101,11 @@ public class ConnectionPool {
         return connection;
     }
 
+    /**
+     * Creates a new connection and adds it to available
+     *
+     * @throws PoolException
+     */
     private void createConnection() throws PoolException {
         try {
             availableConnections.add(ConnectionManager.getInstance().createConnection());
@@ -94,6 +114,12 @@ public class ConnectionPool {
         }
     }
 
+    /**
+     * Removes connection from unavailable and adds to available
+     *
+     * @param connection
+     * @throws PoolException
+     */
     public void releaseConnection(ProxyConnection connection) throws PoolException {
         if (connection != null) {
             try {
@@ -111,6 +137,11 @@ public class ConnectionPool {
         }
     }
 
+    /**
+     * CLoses all connections in the pool
+     *
+     * @throws PoolException
+     */
     public void closeConnectionPool() throws PoolException {
         ProxyConnection connection;
         int currentPoolSize = availableConnections.size() + unavailableConnections.size();
@@ -131,6 +162,10 @@ public class ConnectionPool {
         deregisterDrivers();
     }
 
+    /**
+     * Deregisters drivers
+     *
+     */
     private void deregisterDrivers() {
         DriverManager.drivers().forEach(driver -> {
             try {
@@ -141,6 +176,10 @@ public class ConnectionPool {
         });
     }
 
+    /**
+     * Returns number of available connections
+     * @return
+     */
     public int getAvailableConnectionNumber() {
         return availableConnections.size();
     }

@@ -39,6 +39,7 @@ public interface OrderDao extends AbstractDao<Order> {
      * @param id
      * id of order to look for
      * @return
+     * Found order
      * @throws DaoException if SQLException occurs
      */
     Optional<Order> findOrderById(int id) throws DaoException;
@@ -51,6 +52,7 @@ public interface OrderDao extends AbstractDao<Order> {
      * @param numberOfRecords
      * number of records to return
      * @return
+     * List of found orders
      * @throws DaoException if SQLException occurs
      */
     List<Order> findAllOrders(int startPosition, int numberOfRecords) throws DaoException;
@@ -65,6 +67,7 @@ public interface OrderDao extends AbstractDao<Order> {
      * @param numberOfRecords
      * number of records to return
      * @return
+     * List of found orders
      * @throws DaoException if SQLException occurs
      */
     List<Order> findOrdersByUser(int userId, int startPosition, int numberOfRecords)
@@ -79,14 +82,16 @@ public interface OrderDao extends AbstractDao<Order> {
      * @param id
      * id of the order whose activities t look for
      * @return
+     * List of found orders
      * @throws DaoException if SQLException occurs
      */
     List<Activity> findActivitiesByOrderId(int id) throws DaoException;
 
     /**
-     * Returns list of emails of users who have upconing orders in 1 day interval
+     * Returns list of emails of users who have confirmed upcoming orders in 1 day interval
      *
      * @return
+     * List of found emails
      * @throws DaoException if SQLException occurs
      */
     List<String> findEmailsForUpcomingOrders() throws DaoException;
@@ -116,6 +121,7 @@ public interface OrderDao extends AbstractDao<Order> {
      * @param userId
      * id of the user to count orders of
      * @return
+     * number of given user's orders
      * @throws DaoException if SQLException occurs
      */
     int countUserOrders(int userId) throws DaoException;

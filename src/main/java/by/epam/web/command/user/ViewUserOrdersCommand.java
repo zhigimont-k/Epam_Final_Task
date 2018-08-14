@@ -22,6 +22,15 @@ public class ViewUserOrdersCommand implements Command {
     private static OrderService service = ServiceFactory.getInstance().getOrderService();
     private static final int RECORDS_PER_PAGE = 10;
 
+    /**
+     * Retrieves user and page parameters from request and session, looks for the user's orders,
+     * sets list of found orders as request attribute and forwards to the page with orders table
+     *
+     * @param requestContent
+     * Request and session parameters and attributes
+     * @return
+     * Address of the next page
+     */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();

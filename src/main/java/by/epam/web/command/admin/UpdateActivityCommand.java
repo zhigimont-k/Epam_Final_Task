@@ -22,6 +22,16 @@ public class UpdateActivityCommand implements Command {
     private static Logger logger = LogManager.getLogger();
     private static ActivityService service = ServiceFactory.getInstance().getActivityService();
 
+    /**
+     * Retrieves activity's ID and new properties from request parameters, checks if activity with
+     * the same name but different ID already exists
+     * If it does not, updates activity, if it does, shows an error message
+     *
+     * @param requestContent
+     * Request and session parameters and attributes
+     * @return
+     * Address of the next page
+     */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
 

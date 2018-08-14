@@ -25,7 +25,6 @@
     <input type="hidden" name="command" value="locale"/>
     <input type="hidden" name="page" value="${pageContext.request.requestURL}"/>
     <input type="hidden" name="query" value="${pageContext.request.queryString}"/>
-    ${chooseLanguage}:
     <button class="btn btn-link" type="submit" name="lang" value="ru">${russian}</button>
     <button class="btn btn-link" type="submit" name="lang" value="en">${english}</button>
 </form>

@@ -62,11 +62,11 @@ textarea {
     background-size: cover;
 }
 
-.jumbotron {
+.home {
+    padding-top: 100px;
     width:auto;
-    margin-bottom: 0px;
+    height:90%;
     background-image: url("../images/header.jpg");
-    background-position: 0% 25%;
     background-size: cover;
     background-repeat: no-repeat;
     color: white;

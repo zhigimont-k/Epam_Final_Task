@@ -21,6 +21,14 @@ public class ChangeOrderStatusCommand implements Command {
     private static Logger logger = LogManager.getLogger();
     private static OrderService service = ServiceFactory.getInstance().getOrderService();
 
+    /**
+     * Retrieves order's ID and new status from request parameters, changes order status
+     *
+     * @param requestContent
+     * Request and session parameters and attributes
+     * @return
+     * Address of the next page
+     */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
@@ -28,7 +36,7 @@ public class ChangeOrderStatusCommand implements Command {
 
             String id = requestContent.getParameter(RequestParameter.ORDER_ID);
             String status = requestContent.getParameter(RequestParameter.ORDER_STATUS);
-            Optional<Order> found = service.findOrderById(Integer.parseInt(id));
+            Optional<Order> found = service.findOrderById(id);
             if (found.isPresent()){
                 service.changeOrderStatus(Integer.parseInt(id), status);
                 router.setRedirect(true);

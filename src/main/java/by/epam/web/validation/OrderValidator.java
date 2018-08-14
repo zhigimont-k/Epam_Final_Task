@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
@@ -24,7 +25,6 @@ public class OrderValidator {
     private static final String DATE_FORMAT_REGEX = "\\d{4}-\\d{2}-\\d{2}";
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private static final String TIME_FORMAT_REGEX = "\\d{2}:\\d{2}";
-    private static final String UTC = "UTC";
     private static LocalTime minTime;
     private static LocalTime maxTime;
     private static final LocalTime DEFAULT_TIME = LocalTime.parse("00:00");
@@ -46,7 +46,6 @@ public class OrderValidator {
             minTime = DEFAULT_TIME;
             maxTime = DEFAULT_TIME;
         }
-
     }
 
     public static OrderValidator getInstance() {
@@ -102,12 +101,9 @@ public class OrderValidator {
         return result;
     }
 
-    //////?????????????????????????
     public boolean validateOrderTimeAfterNow(Timestamp timestamp){
-        LocalDate orderTime = timestamp.toInstant()
-                .atZone(ZoneId.of(UTC))
-                .toLocalDate();
-        LocalDate now = LocalDate.now();
+        LocalDateTime orderTime = timestamp.toLocalDateTime();
+        LocalDateTime now = LocalDateTime.now();
         return orderTime.isAfter(now);
     }
 

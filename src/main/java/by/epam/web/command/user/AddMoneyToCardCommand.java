@@ -21,6 +21,16 @@ public class AddMoneyToCardCommand implements Command {
     private static Logger logger = LogManager.getLogger();
     private static UserService service = ServiceFactory.getInstance().getUserService();
 
+    /**
+     * Retrieves user, card number and money from request and session parameters,
+     * checks if user's card number is correct.
+     * If it is, adds money to the card, if it isn't, shows error message
+     *
+     * @param requestContent
+     * Request and session parameters and attributes
+     * @return
+     * Address of the next page
+     */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();

@@ -20,6 +20,16 @@ public class EditActivityCommand implements Command {
     private static Logger logger = LogManager.getLogger();
     private static final ActivityService service = ServiceFactory.getInstance().getActivityService();
 
+    /**
+     * Retrieves activity's ID from request parameters, looks for an activity with the same ID
+     * in database, sets found activity as session attribute and redirects to
+     * an editing page of this activity
+     *
+     * @param requestContent
+     * Request and session parameters and attributes
+     * @return
+     * Address of the next page
+     */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();

@@ -18,6 +18,15 @@ import java.util.List;
 public class ViewUsersCommand implements Command {
     private static Logger logger = LogManager.getLogger();
 
+
+    /**
+     * Looks for users in the database and forwards to the page with users table
+     *
+     * @param requestContent
+     * Request and session parameters and attributes
+     * @return
+     * Address of the next page
+     */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();

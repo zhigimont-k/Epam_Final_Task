@@ -21,6 +21,16 @@ public class ViewActivityCommand implements Command {
     private static Logger logger = LogManager.getLogger();
     private static ActivityService service = ServiceFactory.getInstance().getActivityService();
 
+    /**
+     * Retrieves activity's ID from request parameters, looks for activity with this ID
+     * in the database, looks for reviews for that activity, sets them as request attributes and
+     * forwards to the page with activity information
+     *
+     * @param requestContent
+     * Request and session parameters and attributes
+     * @return
+     * Address of the next page
+     */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();

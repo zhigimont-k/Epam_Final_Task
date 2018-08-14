@@ -47,12 +47,30 @@ public class FrontController extends HttpServlet {
             return commandName;
         }
 
+        /**
+         * Checks if given command is a GET command
+         *
+         * @param commandName
+         * Name of the command to check
+         * @return
+         * Result of check
+         */
         public static boolean isGetMethodCommand(String commandName){
             return Arrays.stream(GetMethodCommand.values())
                     .anyMatch(command -> command.getName().equalsIgnoreCase(commandName));
         }
     }
 
+    /**
+     * Checks if the command is a GET command
+     * If it is, proceeds with execution
+     * If it's not, redirects to home page
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String commandName = request.getParameter(RequestParameter.COMMAND);
@@ -69,6 +87,16 @@ public class FrontController extends HttpServlet {
         processRequest(request, response);
     }
 
+    /**
+     * Retrieves all of request and session parameters and attributes and puts them
+     * into request content, executes command and redirects or forward to the resulting page
+     * depending on the result
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String commandName = request.getParameter(RequestParameter.COMMAND);
         Optional<Command> foundCommand = CommandFactory.getInstance().defineCommand(commandName);

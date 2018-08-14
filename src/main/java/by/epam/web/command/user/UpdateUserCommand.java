@@ -20,6 +20,17 @@ public class UpdateUserCommand implements Command {
     private static Logger logger = LogManager.getLogger();
     private static UserService service = ServiceFactory.getInstance().getUserService();
 
+    /**
+     * Retrieves user, new username, old password and new password from request and session
+     * If user with the same login and old password exists in the database,
+     * updates only username if new password isn't set or both password and username if it is
+     * If no user is found, shows error message
+     *
+     * @param requestContent
+     * Request and session parameters and attributes
+     * @return
+     * Address of the next page
+     */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();

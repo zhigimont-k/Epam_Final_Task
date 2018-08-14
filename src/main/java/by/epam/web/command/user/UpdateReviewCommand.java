@@ -22,6 +22,15 @@ public class UpdateReviewCommand implements Command {
     private static Logger logger = LogManager.getLogger();
     private static ReviewService service = ServiceFactory.getInstance().getReviewService();
 
+    /**
+     * Retieves review's ID and new properties from request parameters, then updates the review
+     * in the database and redirects to the page of activity that the review was for
+     *
+     * @param requestContent
+     * Request and session parameters and attributes
+     * @return
+     * Address of the next page
+     */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();

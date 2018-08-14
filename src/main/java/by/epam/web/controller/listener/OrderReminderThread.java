@@ -21,6 +21,12 @@ class OrderReminderThread implements Runnable {
     private static final OrderDao orderDao = new OrderDaoImpl();
     private static final UserDao userDao = new UserDaoImpl();
 
+    /**
+     * Looks for upcoming orders in 1 day interval and
+     * retrieves users emails and logins from the database
+     * Then runs mail sender threads
+     *
+     */
     @Override
     public void run() {
         try {

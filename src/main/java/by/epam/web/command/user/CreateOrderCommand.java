@@ -19,6 +19,15 @@ public class CreateOrderCommand implements Command {
     private static Logger logger = LogManager.getLogger();
     private static ActivityService service = ServiceFactory.getInstance().getActivityService();
 
+    /**
+     * Looks for available activities in the database, sets the result as session attribute and
+     * forwards to the add order page
+     *
+     * @param requestContent
+     * Request and session parameters and attributes
+     * @return
+     * Address of the next page
+     */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();

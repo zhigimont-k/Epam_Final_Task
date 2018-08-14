@@ -24,6 +24,16 @@ public class ResetPasswordCommand implements Command {
     private static Logger logger = LogManager.getLogger();
     private static UserService service = ServiceFactory.getInstance().getUserService();
 
+    /**
+     * Retrieves email from request parameters, looks for a user with this email in the database
+     * If he doesn't exists, shows error message
+     * If he does, changes this user's password to a new generated one and sends an email with it
+     *
+     * @param requestContent
+     * Request and session parameters and attributes
+     * @return
+     * Address of the next page
+     */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();

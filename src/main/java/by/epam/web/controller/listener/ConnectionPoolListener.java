@@ -15,12 +15,20 @@ import javax.servlet.annotation.WebListener;
 public class ConnectionPoolListener implements ServletContextListener {
     private static Logger logger = LogManager.getLogger();
 
+    /**
+     * Calls connection pool instance to initialize it
+     * @param servletContextEvent
+     */
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         logger.log(Level.INFO, "Creating connection pool...");
         ConnectionPool.getInstance();
     }
 
+    /**
+     * Destroys connection pool
+     * @param servletContextEvent
+     */
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         try {

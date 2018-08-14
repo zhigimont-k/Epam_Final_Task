@@ -21,6 +21,14 @@ public class ChangeUserStatusCommand implements Command {
     private static Logger logger = LogManager.getLogger();
     private static UserService service = ServiceFactory.getInstance().getUserService();
 
+    /**
+     * Retrieves user's ID and new status from reuqest parameters, changes user's status
+     *
+     * @param requestContent
+     * Request and session parameters and attributes
+     * @return
+     * Address of the next page
+     */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();

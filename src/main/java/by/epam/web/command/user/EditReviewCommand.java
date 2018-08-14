@@ -21,6 +21,15 @@ public class EditReviewCommand implements Command {
     private static Logger logger = LogManager.getLogger();
     private static ReviewService service = ServiceFactory.getInstance().getReviewService();
 
+    /**
+     * Retrieves edited review's ID, looks for it in the database, sets it as session attribute and
+     * redirects to the edit review page
+     *
+     * @param requestContent
+     * Request and session parameters and attributes
+     * @return
+     * Address of the next page
+     */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();

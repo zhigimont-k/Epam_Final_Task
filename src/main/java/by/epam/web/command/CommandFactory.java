@@ -16,6 +16,14 @@ public class CommandFactory {
         return instance;
     }
 
+    /**
+     * Returns a command with given name
+     *
+     * @param commandName
+     * Command name to look for
+     * @return
+     * Found command
+     */
     public Optional<Command> defineCommand(String commandName) {
         return Arrays.stream(CommandType.values())
                 .filter(command -> command.getName().equalsIgnoreCase(commandName))
@@ -23,6 +31,14 @@ public class CommandFactory {
                 .map(CommandType::getCommand);
     }
 
+    /**
+     * Returns access level of the command with a given name
+     *
+     * @param commandName
+     * Command name to look for
+     * @return
+     * Found command's access level
+     */
     public Optional<CommandAccessLevel> getCommandRight(String commandName){
         return Arrays.stream(CommandType.values())
                 .filter(command -> command.getName().equalsIgnoreCase(commandName))

@@ -24,22 +24,35 @@
 
     <title>${pageTitle} | ${projectName}</title>
     <script>
-        var minTime = document.getElementById("dateInput").getAttribute("min");
-        console.log("Initial min time: " + minTime);
+        var minTime = "${minHours}";
 
         function setMinTime() {
+            console.log("Initial min time: " + minTime);
             var input = document.getElementById("dateInput").value;
             var dateEntered = new Date(input);
             console.log("input: " + input);
             console.log("converted to date: " + dateEntered);
             var now = new Date();
             console.log("time input: " + now);
+
             if (now.getDay() == dateEntered.getDay()) {
-                document.getElementById("timeInput").setAttribute("min",
-                    now.getHours() + ":" + now.getMinutes());
+                var hours;
+                var minutes;
+                if (now.getHours() < 10) {
+                    hours = "0" + now.getHours();
+                } else {
+                    hours = now.getHours();
+                }
+                if (now.getMinutes() < 10) {
+                    minutes = "0" + now.getMinutes();
+                } else {
+                    minutes = now.getMinutes();
+                }
+                document.getElementById("timeInput").setAttribute("min", hours + ":" + minutes);
             } else {
                 document.getElementById("timeInput").setAttribute("min", minTime);
             }
+            console.log("min time is: " + document.getElementById("timeInput").getAttribute("min"));
         }
     </script>
 </head>

@@ -19,6 +19,18 @@ public class LoginCommand implements Command {
     private static Logger logger = LogManager.getLogger();
     private static UserService service = ServiceFactory.getInstance().getUserService();
 
+    /**
+     * Retrieves login and password from request parameters, looks for a user with the same login
+     * and password in the database.
+     * If user is not found, shows error message.
+     * If user is found but his status is banned, shows error message.
+     * If user is found and his status isn't banned, sets found user as session attribute
+     *
+     * @param requestContent
+     * Request and session parameters and attributes
+     * @return
+     * Address of the next page
+     */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();

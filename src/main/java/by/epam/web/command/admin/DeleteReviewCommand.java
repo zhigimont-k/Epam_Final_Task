@@ -19,6 +19,14 @@ import java.util.Optional;
 public class DeleteReviewCommand implements Command {
     private static Logger logger = LogManager.getLogger();
 
+    /**
+     * Retrieves review's ID from request parameters, deletes review
+     *
+     * @param requestContent
+     * Request and session parameters and attributes
+     * @return
+     * Address of the next page
+     */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();

@@ -11,6 +11,11 @@ import java.util.concurrent.TimeUnit;
 public class OrderStatusUpdaterListener implements ServletContextListener{
     private ScheduledExecutorService executorService;
 
+    /**
+     * Starts order status updater thread one a day
+     *
+     * @param sce
+     */
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         executorService = Executors.newSingleThreadScheduledExecutor();

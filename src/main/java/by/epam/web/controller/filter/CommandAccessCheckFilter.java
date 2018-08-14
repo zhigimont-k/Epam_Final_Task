@@ -26,6 +26,18 @@ public class CommandAccessCheckFilter implements Filter {
 
     }
 
+    /**
+     * Checks command's access level and user's status.
+     * If command doesn't exist, sends a 404 error.
+     * If it exists but the user doesn't have access, send a 403 error
+     * Otherwise proceeds with filtering
+     *
+     * @param servletRequest
+     * @param servletResponse
+     * @param filterChain
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
                          FilterChain filterChain) throws IOException, ServletException {
@@ -56,6 +68,16 @@ public class CommandAccessCheckFilter implements Filter {
         }
     }
 
+    /**
+     * Checks if user's status matches command's access level
+     *
+     * @param commandAccessLevel
+     * Access level of the checked command
+     * @param user
+     * User who is trying to call the command
+     * @return
+     * Result of the check
+     */
     private boolean accessGranted(CommandAccessLevel commandAccessLevel, User user) {
         if (user == null || user.getUserStatus() == User.Status.BANNED) {
             return commandAccessLevel == CommandAccessLevel.GUEST;

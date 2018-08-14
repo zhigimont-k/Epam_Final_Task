@@ -94,6 +94,14 @@ public class XssFilter implements Filter {
             return stripXss(value);
         }
 
+        /**
+         * Removes suspicious content from request parameters
+         *
+         * @param value
+         * String to check
+         * @return
+         * Cleaned string
+         */
         private String stripXss(String value) {
             if (value != null) {
                 value = ESAPI.encoder().canonicalize(value);

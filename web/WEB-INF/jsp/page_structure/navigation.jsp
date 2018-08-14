@@ -29,6 +29,8 @@
     <fmt:message bundle="${locale}" key="locale.page.title.addorder" var="addOrder"/>
     <fmt:message bundle="${locale}" key="locale.page.title.users" var="usersPage"/>
     <fmt:message bundle="${locale}" key="locale.action.logout" var="logout"/>
+    <fmt:message bundle="${locale}" key="locale.action.control" var="control"/>
+
 </head>
 <body>
 
@@ -43,35 +45,42 @@
             </li>
 
             <c:if test="${empty sessionScope.user}">
-                <li><a href="${pageContext.request.contextPath}/register">${signUp}</a></li>
-                <li><a href="${pageContext.request.contextPath}/login">${signIn}</a></li>
+            <li><a href="${pageContext.request.contextPath}/register">${signUp}</a></li>
+            <li><a href="${pageContext.request.contextPath}/login">${signIn}</a></li>
             </c:if>
             <c:if test="${sessionScope.user ne null && sessionScope.user.status ne 'banned'}">
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">${accountPage}
-                        <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="app?command=viewUserOrders&pageNumber=1">${myOrders}</a></li>
-                        <li><a href="app?command=viewUserInfo">${accountPage}</a></li>
-                        <li><a href="${pageContext.request.contextPath}/addMoney">${addMoney}</a></li>
-                    </ul>
-                </li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">${accountPage}
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="app?command=viewUserInfo">${accountPage}</a></li>
+                    <li><a href="app?command=viewUserOrders&pageNumber=1">${myOrders}</a></li>
+                    <li><a href="${pageContext.request.contextPath}/addMoney">${addMoney}</a></li>
+                </ul>
+            </li>
             </c:if>
             <c:if test="${sessionScope.user ne null && sessionScope.user.status == 'admin'}">
-                <li><a href="${pageContext.request.contextPath}/addService">${addService}</a></li>
-                <li><a href="app?command=viewUsers">${usersPage}</a></li>
-                <li><a href="app?command=viewAllOrders&pageNumber=1">${allOrders}</a></li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">${control}
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="${pageContext.request.contextPath}/addService">${addService}</a></li>
+                    <li><a href="app?command=viewUsers">${usersPage}</a></li>
+                    <li><a href="app?command=viewAllOrders&pageNumber=1">${allOrders}</a></li>
+                </ul>
+            </li>
             </c:if>
             <c:if test="${sessionScope.user ne null && sessionScope.user.status ne 'banned'}">
-                <li><a href="app?command=createOrder">${addOrder}</a></li>
+            <li><a href="app?command=createOrder">${addOrder}</a></li>
             </c:if>
-
-        </ul>
-        <c:if test="${sessionScope.user ne null}">
+            <ul class="nav navbar-nav navbar-right text-uppercase navbar-btn">
+                <li><jsp:include page="/WEB-INF/jsp/page_structure/chooseLang.jsp"/></li>
+            </ul>
+            <c:if test="${sessionScope.user ne null}">
             <ul class="nav navbar-nav navbar-right text-uppercase">
                 <li><a href="app?command=logout">${logout}</a></li>
             </ul>
-        </c:if>
+            </c:if>
     </div>
 </nav>
 </body>

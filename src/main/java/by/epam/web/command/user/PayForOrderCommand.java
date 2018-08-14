@@ -23,6 +23,16 @@ public class PayForOrderCommand implements Command {
     private static OrderService service = ServiceFactory.getInstance().getOrderService();
     private static UserService userService = ServiceFactory.getInstance().getUserService();
 
+    /**
+     * Retrieves user and order's ID from request and session parameters.
+     * If user doesn't have enough money on his card to pay for the order, shows error message
+     * Otherwise pays for the order
+     *
+     * @param requestContent
+     * Request and session parameters and attributes
+     * @return
+     * Address of the next page
+     */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
@@ -30,7 +40,7 @@ public class PayForOrderCommand implements Command {
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             String id = requestContent.getParameter(RequestParameter.ORDER_ID);
             int orderId = Integer.parseInt(id);
-            if (service.findOrderById(orderId).get().getPrice().compareTo(
+            if (service.findOrderById(String.valueOf(orderId)).get().getPrice().compareTo(
                     userService.findMoneyByCardNumber(user.getCardNumber())) <= 0){
                 requestContent.setSessionAttribute(
                         RequestParameter.NOT_ENOUGH_MONEY, false);

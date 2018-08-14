@@ -23,6 +23,15 @@ public class AddReviewCommand implements Command {
     private static Logger logger = LogManager.getLogger();
     private static ReviewService service = ServiceFactory.getInstance().getReviewService();
 
+    /**
+     * Retieves user's ID and review properties from session and request parameters
+     * and adds a new review
+     *
+     * @param requestContent
+     * Request and session parameters and attributes
+     * @return
+     * Address of the next page
+     */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
