@@ -559,7 +559,6 @@ public class OrderDaoImpl implements OrderDao {
             preparedStatement.setInt(1, userId);
             preparedStatement.setTimestamp(2, timestamp);
             resultSet = preparedStatement.executeQuery();
-            logger.log(Level.INFO, preparedStatement);
             if (resultSet.next()) {
                 return Optional.of(new OrderBuilder()
                         .setId(resultSet.getInt(DB_ORDER_ID_FIELD))

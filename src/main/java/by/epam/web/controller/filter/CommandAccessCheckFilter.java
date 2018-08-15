@@ -35,6 +35,7 @@ public class CommandAccessCheckFilter implements Filter {
      * @param servletRequest
      * @param servletResponse
      * @param filterChain
+     *
      * @throws IOException
      * @throws ServletException
      */
@@ -71,12 +72,10 @@ public class CommandAccessCheckFilter implements Filter {
     /**
      * Checks if user's status matches command's access level
      *
-     * @param commandAccessLevel
-     * Access level of the checked command
-     * @param user
-     * User who is trying to call the command
-     * @return
-     * Result of the check
+     * @param commandAccessLevel Access level of the checked command
+     * @param user User who is trying to call the command
+     *
+     * @return Result of the check
      */
     private boolean accessGranted(CommandAccessLevel commandAccessLevel, User user) {
         if (user == null || user.getUserStatus() == User.Status.BANNED) {

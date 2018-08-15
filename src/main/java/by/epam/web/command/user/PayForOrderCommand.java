@@ -40,7 +40,7 @@ public class PayForOrderCommand implements Command {
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             String id = requestContent.getParameter(RequestParameter.ORDER_ID);
             int orderId = Integer.parseInt(id);
-            if (service.findOrderById(String.valueOf(orderId)).get().getPrice().compareTo(
+            if (service.findOrderById(orderId).get().getPrice().compareTo(
                     userService.findMoneyByCardNumber(user.getCardNumber())) <= 0){
                 requestContent.setSessionAttribute(
                         RequestParameter.NOT_ENOUGH_MONEY, false);

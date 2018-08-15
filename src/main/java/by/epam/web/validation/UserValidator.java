@@ -2,6 +2,7 @@ package by.epam.web.validation;
 
 import by.epam.web.entity.User;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,8 +54,7 @@ public class UserValidator {
     }
 
     public boolean validateStatus(String status){
-        return User.Status.BANNED.getName().equalsIgnoreCase(status) ||
-                User.Status.USER.getName().equalsIgnoreCase(status) ||
-                User.Status.ADMIN.getName().equalsIgnoreCase(status);
+        return Arrays.stream(User.Status.values())
+                .anyMatch(orderStatus -> orderStatus.getName().equalsIgnoreCase(status));
     }
 }

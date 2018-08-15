@@ -36,7 +36,7 @@ public class CancelOrderCommand implements Command {
         try {
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             String id = requestContent.getParameter(RequestParameter.ORDER_ID);
-            Optional<Order> found = service.findOrderById(id);
+            Optional<Order> found = service.findOrderById(Integer.parseInt(id));
             if (found.isPresent()) {
                 if (user.getId() == found.get().getUserId()) {
                     service.cancelOrder(Integer.parseInt(id));

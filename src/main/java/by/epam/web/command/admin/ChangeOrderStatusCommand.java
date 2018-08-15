@@ -33,10 +33,9 @@ public class ChangeOrderStatusCommand implements Command {
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
-
             String id = requestContent.getParameter(RequestParameter.ORDER_ID);
             String status = requestContent.getParameter(RequestParameter.ORDER_STATUS);
-            Optional<Order> found = service.findOrderById(id);
+            Optional<Order> found = service.findOrderById(Integer.parseInt(id));
             if (found.isPresent()){
                 service.changeOrderStatus(Integer.parseInt(id), status);
                 router.setRedirect(true);

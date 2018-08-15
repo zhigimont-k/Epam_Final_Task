@@ -33,7 +33,7 @@ public class DeleteReviewCommand implements Command {
         try {
             ReviewService service = ServiceFactory.getInstance().getReviewService();
             String reviewId = requestContent.getParameter(RequestParameter.REVIEW_ID);
-            Optional<Review> found = service.findReviewById(reviewId);
+            Optional<Review> found = service.findReviewById(Integer.parseInt(reviewId));
             if (found.isPresent()) {
                 int activityId = found.get().getActivityId();
                 service.deleteReview(reviewId);

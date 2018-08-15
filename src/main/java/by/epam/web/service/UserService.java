@@ -46,10 +46,7 @@ public class UserService {
     public Optional<User> findUserByLoginAndPassword(String login, String password)
             throws ServiceException {
         try {
-            return (UserValidator.getInstance().validateLogin(login) &&
-                    UserValidator.getInstance().validatePassword(password)) ?
-                    userDao.findUserByLoginAndPassword(login, password) :
-                    Optional.empty();
+            return userDao.findUserByLoginAndPassword(login, password);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -57,8 +54,7 @@ public class UserService {
 
     public boolean loginExists(String login) throws ServiceException {
         try {
-            return UserValidator.getInstance().validateLogin(login) &&
-                    userDao.propertyExists(UserDaoImpl.UniqueUserInfo.LOGIN, login);
+            return userDao.propertyExists(UserDaoImpl.UniqueUserInfo.LOGIN, login);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -66,8 +62,7 @@ public class UserService {
 
     public boolean emailExists(String email) throws ServiceException {
         try {
-            return UserValidator.getInstance().validateEmail(email) &&
-                    userDao.propertyExists(UserDaoImpl.UniqueUserInfo.EMAIL, email);
+            return userDao.propertyExists(UserDaoImpl.UniqueUserInfo.EMAIL, email);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -75,8 +70,7 @@ public class UserService {
 
     public boolean phoneNumberExists(String phoneNumber) throws ServiceException {
         try {
-            return UserValidator.getInstance().validatePhoneNumber(phoneNumber) &&
-                    userDao.propertyExists(UserDaoImpl.UniqueUserInfo.PHONE_NUMBER, phoneNumber);
+            return userDao.propertyExists(UserDaoImpl.UniqueUserInfo.PHONE_NUMBER, phoneNumber);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -84,8 +78,7 @@ public class UserService {
 
     public boolean cardNumberExists(String cardNumber) throws ServiceException {
         try {
-            return UserValidator.getInstance().validateCardNumber(cardNumber) &&
-                    userDao.propertyExists(UserDaoImpl.UniqueUserInfo.CARD_NUMBER, cardNumber);
+            return userDao.propertyExists(UserDaoImpl.UniqueUserInfo.CARD_NUMBER, cardNumber);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -93,19 +86,15 @@ public class UserService {
 
     public Optional<User> findUserByEmail(String email) throws ServiceException {
         try {
-            return (UserValidator.getInstance().validateEmail(email)) ?
-                    userDao.findUserByEmail(email) :
-                    Optional.empty();
+            return userDao.findUserByEmail(email);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    public Optional<User> findUserById(String id) throws ServiceException {
+    public Optional<User> findUserById(int id) throws ServiceException {
         try {
-            return (NumberValidator.getInstance().validateId(id)) ?
-                    userDao.findUserById(Integer.parseInt(id)) :
-                    Optional.empty();
+            return userDao.findUserById(id);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -119,62 +108,55 @@ public class UserService {
         }
     }
 
-    public boolean changeUserStatus(String userId, String status) throws ServiceException {
-        if (!UserValidator.getInstance().validateStatus(status) ||
-                !NumberValidator.getInstance().validateId(userId)) {
+    public boolean changeUserStatus(int userId, String status) throws ServiceException {
+        if (!UserValidator.getInstance().validateStatus(status)) {
             return false;
         }
         try {
-            userDao.changeUserStatus(Integer.parseInt(userId), status);
+            userDao.changeUserStatus(userId, status);
             return true;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    public boolean updateUser(String id, String newPassword, String newUserName)
+    public boolean updateUser(int id, String newPassword, String newUserName)
             throws ServiceException {
         if (!UserValidator.getInstance().validatePassword(newPassword) ||
-                !UserValidator.getInstance().validateUserName(newUserName) ||
-                !NumberValidator.getInstance().validateId(id)) {
+                !UserValidator.getInstance().validateUserName(newUserName)) {
             return false;
         }
         try {
-            userDao.updateUser(Integer.parseInt(id), newPassword, newUserName);
+            userDao.updateUser(id, newPassword, newUserName);
             return true;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    public boolean updateUserName(String id, String newUserName) throws ServiceException {
-        if (!UserValidator.getInstance().validateUserName(newUserName) ||
-                !NumberValidator.getInstance().validateId(id)) {
+    public boolean updateUserName(int id, String newUserName) throws ServiceException {
+        if (!UserValidator.getInstance().validateUserName(newUserName)) {
             return false;
         }
         try {
-            userDao.updateUserName(Integer.parseInt(id), newUserName);
+            userDao.updateUserName(id, newUserName);
             return true;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    public Optional<User> findUserByIdAndCard(String userId, String cardNumber)
+    public Optional<User> findUserByIdAndCard(int userId, String cardNumber)
             throws ServiceException {
         try {
-            return (UserValidator.getInstance().validateCardNumber(cardNumber) &&
-                    NumberValidator.getInstance().validateId(userId)) ?
-                    userDao.findUserByIdAndCardNumber(Integer.parseInt(userId), cardNumber) :
-                    Optional.empty();
+            return userDao.findUserByIdAndCardNumber(userId, cardNumber);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
     public boolean addMoneyToCard(String cardNumber, String money) throws ServiceException {
-        if (!UserValidator.getInstance().validateCardNumber(cardNumber) ||
-                !NumberValidator.getInstance().validateMoney(money)) {
+        if (!NumberValidator.getInstance().validateMoney(money)) {
             return false;
         }
         try {
@@ -187,10 +169,7 @@ public class UserService {
 
     public BigDecimal findMoneyByCardNumber(String cardNumber) throws ServiceException {
         try {
-            return (UserValidator.getInstance().validateCardNumber(cardNumber)) ?
-                    userDao.findMoneyByCardNumber(cardNumber) :
-                    BigDecimal.ZERO;
-
+            return userDao.findMoneyByCardNumber(cardNumber);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

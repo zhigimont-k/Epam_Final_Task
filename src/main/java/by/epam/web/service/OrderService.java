@@ -10,32 +10,32 @@ import by.epam.web.entity.Order;
 import by.epam.web.entity.User;
 import by.epam.web.validation.NumberValidator;
 import by.epam.web.validation.OrderValidator;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 public class OrderService {
-    private static Logger logger = LogManager.getLogger();
     private static final OrderDao orderDao = new OrderDaoImpl();
 
     OrderService() {
     }
 
-    public boolean addOrder(String userId, Timestamp time, List<Activity> activityList)
+    public boolean addOrder(int userId, Timestamp time, List<Activity> activityList)
             throws ServiceException {
-        if (!NumberValidator.getInstance().validateId(userId) ||
-                !OrderValidator.getInstance().validateOrderTimeAfterNow(time) ||
+        if (!OrderValidator.getInstance().validateOrderTimeAfterNow(time) ||
                 activityList.isEmpty()) {
             return false;
         }
         Order order;
         try {
             order = new Order();
-            order.setUserId(Integer.parseInt(userId));
+            order.setUserId(userId);
             order.setDateTime(time);
             for (Activity activity : activityList) {
                 order.addActivity(activity);
@@ -47,11 +47,9 @@ public class OrderService {
         }
     }
 
-    public Optional<Order> findOrderById(String id) throws ServiceException {
+    public Optional<Order> findOrderById(int id) throws ServiceException {
         try {
-            return (NumberValidator.getInstance().validateId(id)) ?
-                    orderDao.findOrderById(Integer.parseInt(id)) :
-                    Optional.empty();
+            return orderDao.findOrderById(id);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -66,11 +64,10 @@ public class OrderService {
         }
     }
 
-    public boolean orderExists(int userId, Timestamp timestamp) throws ServiceException {
+    public boolean orderExists(int userId, String date, String time) throws ServiceException {
         try {
-            Optional<Order> found = orderDao.findOrderByUserAndTime(userId, timestamp);
+            Optional<Order> found = orderDao.findOrderByUserAndTime(userId, buildTimestamp(date, time));
             if (found.isPresent()) {
-                logger.log(Level.INFO, "order: "+found.get());
                 return !Order.Status.CANCELLED.getName().equalsIgnoreCase(found.get().getStatus());
             }
             return false;
@@ -87,9 +84,13 @@ public class OrderService {
         }
     }
 
-    public void changeOrderStatus(int id, String status) throws ServiceException {
+    public boolean changeOrderStatus(int id, String status) throws ServiceException {
         try {
-            orderDao.changeOrderStatus(id, status);
+            if (OrderValidator.getInstance().validateStatus(status)){
+                orderDao.changeOrderStatus(id, status);
+                return true;
+            }
+            return false;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -98,8 +99,7 @@ public class OrderService {
     public void cancelOrder(int id) throws ServiceException {
         try {
             Optional<Order> orderOptional = orderDao.findOrderById(id);
-            if (orderOptional.isPresent() &&
-                    OrderValidator.getInstance().validateOrderTimeAfterNow
+            if (OrderValidator.getInstance().validateOrderTimeAfterNow
                             (orderOptional.get().getDateTime())) {
                 orderDao.cancelOrder(id);
             }
@@ -112,8 +112,7 @@ public class OrderService {
     public void payForOrder(int orderId) throws ServiceException {
         try {
             Optional<Order> orderOptional = orderDao.findOrderById(orderId);
-            if (orderOptional.isPresent() &&
-                    OrderValidator.getInstance().validateOrderTimeAfterNow
+            if (OrderValidator.getInstance().validateOrderTimeAfterNow
                             (orderOptional.get().getDateTime())) {
                 orderDao.payForOrder(orderId);
             }
@@ -136,5 +135,22 @@ public class OrderService {
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
+    }
+
+
+    /**
+     * Creates a valid timestamp from given date and time
+     *
+     * @param date Date of the order
+     * @param time Time of the order
+     *
+     * @return Valid timestamp
+     */
+    public Timestamp buildTimestamp(String date, String time) {
+        String orderTime = date + " " + time;
+        if (StringUtils.countMatches(orderTime, ":") == 1) {
+            orderTime += ":00";
+        }
+        return Timestamp.valueOf(orderTime.replace("T", " "));
     }
 }

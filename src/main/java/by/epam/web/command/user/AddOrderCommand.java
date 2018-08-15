@@ -31,7 +31,7 @@ public class AddOrderCommand implements Command {
         PageRouter router = new PageRouter();
         try {
             Order order = (Order)requestContent.getSessionAttribute(RequestParameter.ORDER);
-            service.addOrder(String.valueOf(order.getUserId()), order.getDateTime(),
+            service.addOrder(order.getUserId(), order.getDateTime(),
                     order.getActivityList());
             requestContent.removeSessionAttribute(RequestParameter.ORDER);
             router.setRedirect(true);

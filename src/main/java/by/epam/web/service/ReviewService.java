@@ -17,50 +17,39 @@ public class ReviewService {
     ReviewService() {
     }
 
-    public boolean addReview(String userId, String activityId, String mark, String message)
+    public boolean addReview(int userId, int activityId, String mark, String message)
             throws ServiceException {
         try {
-            if (!NumberValidator.getInstance().validateId(userId) ||
-                    !ReviewValidator.getInstance().validateMark(mark) ||
-                    !ReviewValidator.getInstance().validateMessage(message) ||
-                    !NumberValidator.getInstance().validateId(activityId)) {
+            if (!ReviewValidator.getInstance().validateMark(mark) ||
+                    !ReviewValidator.getInstance().validateMessage(message)) {
                 return false;
             }
-            reviewDao.addReview(Integer.parseInt(userId), Integer.parseInt(activityId),
-                    Integer.parseInt(mark), message);
+            reviewDao.addReview(userId, activityId, Integer.parseInt(mark), message);
             return true;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    public boolean deleteReview(String id) throws ServiceException {
+    public void deleteReview(String id) throws ServiceException {
         try {
-            if (!NumberValidator.getInstance().validateId(id)) {
-                return false;
-            }
             reviewDao.deleteReviewById(Integer.parseInt(id));
-            return true;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    public Optional<Review> findReviewById(String id) throws ServiceException {
+    public Optional<Review> findReviewById(int id) throws ServiceException {
         try {
-            return (NumberValidator.getInstance().validateId(id)) ?
-                    reviewDao.findReviewById(Integer.parseInt(id)) :
-                    Optional.empty();
+            return reviewDao.findReviewById(id);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    public List<Review> findReviewByActivityId(String id) throws ServiceException {
+    public List<Review> findReviewByActivityId(int id) throws ServiceException {
         try {
-            return (NumberValidator.getInstance().validateId(id)) ?
-                    reviewDao.findReviewsByActivityId(Integer.parseInt(id)) :
-                    Collections.emptyList();
+            return reviewDao.findReviewsByActivityId(id);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

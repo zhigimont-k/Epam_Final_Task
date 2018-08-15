@@ -30,7 +30,7 @@ public class ReviewValidator {
 
     public boolean validateMessage(String message) {
         Matcher matcher = Pattern.compile(MESSAGE_FORMAT).matcher(message);
-        return matcher.matches() || message.isEmpty();
+        return (matcher.matches() && !message.trim().isEmpty()) || message.isEmpty();
     }
 
 }

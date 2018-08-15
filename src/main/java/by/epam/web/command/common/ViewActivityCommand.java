@@ -35,14 +35,14 @@ public class ViewActivityCommand implements Command {
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
-            String id = requestContent.getParameter(RequestParameter.ACTIVITY_ID);
-            int activityId = Integer.parseInt(id);
+            int activityId = Integer.parseInt(requestContent.getParameter
+                    (RequestParameter.ACTIVITY_ID));
             Optional<Activity> found = service.findActivityById(activityId);
             ReviewService reviewService = ServiceFactory.getInstance().getReviewService();
-            List<Review> reviewList = reviewService.findReviewByActivityId(id);
+            List<Review> reviewList = reviewService.findReviewByActivityId(activityId);
             UserService userService = ServiceFactory.getInstance().getUserService();
             for (Review review : reviewList) {
-                Optional<User> foundUser = userService.findUserById(String.valueOf(review.getUserId()));
+                Optional<User> foundUser = userService.findUserById(review.getUserId());
                 review.setUserLogin(foundUser.get().getLogin());
             }
             requestContent.setAttribute(RequestParameter.ACTIVITY, found.get());

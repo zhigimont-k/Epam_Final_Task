@@ -18,7 +18,9 @@ public class ActivityService {
 
     public boolean addActivity(String name, String description, String price) throws ServiceException {
         try {
-            if (!ActivityValidator.getInstance().validateActivity(name, description, price)) {
+            if (!ActivityValidator.getInstance().validateName(name) ||
+                    !ActivityValidator.getInstance().validateDescription(description) ||
+                    !ActivityValidator.getInstance().validatePrice(price)) {
                 return false;
             }
             Activity activity;
@@ -28,7 +30,7 @@ public class ActivityService {
             activity.setPrice(new BigDecimal(price));
             activityDao.addActivity(activity);
             return true;
-        } catch (DaoException e){
+        } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
@@ -76,7 +78,9 @@ public class ActivityService {
 
     public boolean updateActivity(int id, String name, String description, String price,
                                   String status) throws ServiceException {
-        if (!ActivityValidator.getInstance().validateActivity(name, description, price) ||
+        if (!ActivityValidator.getInstance().validateName(name) ||
+                !ActivityValidator.getInstance().validateDescription(description) ||
+                !ActivityValidator.getInstance().validatePrice(price) ||
                 !ActivityValidator.getInstance().validateStatus(status)) {
             return false;
         }

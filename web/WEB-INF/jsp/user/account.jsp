@@ -40,33 +40,22 @@
             var MAX_SIZE = 16177215;
             var fuData = document.getElementById('fileChooser');
             var FileUploadPath = fuData.value;
-
-
             if (FileUploadPath == '') {
                 alert("Please upload an image");
-
             } else {
                 var Extension = FileUploadPath.substring(FileUploadPath.lastIndexOf('.') + 1).toLowerCase();
-
-
                 if (Extension == "gif" || Extension == "png" || Extension == "bmp"
                     || Extension == "jpeg" || Extension == "jpg") {
-
-
                     if (fuData.files && fuData.files[0]) {
-
                         var size = fuData.files[0].size;
-
                         if (size > MAX_SIZE) {
                             alert("Maximum file size exceeds");
                             return;
                         } else {
                             var reader = new FileReader();
-
                             reader.onload = function (e) {
                                 $('#blah').attr('src', e.target.result);
                             }
-
                             reader.readAsDataURL(fuData.files[0]);
                         }
                     }
@@ -90,7 +79,7 @@
     <div class="col-lg-4">
         <div class="container col-md-4 col-md-offset-6">
             <form name="registerForm" method="POST" action="app">
-                <input type="hidden" name="command" value="register"/>
+                <input type="hidden" name="command" value="updateUser"/>
                 <div class="form-group">
                     ${loginLabel}:
                     <br/>
@@ -139,7 +128,12 @@
                 </div>
                 <div class="form-group">
                     ${userNameLabel}:<br/>
-                    ${sessionScope.user.userName}
+                        <input type="text"
+                               name="userName"
+                               value="${sessionScope.user.userName}"
+                               maxlength="40"
+                               minlength="2"
+                               pattern="[\p{L}\s]{2,40}"/></label>
                 </div>
                 <div class="form-group">
                     ${cardNumberLabel}:<br/>
@@ -168,7 +162,7 @@
         <br/>
         <form name="updateUserForm" method="POST" action="image" enctype="multipart/form-data">
             <input type="hidden" name="userId" value="${sessionScope.user.id}"/>
-            <input type="file" name="photo" size="50" required/><br><br>
+            <input type="file" id="fileChooser" name="photo" size="50" required/><br><br>
             <input type="submit"
                    value="${submit}"
                    onsubmit="validateFileUpload()">

@@ -33,14 +33,13 @@ public class ViewOrderCommand implements Command {
 
     /**
      * Retrieves user's ID and order's properties from session and request
-     * If order by the same user with the same time exists, shows error message
+     * If order by the same user with the same time exists or date\time is invalid, shows error message
      * Otherwise calculates order's price, creates new order, sets it as session attribute
      * and redirects to order confirmation page
      *
-     * @param requestContent
-     * Request and session parameters and attributes
-     * @return
-     * Address of the next page
+     * @param requestContent Request and session parameters and attributes
+     *
+     * @return Address of the next page
      */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
@@ -52,7 +51,9 @@ public class ViewOrderCommand implements Command {
             String[] activityIdList = requestContent.getParameters(RequestParameter.ACTIVITY_ID);
             BigDecimal orderPrice = new BigDecimal(BigInteger.ZERO);
             List<Activity> activityList = new ArrayList<>();
-            if (service.orderExists(userId, buildTimestamp(date, time))) {
+            if (!OrderValidator.getInstance().validateDate(date) ||
+                    !OrderValidator.getInstance().validateTime(time, date) ||
+                    service.orderExists(userId, date, time)) {
                 requestContent.setSessionAttribute(RequestParameter.ORDER_EXISTS, true);
                 router.setRedirect(true);
                 router.setPage(PageAddress.ADD_ORDER_PAGE);
@@ -68,7 +69,7 @@ public class ViewOrderCommand implements Command {
                 }
                 Order order = new Order();
                 order.setUserId(userId);
-                order.setDateTime(buildTimestamp(date, time));
+                order.setDateTime(service.buildTimestamp(date, time));
                 order.setPrice(orderPrice);
                 for (Activity activity : activityList) {
                     order.addActivity(activity);
@@ -83,23 +84,5 @@ public class ViewOrderCommand implements Command {
             router.setPage(PageAddress.ERROR_PAGE);
         }
         return router;
-    }
-
-    /**
-     * Creates a valid timestamp from given date and time
-     *
-     * @param date
-     * Date of the order
-     * @param time
-     * Time of the order
-     * @return
-     * Valid timestamp
-     */
-    private Timestamp buildTimestamp(String date, String time) {
-        String orderTime = date + " " + time;
-        if (StringUtils.countMatches(orderTime, ":") == 1) {
-            orderTime += ":00";
-        }
-        return Timestamp.valueOf(orderTime.replace("T", " "));
     }
 }

@@ -36,7 +36,7 @@ public class ChangeUserStatusCommand implements Command {
 
             String id = requestContent.getParameter(RequestParameter.USER_ID);
             String status = requestContent.getParameter(RequestParameter.USER_STATUS);
-            service.changeUserStatus(id, status);
+            service.changeUserStatus(Integer.parseInt(id), status);
             router.setRedirect(true);
             router.setPage(PageAddress.VIEW_USERS);
         } catch (ServiceException e) {

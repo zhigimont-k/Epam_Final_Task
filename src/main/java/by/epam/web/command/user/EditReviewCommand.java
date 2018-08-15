@@ -35,7 +35,7 @@ public class EditReviewCommand implements Command {
         PageRouter router = new PageRouter();
         try {
             String reviewId = requestContent.getParameter(RequestParameter.REVIEW_ID);
-            Optional<Review> found = service.findReviewById(reviewId);
+            Optional<Review> found = service.findReviewById(Integer.parseInt(reviewId));
             if (found.isPresent()) {
                 requestContent.setSessionAttribute(RequestParameter.REVIEW, found.get());
                 router.setRedirect(true);

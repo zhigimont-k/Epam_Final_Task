@@ -1,5 +1,6 @@
 package by.epam.web.validation;
 
+import by.epam.web.entity.Order;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -64,9 +66,7 @@ public class OrderValidator {
                 Date dateValue = format.parse(date);
                 Calendar calendar = Calendar.getInstance();
                 Date now = calendar.getTime();
-                calendar.add(Calendar.MONTH, +1);
-                Date maxDate = calendar.getTime();
-                result = dateValue.after(now) && dateValue.before(maxDate);
+                result = dateValue.after(now);
 
             } catch (ParseException e) {
                 return false;
@@ -116,6 +116,11 @@ public class OrderValidator {
             logger.log(Level.INFO, "Invalid time: " + time);
             return false;
         }
+    }
+
+    public boolean validateStatus(String status){
+        return Arrays.stream(Order.Status.values())
+                .anyMatch(orderStatus -> orderStatus.getName().equalsIgnoreCase(status));
     }
 
 }

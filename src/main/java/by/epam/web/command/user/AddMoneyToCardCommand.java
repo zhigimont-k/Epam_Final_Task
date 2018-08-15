@@ -38,7 +38,7 @@ public class AddMoneyToCardCommand implements Command {
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             String cardNumber = requestContent.getParameter(RequestParameter.CARD_NUMBER);
             String moneyToAdd = requestContent.getParameter(RequestParameter.MONEY);
-            if (service.findUserByIdAndCard(String.valueOf(user.getId()), cardNumber).isPresent()) {
+            if (service.findUserByIdAndCard(user.getId(), cardNumber).isPresent()) {
                 requestContent.setSessionAttribute(RequestParameter.NO_CARD_FOUND, false);
                 if (service.addMoneyToCard(cardNumber, moneyToAdd)) {
                     router.setRedirect(true);

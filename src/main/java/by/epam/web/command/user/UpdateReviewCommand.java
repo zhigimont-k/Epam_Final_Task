@@ -38,7 +38,7 @@ public class UpdateReviewCommand implements Command {
             String id = requestContent.getParameter(RequestParameter.REVIEW_ID);
             String newMark = requestContent.getParameter(RequestParameter.REVIEW_MARK);
             String newMessage = requestContent.getParameter(RequestParameter.REVIEW_MESSAGE).trim();
-            Optional<Review> found = service.findReviewById(id);
+            Optional<Review> found = service.findReviewById(Integer.parseInt(id));
             service.updateReview(Integer.parseInt(id), Integer.parseInt(newMark),
                     newMessage);
             requestContent.setSessionAttribute(RequestParameter.REVIEW, null);

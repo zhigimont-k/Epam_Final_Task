@@ -40,8 +40,7 @@ public class AddReviewCommand implements Command {
             String activityId = requestContent.getParameter(RequestParameter.ACTIVITY_ID);
             String mark = requestContent.getParameter(RequestParameter.REVIEW_MARK);
             String message = requestContent.getParameter(RequestParameter.REVIEW_MESSAGE).trim();
-            service.addReview(String.valueOf(userId), activityId,
-                    mark, message);
+            service.addReview(userId, Integer.parseInt(activityId), mark, message);
             router.setRedirect(true);
             router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
         } catch (ServiceException e) {
