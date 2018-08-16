@@ -18,6 +18,7 @@
     <fmt:message bundle="${locale}" key="locale.action.signin" var="signIn"/>
     <fmt:message bundle="${locale}" key="locale.action.signup" var="signUp"/>
     <fmt:message bundle="${locale}" key="locale.page.title.home" var="pageTitle"/>
+    <fmt:message bundle="${locale}" key="locale.message.welcome" var="introText"/>
     <fmt:message bundle="${projectInfo}" key="cbb.name.short" var="projectName"/>
     <fmt:message bundle="${projectInfo}" key="cbb.name.full" var="projectNameFull"/>
     <title>${pageTitle} | ${projectName}</title>
@@ -29,8 +30,7 @@
         <h1 class="text-uppercase">${projectNameFull}</h1>
         <h4>
             <jsp:include page="/WEB-INF/jsp/page_structure/welcomePanel.jsp"/>
-            Bootstrap is the most popular HTML, CSS, and JS framework for developing
-            responsive, mobile-first projects on the web.
+            ${introText}
         </h4>
         <br/>
         <c:if test="${empty sessionScope.user}">

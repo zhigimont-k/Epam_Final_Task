@@ -31,9 +31,9 @@ public class ReviewService {
         }
     }
 
-    public void deleteReview(String id) throws ServiceException {
+    public void deleteReview(int id) throws ServiceException {
         try {
-            reviewDao.deleteReviewById(Integer.parseInt(id));
+            reviewDao.deleteReviewById(id);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

@@ -73,14 +73,13 @@
             <c:if test="${sessionScope.user ne null && sessionScope.user.status ne 'banned'}">
             <li><a href="app?command=createOrder">${addOrder}</a></li>
             </c:if>
-            <ul class="nav navbar-nav navbar-right text-uppercase navbar-btn">
+            <ul class="nav navbar-nav navbar-right text-uppercase">
+                <c:if test="${sessionScope.user ne null}">
+                    <li><a href="app?command=logout">${logout}</a></li>
+                </c:if>
                 <li><jsp:include page="/WEB-INF/jsp/page_structure/chooseLang.jsp"/></li>
             </ul>
-            <c:if test="${sessionScope.user ne null}">
-            <ul class="nav navbar-nav navbar-right text-uppercase">
-                <li><a href="app?command=logout">${logout}</a></li>
-            </ul>
-            </c:if>
+
     </div>
 </nav>
 </body>

@@ -34,7 +34,7 @@
 
 <div class="container">
     <div class="row centered-form center-block">
-        <div class="container col-md-4 col-md-offset-6">
+        <div class="container col-md-4 col-md-offset-4">
             <form name="resetPasswordForm" method="POST" action="app">
                 <input type="hidden" name="command" value="resetPassword"/>
                 <div class="form-group">

@@ -24,15 +24,15 @@
                 <div class="col-md-3">
                     <c:choose>
                         <c:when test="${activity.status == 'available'}">
-                            <div class="panel panel-success"
-                                 style="background-image: url(${pageContext.request.contextPath}/images/card-bg.jpg);">
+                            <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <a href="app?command=viewActivity&activityId=${activity.id}">
                                             ${activity.name}
                                     </a>
                                     <p class="text-muted text-lowercase">${available}</p>
                                 </div>
-                                <div class="panel-body">
+                                <div class="panel-body" style="background-image: url(${pageContext.request.contextPath}/images/card-bg-available.png);
+                                        background-size: cover;">
                                         ${activity.description}
                                     <h4>${activity.price} ${byn}</h4>
                                 </div>
@@ -55,7 +55,8 @@
                                     </a>
                                     <p class="text-muted text-lowercase">${unavailable}</p>
                                 </div>
-                                <div class="panel-body">
+                                <div class="panel-body" style="background-image: url(${pageContext.request.contextPath}/images/card-bg-unavailable.png);
+                                        background-size: cover;">
                                         ${activity.description}
                                     <h4>${activity.price}</h4>
                                 </div>

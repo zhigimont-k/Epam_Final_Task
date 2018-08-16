@@ -31,7 +31,7 @@
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
 <div class="container">
     <div class="row centered-form center-block">
-        <div class="container col-md-4 col-md-offset-6">
+        <div class="container col-md-4 col-md-offset-4">
             <h3>${editReview}:</h3>
             <form name="reviewEditForm" method="POST" action="app">
                 <input type="hidden" name="command" value="updateReview"/>
@@ -51,11 +51,9 @@
                     <label>${messageLabel}:
                         <br/>
                         <textarea name="reviewMessage"
-                                  maxlength="280" cols="10"
+                                  maxlength="280" cols="20"
                                   rows="10"
-                                  class="form-control noresize"
-                                  required>
-                            ${sessionScope.review.message}
+                                  class="form-control noresize">${sessionScope.review.message}
                         </textarea>
                     </label>
                 </div>

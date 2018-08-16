@@ -36,7 +36,7 @@ public class DeleteReviewCommand implements Command {
             Optional<Review> found = service.findReviewById(Integer.parseInt(reviewId));
             if (found.isPresent()) {
                 int activityId = found.get().getActivityId();
-                service.deleteReview(reviewId);
+                service.deleteReview(Integer.parseInt(reviewId));
                 router.setRedirect(true);
                 router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
             } else {

@@ -41,6 +41,7 @@ img {
 
 textarea {
     min-height: 110px;
+    min-width: 200px;
 }
 
 .noresize {

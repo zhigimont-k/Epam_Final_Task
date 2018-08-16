@@ -43,7 +43,7 @@
     </c:if>
     <div class="container">
         <div class="row centered-form center-block">
-            <div class="container col-md-4 col-md-offset-6">
+            <div class="container col-md-4 col-md-offset-4">
                 <c:if test="${sessionScope.userIsBanned}">
                     <div class="alert alert-danger">
                             ${userIsBanned}

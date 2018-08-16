@@ -31,6 +31,14 @@ public interface OrderDao extends AbstractDao<Order> {
      * @throws DaoException if SQLException occurs
      */
     void changeOrderStatus(int orderId, String status) throws DaoException;
+
+    /**
+     * Sets order's status as 'cancelled' and returns money to the user's card if it was paid
+     *
+     * @param orderId
+     * ID of the order to cancel
+     * @throws DaoException if SQLException occurs
+     */
     void cancelOrder(int orderId) throws DaoException;
 
     /**

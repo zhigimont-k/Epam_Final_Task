@@ -38,7 +38,7 @@
         <label>${messageLabel}:
             <br/>
             <textarea name="reviewMessage"
-                      maxlength="280" cols="10"
+                      maxlength="280" cols="20"
                       rows="10"
                       class="form-control noresize"></textarea>
         </label>

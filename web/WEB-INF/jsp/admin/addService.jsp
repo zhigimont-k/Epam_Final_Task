@@ -22,6 +22,7 @@
     <fmt:message bundle="${locale}" key="locale.table.description" var="serviceDescriptionLabel"/>
     <fmt:message bundle="${locale}" key="locale.table.price" var="servicePriceLabel"/>
     <fmt:message bundle="${locale}" key="locale.action.add" var="button"/>
+    <fmt:message bundle="${locale}" key="locale.currency.byn" var="byn"/>
 
     <fmt:message bundle="${locale}" key="locale.message.serviceexists" var="serviceExists"/>
 
@@ -36,7 +37,7 @@
 
 <div class="container">
     <div class="row centered-form center-block">
-        <div class="container col-md-4 col-md-offset-6">
+        <div class="container col-md-4 col-md-offset-4">
             <h3>${addService}:</h3>
             <c:if test="${dataExists == true}">
                 <div class="alert alert-danger alert-dismissible">
@@ -74,7 +75,7 @@
                                maxlength="10"
                                minlength="1"
                                pattern="\d{1,10}"
-                               required/>
+                               required/> ${byn}
                     </label>
                 </div>
                 <button type="submit" class="btn btn-default">${button}</button>

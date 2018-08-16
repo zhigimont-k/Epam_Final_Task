@@ -39,7 +39,7 @@
 
 <div class="container">
     <div class="row centered-form center-block">
-        <div class="container col-md-4 col-md-offset-6">
+        <div class="container col-md-4 col-md-offset-4">
             <h3>${pageTitle}:</h3>
             <form name="activityEditForm" method="POST" action="app">
                 <input type="hidden" name="command" value="updateActivity"/>
@@ -83,10 +83,10 @@
                     <label>${statusLabel}:
                         <select name="activityStatus">
                             <label>
-                                <option value="available">available</option>
+                                <option value="available">${available}</option>
                             </label>
                             <label>
-                                <option value="unavailable">unavailable</option>
+                                <option value="unavailable">${unavailable}</option>
                             </label>
                         </select>
                 </div>
