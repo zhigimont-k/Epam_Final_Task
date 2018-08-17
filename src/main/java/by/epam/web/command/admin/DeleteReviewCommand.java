@@ -41,6 +41,7 @@ public class DeleteReviewCommand implements Command {
                 router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
             } else {
                 router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
+                logger.log(Level.ERROR, "Couldn't find review");
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);

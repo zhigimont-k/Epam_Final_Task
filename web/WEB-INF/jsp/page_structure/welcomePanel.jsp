@@ -16,7 +16,7 @@
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
 
-    <fmt:message bundle="${locale}" key="locale.message.welcome" var="welcomeMessage"/>
+    <fmt:message bundle="${locale}" key="locale.message.welcome.short" var="welcomeMessage"/>
     <fmt:message bundle="${locale}" key="locale.status.guest" var="guest"/>
 </head>
 <body>

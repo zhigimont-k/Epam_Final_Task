@@ -59,8 +59,7 @@
                             reader.readAsDataURL(fuData.files[0]);
                         }
                     }
-                }
-                else {
+                } else {
                     alert("Photo only allows file types of GIF, PNG, JPG, JPEG and BMP. ");
                 }
             }
@@ -128,12 +127,12 @@
                 </div>
                 <div class="form-group">
                     ${userNameLabel}:<br/>
-                        <input type="text"
-                               name="userName"
-                               value="${sessionScope.user.userName}"
-                               maxlength="40"
-                               minlength="2"
-                               pattern="[\p{L}\s]{2,40}"/></label>
+                    <input type="text"
+                           name="userName"
+                           value="${sessionScope.user.userName}"
+                           maxlength="40"
+                           minlength="2"
+                           pattern="[\p{L}\s]{2,40}"/></label>
                 </div>
                 <div class="form-group">
                     ${cardNumberLabel}:<br/>

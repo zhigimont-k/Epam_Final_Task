@@ -24,10 +24,9 @@ public class ChangeOrderStatusCommand implements Command {
     /**
      * Retrieves order's ID and new status from request parameters, changes order status
      *
-     * @param requestContent
-     * Request and session parameters and attributes
-     * @return
-     * Address of the next page
+     * @param requestContent Request and session parameters and attributes
+     *
+     * @return Address of the next page
      */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
@@ -35,14 +34,13 @@ public class ChangeOrderStatusCommand implements Command {
         try {
             String id = requestContent.getParameter(RequestParameter.ORDER_ID);
             String status = requestContent.getParameter(RequestParameter.ORDER_STATUS);
-            Optional<Order> found = service.findOrderById(Integer.parseInt(id));
-            if (found.isPresent()){
-                service.changeOrderStatus(Integer.parseInt(id), status);
+            if (service.changeOrderStatus(Integer.parseInt(id), status)) {
                 router.setRedirect(true);
                 router.setPage(PageAddress.VIEW_ALL_ORDERS);
             } else {
-                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
+                logger.log(Level.ERROR, "Couldn't change order status");
             }
+
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);

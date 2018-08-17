@@ -24,10 +24,9 @@ public class ChangeUserStatusCommand implements Command {
     /**
      * Retrieves user's ID and new status from reuqest parameters, changes user's status
      *
-     * @param requestContent
-     * Request and session parameters and attributes
-     * @return
-     * Address of the next page
+     * @param requestContent Request and session parameters and attributes
+     *
+     * @return Address of the next page
      */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
@@ -36,9 +35,12 @@ public class ChangeUserStatusCommand implements Command {
 
             String id = requestContent.getParameter(RequestParameter.USER_ID);
             String status = requestContent.getParameter(RequestParameter.USER_STATUS);
-            service.changeUserStatus(Integer.parseInt(id), status);
-            router.setRedirect(true);
-            router.setPage(PageAddress.VIEW_USERS);
+            if (service.changeUserStatus(Integer.parseInt(id), status)) {
+                router.setRedirect(true);
+                router.setPage(PageAddress.VIEW_USERS);
+            } else {
+                logger.log(Level.ERROR, "Couldn't change user status");
+            }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);

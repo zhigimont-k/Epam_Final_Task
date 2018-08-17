@@ -26,10 +26,9 @@ public class UpdateUserCommand implements Command {
      * updates only username if new password isn't set or both password and username if it is
      * If no user is found, shows error message
      *
-     * @param requestContent
-     * Request and session parameters and attributes
-     * @return
-     * Address of the next page
+     * @param requestContent Request and session parameters and attributes
+     *
+     * @return Address of the next page
      */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
@@ -42,13 +41,19 @@ public class UpdateUserCommand implements Command {
             if (service.findUserByLoginAndPassword(user.getLogin(), password).isPresent()) {
                 requestContent.setSessionAttribute(RequestParameter.AUTH_FAIL, false);
                 if (newPassword.isEmpty()) {
-                    service.updateUserName(user.getId(), userName);
-                    Optional<User> found = service.findUserById(user.getId());
-                    requestContent.setSessionAttribute(RequestParameter.USER, found.get());
+                    if (service.updateUserName(user.getId(), userName)) {
+                        Optional<User> found = service.findUserById(user.getId());
+                        requestContent.setSessionAttribute(RequestParameter.USER, found.get());
+                    } else {
+                        logger.log(Level.ERROR, "Couldn't update user");
+                    }
                 } else {
-                    service.updateUser(user.getId(), newPassword, userName);
-                    Optional<User> found = service.findUserById(user.getId());
-                    requestContent.setSessionAttribute(RequestParameter.USER, found.get());
+                    if (service.updateUser(user.getId(), newPassword, userName)) {
+                        Optional<User> found = service.findUserById(user.getId());
+                        requestContent.setSessionAttribute(RequestParameter.USER, found.get());
+                    } else {
+                        logger.log(Level.ERROR, "Couldn't update user");
+                    }
                 }
                 router.setRedirect(true);
                 router.setPage(PageAddress.VIEW_USER_INFO);

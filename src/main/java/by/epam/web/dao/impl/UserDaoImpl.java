@@ -54,7 +54,7 @@ public class UserDaoImpl implements UserDao {
             " AND user.password = SHA1(?)";
     private static final String FIND_ALL_USERS = "SELECT user.user_id, " +
             "user.login, user.password, user.user_email, user.phone_number, user.user_name, user.user_status " +
-            "FROM user ";
+            "FROM user ORDER BY user.user_id ASC";
     private static final String UPDATE_USER_STATUS = "UPDATE user " +
             "SET user_status = ? WHERE user_id = ?";
     private static final String UPDATE_USER = "UPDATE user " +

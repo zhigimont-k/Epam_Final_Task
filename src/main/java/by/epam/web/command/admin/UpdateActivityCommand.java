@@ -27,10 +27,9 @@ public class UpdateActivityCommand implements Command {
      * the same name but different ID already exists
      * If it does not, updates activity, if it does, shows an error message
      *
-     * @param requestContent
-     * Request and session parameters and attributes
-     * @return
-     * Address of the next page
+     * @param requestContent Request and session parameters and attributes
+     *
+     * @return Address of the next page
      */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
@@ -49,20 +48,14 @@ public class UpdateActivityCommand implements Command {
                 router.setRedirect(true);
                 router.setPage(PageAddress.EDIT_ACTIVITY_PAGE);
             } else {
-                Optional<Activity> found = service.findActivityById(activityId);
-                if (found.isPresent()) {
-                    found.get().setName(newName);
-                    found.get().setDescription(newDescription);
-                    found.get().setPrice(new BigDecimal(newPrice));
-                    found.get().setStatus(newStatus);
-                    service.updateActivity(activityId, newName, newDescription,
-                            newPrice, newStatus);
+                if (service.updateActivity(activityId, newName, newDescription,
+                        newPrice, newStatus)) {
                     requestContent.setSessionAttribute(RequestParameter.DATA_EXISTS, false);
                     requestContent.setSessionAttribute(RequestParameter.ACTIVITY, null);
                     router.setRedirect(true);
                     router.setPage(PageAddress.VIEW_ACTIVITIES);
                 } else {
-                    router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
+                    logger.log(Level.ERROR, "Couldn't update activity");
                 }
             }
         } catch (ServiceException e) {

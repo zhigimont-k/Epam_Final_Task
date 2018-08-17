@@ -42,6 +42,7 @@ public class EditActivityCommand implements Command {
                 router.setPage(PageAddress.EDIT_ACTIVITY_PAGE);
             } else {
                 router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
+                logger.log(Level.ERROR, "Couldn't find activity");
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);

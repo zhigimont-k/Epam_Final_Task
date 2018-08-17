@@ -46,7 +46,7 @@ public class AddActivityCommand implements Command {
                     router.setRedirect(true);
                     router.setPage(PageAddress.VIEW_ACTIVITIES);
                 } else {
-                    logger.log(Level.ERROR, "Error while adding activity");
+                    logger.log(Level.ERROR, "Couldn't add activity");
                 }
             }
         } catch (ServiceException e) {

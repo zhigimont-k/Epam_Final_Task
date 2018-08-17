@@ -27,10 +27,9 @@ public class AddReviewCommand implements Command {
      * Retieves user's ID and review properties from session and request parameters
      * and adds a new review
      *
-     * @param requestContent
-     * Request and session parameters and attributes
-     * @return
-     * Address of the next page
+     * @param requestContent Request and session parameters and attributes
+     *
+     * @return Address of the next page
      */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
@@ -40,9 +39,12 @@ public class AddReviewCommand implements Command {
             String activityId = requestContent.getParameter(RequestParameter.ACTIVITY_ID);
             String mark = requestContent.getParameter(RequestParameter.REVIEW_MARK);
             String message = requestContent.getParameter(RequestParameter.REVIEW_MESSAGE).trim();
-            service.addReview(userId, Integer.parseInt(activityId), mark, message);
-            router.setRedirect(true);
-            router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
+            if (service.addReview(userId, Integer.parseInt(activityId), mark, message)) {
+                router.setRedirect(true);
+                router.setPage(PageAddress.VIEW_ACTIVITY + activityId);
+            } else {
+                logger.log(Level.ERROR, "Couldn't add review");
+            }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);
@@ -51,7 +53,7 @@ public class AddReviewCommand implements Command {
 
     }
 
-    private boolean validateReview(String mark, String message){
+    private boolean validateReview(String mark, String message) {
         return ReviewValidator.getInstance().validateMark(mark) &&
                 ReviewValidator.getInstance().validateMessage(message);
     }

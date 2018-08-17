@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class NumberValidator {
     private static NumberValidator instance = new NumberValidator();
-    private static final String MONEY_FORMAT = "[1-9]{1,5}\\.?\\d{0,2}";
+    private static final String MONEY_FORMAT = "[1-9]\\d{1,5}\\.?\\d{0,2}";
     private static final String PAGE_PARAMETER_FORMAT = "[1-9]\\d{0,2}";
     private static final int MIN_NUMBER = 1;
 

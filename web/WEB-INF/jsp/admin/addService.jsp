@@ -74,7 +74,7 @@
                                name="activityPrice"
                                maxlength="10"
                                minlength="1"
-                               pattern="\d{1,10}"
+                               pattern="[1-9]\d{1,5}\.?\d{0,2}"
                                required/> ${byn}
                     </label>
                 </div>

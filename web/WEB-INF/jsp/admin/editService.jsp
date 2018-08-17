@@ -73,7 +73,7 @@
                                name="activityPrice"
                                maxlength="10"
                                minlength="1"
-                               pattern="\d{1,10}"
+                               pattern="[1-9]\d{1,5}\.?\d{0,2}"
                                value="${sessionScope.activity.price}"
                                required/> ${byn}
                     </label>
@@ -82,12 +82,8 @@
                     <br/>
                     <label>${statusLabel}:
                         <select name="activityStatus">
-                            <label>
-                                <option value="available">${available}</option>
-                            </label>
-                            <label>
-                                <option value="unavailable">${unavailable}</option>
-                            </label>
+                            <option value="available">${available}</option>
+                            <option value="unavailable">${unavailable}</option>
                         </select>
                 </div>
                 <button type="submit" class="btn btn-default">${button}</button>

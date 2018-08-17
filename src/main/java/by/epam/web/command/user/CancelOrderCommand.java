@@ -44,9 +44,11 @@ public class CancelOrderCommand implements Command {
                     router.setPage(PageAddress.VIEW_USER_ORDERS);
                 } else {
                     router.setPage(PageAddress.FORBIDDEN_ERROR_PAGE);
+                    logger.log(Level.ERROR, "User's id and order's user's id do not match");
                 }
             } else {
                 router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
+                logger.log(Level.ERROR, "Couldn't find order");
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);

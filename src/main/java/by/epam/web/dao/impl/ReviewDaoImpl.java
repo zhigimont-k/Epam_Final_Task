@@ -30,21 +30,18 @@ public class ReviewDaoImpl implements ReviewDao {
             "VALUES (?, ?, ?, ?)";
     private static final String UPDATE_REVIEW = "UPDATE review " +
             "SET mark = ?, message = ?, creation_date = creation_date " +
-            "WHERE review_id = ?";
+            "WHERE review_id = ? AND review.review_deleted = 0";
     private static final String FIND_REVIEW_BY_ID = "SELECT review.review_id, " +
             "review.user_id, review.service_id, review.creation_date, review.mark, review.message " +
             "FROM review " +
-            "WHERE review.review_id = ?";
-    private static final String FIND_REVIEW_BY_USER_ID = "SELECT review.review_id, " +
-            "review.user_id, review.service_id, review.creation_date, review.mark, review.message " +
-            "FROM review " +
-            "WHERE review.user_id = ?";
+            "WHERE review.review_id = ? AND review.review_deleted = 0";
     private static final String FIND_REVIEW_BY_ACTIVITY_ID = "SELECT review.review_id, " +
             "review.user_id, review.service_id, review.creation_date, review.mark, review.message " +
             "FROM review " +
-            "WHERE review.service_id = ?";
-    private static final String DELETE_REVIEW_BY_ID = "DELETE  " +
-            "FROM review " +
+            "WHERE review.service_id = ? AND review.review_deleted = 0  " +
+            "ORDER BY review.creation_date ASC";
+    private static final String DELETE_REVIEW_BY_ID = "UPDATE review  " +
+            "SET review_deleted = 1, creation_date = creation_date " +
             "WHERE review.review_id = ?";
 
     @Override

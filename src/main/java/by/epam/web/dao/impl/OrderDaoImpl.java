@@ -50,7 +50,7 @@ public class OrderDaoImpl implements OrderDao {
             "FROM order_info " +
             "JOIN user " +
             "ON order_info.user_id = user.user_id " +
-            "LIMIT ?,?";
+            "ORDER BY order_info.order_id ASC LIMIT ?,?";
     private static final String FIND_ORDER_BY_ID = "SELECT order_info.order_id, " +
             "order_info.user_id, order_info.order_status, order_info.order_time, order_info.order_price, order_info.paid " +
             "FROM order_info " +
@@ -65,7 +65,7 @@ public class OrderDaoImpl implements OrderDao {
             "WHERE order_info.user_id = ? AND " +
             "order_info.order_time = ?";
     private static final String FIND_ORDERS_BY_USER_ID_LIMITED = FIND_ORDERS_BY_USER_ID +
-            "LIMIT ?,? ";
+            " LIMIT ?,? ";
     private static final String FIND_ACTIVITIES_BY_ORDER_ID = "SELECT service.service_id, " +
             "service_name, service_description, service_status, service_price FROM service " +
             "JOIN order_services ON service.service_id = order_services.service_id " +

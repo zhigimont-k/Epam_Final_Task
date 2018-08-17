@@ -26,6 +26,21 @@
     <script>
         var minTime = "${minHours}";
 
+        function checkServices(){
+            var checker = document.getElementsByName("activityId");
+            var counter = 0;
+            for (var i = 0; i < checker.length; i++){
+                if (checker[i].checked){
+                    document.getElementById("submitButton").disabled = false;
+                } else {
+                    counter++;
+                }
+            }
+            if (counter == checker.length){
+                document.getElementById("submitButton").disabled = true;
+            }
+        }
+
         function setMinTime() {
             console.log("Initial min time: " + minTime);
             var input = document.getElementById("dateInput").value;
@@ -58,7 +73,7 @@
 </head>
 <body>
 
-<c:if test="${empty sessionScope.user && sessionScope.user.status == 'banned'}">
+<c:if test="${empty sessionScope.user}">
     <jsp:forward page="${pageContext.request.contextPath}/home"/>
 </c:if>
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>
@@ -95,12 +110,15 @@
                 ${servicesLabel}:
                 <div class="form-group">
                     <c:forEach var="activity" items="${sessionScope.activityList}">
-                        <label><input type="checkbox" name="activityId" value="${activity.id}">
+                        <label><input type="checkbox" name="activityId"
+                                      value="${activity.id}"
+                        onchange="checkServices()">
                                 ${activity.name} (${activity.price} ${byn})<br></label>
                         <br/>
                     </c:forEach>
                 </div>
-                <button type="submit" class="btn btn-default">${button}</button>
+                <button type="submit" id="submitButton"
+                        class="btn btn-default" disabled>${button}</button>
             </form>
             <c:if test="${illegalInput == true}">
                 <div class="alert alert-danger">

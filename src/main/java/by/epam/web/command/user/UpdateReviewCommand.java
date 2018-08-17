@@ -26,10 +26,9 @@ public class UpdateReviewCommand implements Command {
      * Retieves review's ID and new properties from request parameters, then updates the review
      * in the database and redirects to the page of activity that the review was for
      *
-     * @param requestContent
-     * Request and session parameters and attributes
-     * @return
-     * Address of the next page
+     * @param requestContent Request and session parameters and attributes
+     *
+     * @return Address of the next page
      */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
@@ -39,11 +38,14 @@ public class UpdateReviewCommand implements Command {
             String newMark = requestContent.getParameter(RequestParameter.REVIEW_MARK);
             String newMessage = requestContent.getParameter(RequestParameter.REVIEW_MESSAGE).trim();
             Optional<Review> found = service.findReviewById(Integer.parseInt(id));
-            service.updateReview(Integer.parseInt(id), Integer.parseInt(newMark),
-                    newMessage);
-            requestContent.setSessionAttribute(RequestParameter.REVIEW, null);
-            router.setRedirect(true);
-            router.setPage(PageAddress.VIEW_ACTIVITY + found.get().getActivityId());
+            if (service.updateReview(Integer.parseInt(id), Integer.parseInt(newMark),
+                    newMessage)) {
+                requestContent.setSessionAttribute(RequestParameter.REVIEW, null);
+                router.setRedirect(true);
+                router.setPage(PageAddress.VIEW_ACTIVITY + found.get().getActivityId());
+            } else {
+                logger.log(Level.ERROR, "Couldn't update review");
+            }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);

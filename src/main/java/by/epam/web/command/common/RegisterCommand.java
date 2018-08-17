@@ -50,6 +50,7 @@ public class RegisterCommand implements Command {
                     router.setPage(PageAddress.HOME_PAGE);
                 } else {
                     router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
+                    logger.log(Level.ERROR, "Couldn't register user");
                 }
             } else {
                 router.setPage(PageAddress.REGISTER_PAGE);

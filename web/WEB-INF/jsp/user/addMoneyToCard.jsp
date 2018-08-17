@@ -46,13 +46,13 @@
                                name="money"
                                minlength="1"
                                maxlength="6"
-                               pattern="\d{1,6}"
+                               pattern="[1-9]\d{1,5}\.?\d{0,2}"
                                required/> ${byn}
                     </label>
                 </div>
                 <button type="submit" class="btn btn-default">${button}</button>
             </form>
-            <c:if test="${sessionScope.noCardFound == true}">
+            <c:if test="${noCardFound == true}">
                 <div class="alert alert-danger alert-dismissible">
                         ${cardNotFoundMessage}
                 </div>

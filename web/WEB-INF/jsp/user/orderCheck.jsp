@@ -23,7 +23,7 @@
 <body>
 
 
-<c:if test="${empty sessionScope.user && sessionScope.user.status == 'banned'}">
+<c:if test="${empty sessionScope.user}">
     <jsp:forward page="${pageContext.request.contextPath}/home"/>
 </c:if>
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>

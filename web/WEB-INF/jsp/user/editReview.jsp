@@ -25,7 +25,7 @@
     <title>${pageTitle} | ${projectName}</title>
 </head>
 <body>
-<c:if test="${empty sessionScope.user || sessionScope.user.status eq 'banned' || empty sessionScope.review}">
+<c:if test="${empty sessionScope.user || empty sessionScope.review}">
     <jsp:forward page="${pageContext.request.contextPath}/home"/>
 </c:if>
 <jsp:include page="/WEB-INF/jsp/page_structure/header.jsp"/>

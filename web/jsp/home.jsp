@@ -34,8 +34,10 @@
         </h4>
         <br/>
         <c:if test="${empty sessionScope.user}">
-            <a href="${pageContext.request.contextPath}/login" class="btn btn-danger">${signIn}</a>
-            <a href="${pageContext.request.contextPath}/register" class="btn btn-default">${signUp}</a>
+            <a href="${pageContext.request.contextPath}/login" class="btn btn-default" style="
+text-shadow: none;">${signIn}</a>
+            <a href="${pageContext.request.contextPath}/register" class="btn btn-danger" style="
+text-shadow: none;">${signUp}</a>
         </c:if>
     </div>
 </main>
