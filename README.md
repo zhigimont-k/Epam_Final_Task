@@ -1,4 +1,5 @@
-<h3>Cat Beauty Bar</h3>
+<h2>Cat Beauty Bar</h3>
+
 <table style="table-layout: fixed; width:100%;">
   <tr>
     <td>A web application for an imaginary cat beauty salon.
