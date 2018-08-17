@@ -1,6 +1,7 @@
-"Cat Beauty Bar"
-
-A web application for an imaginary cat beauty salon.
+<h3>Cat Beauty Bar</h3>
+<table style="table-layout: fixed; width:100%;">
+  <tr>
+    <td>A web application for an imaginary cat beauty salon.
 
 Guests may view all of the services, as well as view individual ones and read users' reviews on them.
 
@@ -22,11 +23,8 @@ Those users who have confirmed orders the next day are sent reminder messages to
 
 Administrator can add new services and update them. Administrator can also delete reviews and change users' statuses to 'admin', 'user' and 'banned'.
 
-Banned users get an error message when they try to sign in which means they can use the service only as guests.
-
---
-
-Technical description:
+Banned users get an error message when they try to sign in which means they can use the service only as guests.</td>
+    <td style="width:50%;"><h4>Technical description:</h4>
 
 Java 9
 
@@ -40,4 +38,6 @@ Logger: Log4J2
 
 Tests: TestNG
 
-Build tool: Maven
+Build tool: Maven</td>
+  </tr>
+</table>
