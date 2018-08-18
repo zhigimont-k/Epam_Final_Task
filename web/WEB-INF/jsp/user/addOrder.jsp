@@ -88,6 +88,11 @@
                     <strong>${orderExistsMessage}</strong>
                 </div>
             </c:if>
+            <c:if test="${sessionScope.illegalInput == true}">
+                <div class="alert alert-danger">
+                        ${orderWarning}
+                </div>
+            </c:if>
             <form name="addOrderForm" method="POST" action="app">
                 <input type="hidden" name="command" value="viewOrder"/>
                 <h3>${pageTitle}</h3>
@@ -96,12 +101,14 @@
                         <input type="date"
                                min="<fmt:formatDate value="${now}" pattern="yyyy-MM-dd" />"
                                name="orderDate"
+                               title="<fmt:message bundle="${locale}" key="locale.requirement.orderdate"/>"
                                onchange="setMinTime()"
                                id="dateInput"
                                required/>
                         <input type="time"
                                name="orderTime"
                                id="timeInput"
+                               title="<fmt:message bundle="${locale}" key="locale.requirement.ordertime"/>"
                                min="${minHours}"
                                max="${maxHours}"
                                required/>
@@ -120,11 +127,6 @@
                 <button type="submit" id="submitButton"
                         class="btn btn-default" disabled>${button}</button>
             </form>
-            <c:if test="${illegalInput == true}">
-                <div class="alert alert-danger">
-                        ${orderWarning}
-                </div>
-            </c:if>
         </div>
     </div>
 </div>

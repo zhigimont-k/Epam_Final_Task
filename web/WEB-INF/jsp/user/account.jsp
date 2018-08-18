@@ -74,13 +74,19 @@
 </c:if>
 
 <div class="container">
+    <c:if test="${authFail == true}">
+        <div class="alert alert-danger alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>${authFailMessage}</strong>
+        </div>
+    </c:if>
     <div class="col-lg-2"><br/></div>
     <div class="col-lg-4">
         <div class="container col-md-4 col-md-offset-6">
             <form name="registerForm" method="POST" action="app">
                 <input type="hidden" name="command" value="updateUser"/>
                 <div class="form-group">
-                    ${loginLabel}:
+                    <strong>${loginLabel}:</strong>
                     <br/>
                     ${sessionScope.user.login}
                 </div>
@@ -116,17 +122,17 @@
                     </label>
                 </div>
                 <div class="form-group">
-                    ${emailLabel}*:
+                    <strong>${emailLabel}:</strong>
                     <br/>
                     ${sessionScope.user.email}
                 </div>
                 <div class="form-group">
-                    ${phoneNumberLabel}*:
+                    <strong>${phoneNumberLabel}:</strong>
                     <br/>
                     ${sessionScope.user.phoneNumber}
                 </div>
                 <div class="form-group">
-                    ${userNameLabel}:<br/>
+                    <label>${userNameLabel}:<br/>
                     <input type="text"
                            name="userName"
                            value="${sessionScope.user.userName}"
@@ -135,22 +141,18 @@
                            pattern="[\p{L}\s]{2,40}"/></label>
                 </div>
                 <div class="form-group">
-                    ${cardNumberLabel}:<br/>
+                    <strong>${cardNumberLabel}:</strong>
+                    <br/>
                     ${sessionScope.user.cardNumber}
                 </div>
                 <div class="form-group">
-                    ${moneyLabel}:<br/>
+                    <strong>${moneyLabel}:</strong>
+                    <br/>
                     ${money} ${byn}
                 </div>
 
                 <button type="submit" class="btn btn-default">${button}</button>
             </form>
-            <c:if test="${authFail == true}">
-                <div class="alert alert-danger alert-dismissible">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>${authFailMessage}</strong>
-                </div>
-            </c:if>
         </div>
     </div>
 

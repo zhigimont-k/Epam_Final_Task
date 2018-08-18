@@ -52,12 +52,16 @@ public class ViewOrderCommand implements Command {
             BigDecimal orderPrice = new BigDecimal(BigInteger.ZERO);
             List<Activity> activityList = new ArrayList<>();
             if (!OrderValidator.getInstance().validateDate(date) ||
-                    !OrderValidator.getInstance().validateTime(time, date) ||
-                    service.orderExists(userId, date, time)) {
+                    !OrderValidator.getInstance().validateTime(time, date)) {
+                requestContent.setSessionAttribute(RequestParameter.ILLEGAL_INPUT, true);
+                router.setRedirect(true);
+                router.setPage(PageAddress.ADD_ORDER_PAGE);
+            } else if (service.orderExists(userId, date, time)){
                 requestContent.setSessionAttribute(RequestParameter.ORDER_EXISTS, true);
                 router.setRedirect(true);
                 router.setPage(PageAddress.ADD_ORDER_PAGE);
             } else {
+                requestContent.setSessionAttribute(RequestParameter.ILLEGAL_INPUT, false);
                 requestContent.setSessionAttribute(RequestParameter.ORDER_EXISTS, false);
                 for (String activityId : activityIdList) {
                     int id = Integer.parseInt(activityId);

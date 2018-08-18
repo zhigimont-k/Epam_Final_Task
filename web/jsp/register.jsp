@@ -46,6 +46,30 @@
 
     <div class="container">
         <div class="row centered-form center-block">
+            <c:if test="${loginExists == true}">
+                <div class="alert alert-danger alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>${loginExistsMessage}</strong>
+                </div>
+            </c:if>
+            <c:if test="${emailExists == true}">
+                <div class="alert alert-danger alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>${emailExistsMessage}</strong>
+                </div>
+            </c:if>
+            <c:if test="${phoneNumberExists == true}">
+                <div class="alert alert-danger alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>${phoneNumberExistsMessage}</strong>
+                </div>
+            </c:if>
+            <c:if test="${cardNumberExists == true}">
+                <div class="alert alert-danger alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>${cardExistsMessage}</strong>
+                </div>
+            </c:if>
             <div class="container col-md-4 col-md-offset-4">
                 <form name="registerForm" method="POST" action="app">
                     <input type="hidden" name="command" value="register"/>
@@ -56,7 +80,9 @@
                                    name="login"
                                    maxlength="40"
                                    pattern="\w+{4, 40}"
-                                   data-toggle="tooltip" title="hi"
+                                   data-toggle="tooltip"
+                                   title="<fmt:message bundle="${locale}" key="locale.requirement.login"/>"
+                                   placeholder="<fmt:message bundle="${locale}" key="locale.placeholder.login"/>"
                                    required/>
                         </label>
                     </div>
@@ -67,6 +93,7 @@
                                    name="password"
                                    id="passwordField"
                                    maxlength="32"
+                                   title="<fmt:message bundle="${locale}" key="locale.requirement.password"/>"
                                    required/>
                         </label>
                         <br/>
@@ -83,6 +110,8 @@
                                    maxlength="50"
                                    minlength="5"
                                    pattern="([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})"
+                                   title="<fmt:message bundle="${locale}" key="locale.requirement.email"/>"
+                                   placeholder="<fmt:message bundle="${locale}" key="locale.placeholder.email"/>"
                                    required/></label>
                         </label>
                     </div>
@@ -94,6 +123,8 @@
                                    maxlength="13"
                                    minlength="13"
                                    pattern="\+(\d{12})"
+                                   title="<fmt:message bundle="${locale}" key="locale.requirement.phonenumber"/>"
+                                   placeholder="<fmt:message bundle="${locale}" key="locale.placeholder.phonenumber"/>"
                                    required/>
                         </label>
                     </div>
@@ -103,6 +134,8 @@
                                    name="userName"
                                    maxlength="40"
                                    minlength="2"
+                                   title="<fmt:message bundle="${locale}" key="locale.requirement.username"/>"
+                                   placeholder="<fmt:message bundle="${locale}" key="locale.placeholder.username"/>"
                                    pattern="[\p{L}\s]{2,40}"/>
                         </label>
                     </div>
@@ -113,36 +146,14 @@
                                    maxlength="16"
                                    minlength="16"
                                    pattern="\d{16}"
+                                   title="<fmt:message bundle="${locale}" key="locale.requirement.cardnumber"/>"
+                                   placeholder="<fmt:message bundle="${locale}" key="locale.placeholder.cardnumber"/>"
                                    required/>
                         </label>
                     </div>
 
                     <button type="submit" class="btn btn-default">${signUp}</button>
                 </form>
-                <c:if test="${loginExists == true}">
-                    <div class="alert alert-danger alert-dismissible">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong>${loginExistsMessage}</strong>
-                    </div>
-                </c:if>
-                <c:if test="${emailExists == true}">
-                    <div class="alert alert-danger alert-dismissible">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong>${emailExistsMessage}</strong>
-                    </div>
-                </c:if>
-                <c:if test="${phoneNumberExists == true}">
-                    <div class="alert alert-danger alert-dismissible">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong>${phoneNumberExistsMessage}</strong>
-                    </div>
-                </c:if>
-                <c:if test="${cardNumberExists == true}">
-                    <div class="alert alert-danger alert-dismissible">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong>${cardExistsMessage}</strong>
-                    </div>
-                </c:if>
                 <p>${haveAccountAlready} <a href="${pageContext.request.contextPath}/login">${signIn}</a></p>
             </div>
         </div>

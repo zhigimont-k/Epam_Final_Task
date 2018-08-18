@@ -42,7 +42,7 @@
                     </label>
                 </div>
                 <div class="form-group">
-                    ${servicesLabel}:
+                    <strong>${servicesLabel}:</strong>
                     <br/>
                     <c:forEach var="activity" items="${sessionScope.order.activityList}">
                         <input type="hidden" name="activityId" value="${activity.id}"/>

@@ -2,17 +2,12 @@ package by.epam.web.validation;
 
 import by.epam.web.entity.Order;
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -22,7 +17,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class OrderValidator {
-    private static Logger logger = LogManager.getLogger();
     private static OrderValidator instance = new OrderValidator();
     private static final String DATE_FORMAT_REGEX = "\\d{4}-\\d{2}-\\d{2}";
     private static final String DATE_FORMAT = "yyyy-MM-dd";
@@ -66,8 +60,7 @@ public class OrderValidator {
                 Date dateValue = format.parse(date);
                 Calendar calendar = Calendar.getInstance();
                 Date now = calendar.getTime();
-                result = dateValue.after(now);
-
+                result = dateValue.after(now) || DateUtils.isSameDay(dateValue, now);
             } catch (ParseException e) {
                 return false;
             }
@@ -110,10 +103,8 @@ public class OrderValidator {
     private boolean validateWorkingHours(String time) {
         try {
             LocalTime.parse(time);
-            logger.log(Level.INFO, "Read time from property file: " + time);
             return true;
         } catch (DateTimeParseException | NullPointerException e) {
-            logger.log(Level.INFO, "Invalid time: " + time);
             return false;
         }
     }

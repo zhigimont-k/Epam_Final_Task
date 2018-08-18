@@ -31,6 +31,7 @@
                    name="reviewMark"
                    max="10"
                    min="1"
+                   title="<fmt:message bundle="${locale}" key="locale.requirement.mark"/>"
                    required/>
         </label>
     </div>
@@ -39,6 +40,8 @@
             <br/>
             <textarea name="reviewMessage"
                       maxlength="280" cols="20"
+                      title="<fmt:message bundle="${locale}" key="locale.requirement.message"/>"
+                      placeholder="<fmt:message bundle="${locale}" key="locale.placeholder.message"/>"
                       rows="10"
                       class="form-control noresize"></textarea>
         </label>

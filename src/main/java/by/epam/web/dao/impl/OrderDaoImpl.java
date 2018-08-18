@@ -63,7 +63,7 @@ public class OrderDaoImpl implements OrderDao {
             "order_info.user_id, order_info.order_status, order_info.order_time, order_info.order_price, order_info.paid " +
             "FROM order_info " +
             "WHERE order_info.user_id = ? AND " +
-            "order_info.order_time = ?";
+            "DATE(order_info.order_time) = DATE(?) AND order_status != 'cancelled'";
     private static final String FIND_ORDERS_BY_USER_ID_LIMITED = FIND_ORDERS_BY_USER_ID +
             " LIMIT ?,? ";
     private static final String FIND_ACTIVITIES_BY_ORDER_ID = "SELECT service.service_id, " +
@@ -103,8 +103,8 @@ public class OrderDaoImpl implements OrderDao {
     private static final String COUNT_USER_ORDERS = "SELECT DISTINCT COUNT(*) FROM order_info " +
             "WHERE user_id = ?";
     private static final String CANCEL_UNCONFIRMED_OUTDATED_ORDERS = "UPDATE order_info " +
-            "SET order_status = 'cancelled' " +
-            "WHERE DATE(order_time) <= CURRENT_DATE AND order_status = 'pending'";
+            "SET order_status = 'cancelled', order_time = order_time " +
+            "WHERE order_time <= UTC_TIMESTAMP() AND order_status = 'pending'";
 
     @Override
     public void addOrder(Order order) throws DaoException {

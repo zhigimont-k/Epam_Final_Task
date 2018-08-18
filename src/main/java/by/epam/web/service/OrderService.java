@@ -76,6 +76,15 @@ public class OrderService {
         }
     }
 
+    public boolean orderExists(int userId, Timestamp timestamp) throws ServiceException {
+        try {
+            Optional<Order> found = orderDao.findOrderByUserAndTime(userId, timestamp);
+            return found.isPresent();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
     public List<Order> findAllOrders(int startPosition, int numberOfRecords) throws ServiceException {
         try {
             return orderDao.findAllOrders(startPosition, numberOfRecords);

@@ -53,6 +53,7 @@
                         <input type="text" name="activityName"
                                maxlength="40"
                                minlength="2"
+                               title="<fmt:message bundle="${locale}" key="locale.requirement.servicename"/>"
                                pattern="[\p{L}\s]{2,40}" required/>
                     </label>
                 </div>
@@ -63,6 +64,8 @@
                                   maxlength="280"
                                   cols="30"
                                   rows="10"
+                                  title="<fmt:message bundle="${locale}" key="locale.requirement.description"/>"
+                                  placeholder="<fmt:message bundle="${locale}" key="locale.placeholder.description"/>"
                                   class="form-control noresize"
                                   required></textarea>
                     </label>
@@ -75,6 +78,8 @@
                                maxlength="10"
                                minlength="1"
                                pattern="[1-9]\d{1,5}\.?\d{0,2}"
+                               title="<fmt:message bundle="${locale}" key="locale.requirement.price"/>"
+                               placeholder="<fmt:message bundle="${locale}" key="locale.placeholder.price"/>"
                                required/> ${byn}
                     </label>
                 </div>

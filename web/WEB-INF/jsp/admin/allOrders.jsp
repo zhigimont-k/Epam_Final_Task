@@ -82,7 +82,7 @@
                             <option value="pending">${pending}</option>
                             <option value="cancelled">${cancelled}</option>
                             <option value="confirmed">${confirmed}</option>
-                            <option value="finished">${confirmed}</option>
+                            <option value="finished">${finished}</option>
                         </select>
                         <input type="submit" value="${button}">
                     </form>

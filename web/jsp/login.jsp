@@ -32,7 +32,7 @@
     <fmt:message bundle="${locale}" key="locale.action.showpassword" var="showPassword"/>
     <fmt:message bundle="${locale}" key="locale.message.userIsBanned" var="userIsBanned"/>
     <title>${pageTitle} | ${projectName}</title>
-    <script type="text/javascript" src="../js/inputScript.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/inputScript.js"></script>
 </head>
 <body>
 <main>
@@ -43,7 +43,7 @@
     </c:if>
     <div class="container">
         <div class="row centered-form center-block">
-            <div class="container col-md-4 col-md-offset-4">
+            <div class="container col-lg-4 col-lg-offset-4">
                 <c:if test="${sessionScope.userIsBanned}">
                     <div class="alert alert-danger">
                             ${userIsBanned}
@@ -58,8 +58,6 @@
                                    name="login"
                                    maxlength="40"
                                    pattern="\w+{4, 40}"
-                                   data-toggle="tooltip"
-                                   title="hi"
                                    required/>
                         </label>
                     </div>
