@@ -31,7 +31,7 @@ Java 9
 
 JavaEE: Servlet, JSP
 
-Server / Servlet container: tomcat7-maven-plugin 2.1
+Server / Servlet container: Tomcat 9.0.8
 
 Database: MySQL, JDBC
 
