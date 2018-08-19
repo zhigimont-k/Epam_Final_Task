@@ -2,8 +2,9 @@
 
 <table style="table-layout: fixed; width:100%;">
   <tr>
-    <td>A web application for an imaginary cat beauty salon.
-
+    <td>
+A web application for an imaginary cat beauty salon.
+      
 Guests may view all of the services, as well as view individual ones and read users' reviews on them.
 
 Registered users can add and edit reviews for services, edit user information (password, username and avatar), add money to their cards and make orders.
@@ -35,7 +36,7 @@ Server / Servlet container: Tomcat 9.0.8
 
 Database: MySQL, JDBC
 
-Logger: Log4J2
+Logger: Log4J
 
 Tests: TestNG
 
