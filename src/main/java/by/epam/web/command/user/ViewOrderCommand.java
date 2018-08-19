@@ -48,7 +48,8 @@ public class ViewOrderCommand implements Command {
             BigDecimal orderPrice = new BigDecimal(BigInteger.ZERO);
             List<Activity> activityList = new ArrayList<>();
             if (!OrderValidator.getInstance().validateDate(date) ||
-                    !OrderValidator.getInstance().validateTime(time, date)) {
+                    !OrderValidator.getInstance().validateTime(time, date) ||
+                    activityIdList.length == 0) {
                 requestContent.setSessionAttribute(RequestParameter.ILLEGAL_INPUT, true);
                 router.setRedirect(true);
                 router.setPage(PageAddress.ADD_ORDER_PAGE);
