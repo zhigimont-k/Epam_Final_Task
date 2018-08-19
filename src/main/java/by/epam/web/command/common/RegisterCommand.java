@@ -9,7 +9,6 @@ import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.service.UserService;
 import by.epam.web.controller.SessionRequestContent;
-import by.epam.web.validation.UserValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,10 +24,9 @@ public class RegisterCommand implements Command {
      * phone number and card number are unique
      * If they are, adds new user to database, if they aren't, shows appropriate error messages
      *
-     * @param requestContent
-     * Request and session parameters and attributes
-     * @return
-     * Address of the next page
+     * @param requestContent Request and session parameters and attributes
+     *
+     * @return Address of the next page
      */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
@@ -41,21 +39,18 @@ public class RegisterCommand implements Command {
             String phoneNumber = requestContent.getParameter(RequestParameter.PHONE_NUMBER);
             String cardNumber = requestContent.getParameter(RequestParameter.CARD_NUMBER);
             if (checkUniqueness(requestContent, login, email, phoneNumber, cardNumber)) {
-                requestContent.removeSessionAttribute(RequestParameter.ILLEGAL_INPUT);
                 Optional<User> user = service.registerUser(login, password, email, phoneNumber, userName,
                         cardNumber);
                 if (user.isPresent()) {
                     requestContent.setSessionAttribute(RequestParameter.USER, user.get());
-                    router.setRedirect(true);
-                    router.setPage(PageAddress.HOME_PAGE);
                 } else {
-                    router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
                     logger.log(Level.ERROR, "Couldn't register user");
                 }
+                router.setRedirect(true);
+                router.setPage(PageAddress.HOME_PAGE);
             } else {
                 router.setPage(PageAddress.REGISTER_PAGE);
             }
-
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);
@@ -67,18 +62,14 @@ public class RegisterCommand implements Command {
      * Checks if given parameters are not already present in the database, if they are,
      * sets error messages in request parameters
      *
-     * @param requestContent
-     * Request and session parameters and attributes
-     * @param login
-     * Login of user
-     * @param email
-     * Email of user
-     * @param phoneNumber
-     * Phone number of user
-     * @param cardNumber
-     * Card number of user
-     * @return
-     * Result of the check
+     * @param requestContent Request and session parameters and attributes
+     * @param login          Login of user
+     * @param email          Email of user
+     * @param phoneNumber    Phone number of user
+     * @param cardNumber     Card number of user
+     *
+     * @return Result of the check
+     *
      * @throws ServiceException if exception occurs while accessing database
      */
     private boolean checkUniqueness(SessionRequestContent requestContent, String login,
@@ -101,7 +92,6 @@ public class RegisterCommand implements Command {
             flag = false;
             requestContent.setAttribute(RequestParameter.CARD_NUMBER_EXISTS, true);
         }
-
         return flag;
     }
 }

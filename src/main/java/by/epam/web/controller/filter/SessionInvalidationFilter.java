@@ -13,8 +13,9 @@ import java.io.IOException;
 
 @WebFilter(filterName = "SessionInvalidatorFilter",
         urlPatterns = {"/*"})
-public class SessionInvalidationFilter implements Filter{
+public class SessionInvalidationFilter implements Filter {
     private static Logger logger = LogManager.getLogger();
+
     @Override
     public void init(FilterConfig filterConfig) {
 
@@ -26,6 +27,7 @@ public class SessionInvalidationFilter implements Filter{
      * @param servletRequest
      * @param servletResponse
      * @param filterChain
+     *
      * @throws IOException
      * @throws ServletException
      */

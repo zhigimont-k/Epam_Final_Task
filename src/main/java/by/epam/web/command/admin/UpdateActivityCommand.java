@@ -9,14 +9,9 @@ import by.epam.web.service.ActivityService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.controller.SessionRequestContent;
-import by.epam.web.validation.ActivityValidator;
-import by.epam.web.validation.NumberValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.math.BigDecimal;
-import java.util.Optional;
 
 public class UpdateActivityCommand implements Command {
     private static Logger logger = LogManager.getLogger();
@@ -52,11 +47,13 @@ public class UpdateActivityCommand implements Command {
                         newPrice, newStatus)) {
                     requestContent.setSessionAttribute(RequestParameter.DATA_EXISTS, false);
                     requestContent.setSessionAttribute(RequestParameter.ACTIVITY, null);
-                    router.setRedirect(true);
                     router.setPage(PageAddress.VIEW_ACTIVITIES);
                 } else {
                     logger.log(Level.ERROR, "Couldn't update activity");
+                    router.setPage(PageAddress.EDIT_ACTIVITY_PAGE);
                 }
+                router.setRedirect(true);
+
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);

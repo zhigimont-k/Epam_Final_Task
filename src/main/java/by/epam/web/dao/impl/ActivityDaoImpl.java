@@ -7,7 +7,6 @@ import by.epam.web.entity.ActivityBuilder;
 import by.epam.web.pool.ConnectionPool;
 import by.epam.web.pool.PoolException;
 import by.epam.web.pool.ProxyConnection;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,14 +46,12 @@ public class ActivityDaoImpl implements ActivityDao {
             "service.service_name, service.service_description, service.service_price, service.service_status " +
             "FROM service " +
             "WHERE service.service_status = 'available'";
-    private static final String UPDATE_ACTIVITY_STATUS = "UPDATE service " +
-            "SET service_status = ? WHERE service_id = ?";
     private static final String UPDATE_ACTIVITY = "UPDATE service " +
             "SET service_name = ?, service_description = ?, service_price = ?, service_status = ? " +
             "WHERE service_id = ?";
 
     @Override
-    public void addActivity(Activity activity) throws DaoException{
+    public void addActivity(Activity activity) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -81,7 +78,7 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public Optional<Activity> findActivityById(int id) throws DaoException{
+    public Optional<Activity> findActivityById(int id) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -115,7 +112,7 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public Optional<Activity> findActivityByName(String name) throws DaoException{
+    public Optional<Activity> findActivityByName(String name) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -150,7 +147,7 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public List<Activity> findAllActivities() throws DaoException{
+    public List<Activity> findAllActivities() throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         Statement statement = null;
@@ -183,7 +180,7 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public List<Activity> findAvailableActivities() throws DaoException{
+    public List<Activity> findAvailableActivities() throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         Statement statement = null;
@@ -217,7 +214,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     @Override
     public void updateActivity(int id, String name, String description,
-                               BigDecimal price, String status) throws DaoException{
+                               BigDecimal price, String status) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {

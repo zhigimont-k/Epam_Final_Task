@@ -20,12 +20,13 @@ public class AdminPageFilter implements Filter {
     }
 
     /**
-     * Checks if user is admin.
-     * If he is, continues filtering, otherwise send a 403 error
+     * Checks if user's status is admin.
+     * If he is, continues filtering, otherwise sends a 403 error
      *
      * @param servletRequest
      * @param servletResponse
      * @param filterChain
+     *
      * @throws ServletException
      * @throws IOException
      */

@@ -4,10 +4,8 @@ import by.epam.web.dao.DaoException;
 import by.epam.web.dao.ReviewDao;
 import by.epam.web.dao.impl.ReviewDaoImpl;
 import by.epam.web.entity.Review;
-import by.epam.web.validation.NumberValidator;
 import by.epam.web.validation.ReviewValidator;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 

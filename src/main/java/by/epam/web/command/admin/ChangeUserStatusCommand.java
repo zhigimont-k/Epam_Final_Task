@@ -4,18 +4,13 @@ import by.epam.web.command.Command;
 import by.epam.web.controller.PageRouter;
 import by.epam.web.constant.PageAddress;
 import by.epam.web.constant.RequestParameter;
-import by.epam.web.entity.User;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.service.UserService;
 import by.epam.web.controller.SessionRequestContent;
-import by.epam.web.validation.NumberValidator;
-import by.epam.web.validation.UserValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.Optional;
 
 public class ChangeUserStatusCommand implements Command {
     private static Logger logger = LogManager.getLogger();
@@ -32,15 +27,13 @@ public class ChangeUserStatusCommand implements Command {
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
-
             String id = requestContent.getParameter(RequestParameter.USER_ID);
             String status = requestContent.getParameter(RequestParameter.USER_STATUS);
-            if (service.changeUserStatus(Integer.parseInt(id), status)) {
-                router.setRedirect(true);
-                router.setPage(PageAddress.VIEW_USERS);
-            } else {
+            if (!service.changeUserStatus(Integer.parseInt(id), status)) {
                 logger.log(Level.ERROR, "Couldn't change user status");
             }
+            router.setRedirect(true);
+            router.setPage(PageAddress.VIEW_USERS);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);

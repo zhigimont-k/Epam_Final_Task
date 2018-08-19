@@ -12,27 +12,27 @@ public class MailComposer {
     private static final String ORDER_REMINDER_MESSAGE_THEME_NAME = "message.cbb.order.reminder.theme";
 
 
-    private MailComposer(){
+    private MailComposer() {
         bundle = ResourceBundle.getBundle(BUNDLE_NAME);
     }
 
-    public static MailComposer getInstance(){
+    public static MailComposer getInstance() {
         return instance;
     }
 
-    public static String getResetPasswordMessage(String newPassword){
+    public static String getResetPasswordMessage(String newPassword) {
         return String.format(bundle.getString(RESET_PASSWORD_MESSAGE_NAME), newPassword);
     }
 
-    public static String getResetPasswordMessageTheme(){
+    public static String getResetPasswordMessageTheme() {
         return bundle.getString(RESET_PASSWORD_MESSAGE_THEME_NAME);
     }
 
-    public static String getOrderReminderMessage(String userLogin){
+    public static String getOrderReminderMessage(String userLogin) {
         return String.format(bundle.getString(ORDER_REMINDER_MESSAGE_NAME), userLogin);
     }
 
-    public static String getOrderReminderMessageTheme(){
+    public static String getOrderReminderMessageTheme() {
         return bundle.getString(ORDER_REMINDER_MESSAGE_THEME_NAME);
     }
 

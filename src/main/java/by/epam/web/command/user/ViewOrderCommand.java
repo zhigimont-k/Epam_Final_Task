@@ -13,16 +13,12 @@ import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.controller.SessionRequestContent;
 import by.epam.web.validation.OrderValidator;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class ViewOrderCommand implements Command {
@@ -56,7 +52,7 @@ public class ViewOrderCommand implements Command {
                 requestContent.setSessionAttribute(RequestParameter.ILLEGAL_INPUT, true);
                 router.setRedirect(true);
                 router.setPage(PageAddress.ADD_ORDER_PAGE);
-            } else if (service.orderExists(userId, date, time)){
+            } else if (service.orderExists(userId, date, time)) {
                 requestContent.setSessionAttribute(RequestParameter.ORDER_EXISTS, true);
                 router.setRedirect(true);
                 router.setPage(PageAddress.ADD_ORDER_PAGE);

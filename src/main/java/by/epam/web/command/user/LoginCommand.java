@@ -26,10 +26,9 @@ public class LoginCommand implements Command {
      * If user is found but his status is banned, shows error message.
      * If user is found and his status isn't banned, sets found user as session attribute
      *
-     * @param requestContent
-     * Request and session parameters and attributes
-     * @return
-     * Address of the next page
+     * @param requestContent Request and session parameters and attributes
+     *
+     * @return Address of the next page
      */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
@@ -42,14 +41,13 @@ public class LoginCommand implements Command {
                 User user = found.get();
                 if (User.Status.BANNED.getName().equalsIgnoreCase(user.getStatus())) {
                     requestContent.setSessionAttribute(RequestParameter.USER_IS_BANNED, true);
-                    router.setRedirect(true);
                     router.setPage(PageAddress.LOGIN_PAGE);
                 } else {
                     requestContent.setSessionAttribute(RequestParameter.USER_IS_BANNED, false);
                     requestContent.setSessionAttribute(RequestParameter.USER, user);
-                    router.setRedirect(true);
                     router.setPage(PageAddress.HOME_PAGE);
                 }
+                router.setRedirect(true);
             } else {
                 requestContent.setAttribute(RequestParameter.AUTH_FAIL, true);
                 router.setPage(PageAddress.LOGIN_PAGE);

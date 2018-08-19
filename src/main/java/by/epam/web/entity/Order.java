@@ -3,7 +3,6 @@ package by.epam.web.entity;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.*;
-import java.util.function.Consumer;
 
 public class Order extends Entity {
     public enum Status {
@@ -48,44 +47,12 @@ public class Order extends Entity {
         return activityList.size();
     }
 
-    public boolean activityListIsEmpty() {
-        return activityList.isEmpty();
-    }
-
     public boolean addActivity(Activity activity) {
         return activityList.add(activity);
     }
 
-    public boolean removeActivity(Object o) {
-        return activityList.remove(o);
-    }
-
-    public void sortActivityList(Comparator<? super Activity> c) {
-        activityList.sort(c);
-    }
-
     public Activity getActivity(int index) {
         return activityList.get(index);
-    }
-
-    public Activity setActivity(int index, Activity element) {
-        return activityList.set(index, element);
-    }
-
-    public void addActivity(int index, Activity element) {
-        activityList.add(index, element);
-    }
-
-    public Activity removeActivity(int index) {
-        return activityList.remove(index);
-    }
-
-    public int indexOfActivity(Object o) {
-        return activityList.indexOf(o);
-    }
-
-    public void forEach(Consumer<? super Activity> action) {
-        activityList.forEach(action);
     }
 
     public List<Activity> getActivityList() {

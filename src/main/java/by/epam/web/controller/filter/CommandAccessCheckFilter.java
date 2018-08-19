@@ -73,7 +73,7 @@ public class CommandAccessCheckFilter implements Filter {
      * Checks if user's status matches command's access level
      *
      * @param commandAccessLevel Access level of the checked command
-     * @param user User who is trying to call the command
+     * @param user               User who is trying to call the command
      *
      * @return Result of the check
      */

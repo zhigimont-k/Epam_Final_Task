@@ -46,7 +46,6 @@ public class ConnectionPool {
      * If available connections number is smaller than initial pool size, tries to create missing
      * connections
      * If no connections were created, throws runtime exception
-     *
      */
     private void initPool() {
         availableConnections = new LinkedBlockingQueue<>();
@@ -82,6 +81,7 @@ public class ConnectionPool {
      * Moves connection from available to unavailable and returns it
      *
      * @return
+     *
      * @throws PoolException
      */
     public ProxyConnection takeConnection() throws PoolException {
@@ -118,6 +118,7 @@ public class ConnectionPool {
      * Removes connection from unavailable and adds to available
      *
      * @param connection
+     *
      * @throws PoolException
      */
     public void releaseConnection(ProxyConnection connection) throws PoolException {
@@ -138,7 +139,7 @@ public class ConnectionPool {
     }
 
     /**
-     * CLoses all connections in the pool
+     * Closes all connections in the pool
      *
      * @throws PoolException
      */
@@ -164,7 +165,6 @@ public class ConnectionPool {
 
     /**
      * Deregisters drivers
-     *
      */
     private void deregisterDrivers() {
         DriverManager.drivers().forEach(driver -> {
@@ -178,6 +178,7 @@ public class ConnectionPool {
 
     /**
      * Returns number of available connections
+     *
      * @return
      */
     public int getAvailableConnectionNumber() {

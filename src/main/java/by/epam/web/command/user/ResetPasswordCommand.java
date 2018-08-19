@@ -12,7 +12,6 @@ import by.epam.web.util.MailComposer;
 import by.epam.web.util.MailSenderThread;
 import by.epam.web.util.PasswordGenerator;
 import by.epam.web.controller.SessionRequestContent;
-import by.epam.web.validation.UserValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,10 +28,9 @@ public class ResetPasswordCommand implements Command {
      * If he doesn't exists, shows error message
      * If he does, changes this user's password to a new generated one and sends an email with it
      *
-     * @param requestContent
-     * Request and session parameters and attributes
-     * @return
-     * Address of the next page
+     * @param requestContent Request and session parameters and attributes
+     *
+     * @return Address of the next page
      */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {

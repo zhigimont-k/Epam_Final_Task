@@ -64,7 +64,7 @@ public class OrderBuilder {
         return this;
     }
 
-    public Order create(){
+    public Order create() {
         Order order = new Order();
         order.setId(id);
         order.setUserId(userId);
@@ -73,7 +73,7 @@ public class OrderBuilder {
         order.setDateTime(dateTime);
         order.setPaid(paid);
         order.setUserLogin(userLogin);
-        for (Activity activity : activityList){
+        for (Activity activity : activityList) {
             order.addActivity(activity);
         }
         return order;

@@ -9,13 +9,11 @@ import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.service.UserService;
 import by.epam.web.controller.SessionRequestContent;
-import by.epam.web.validation.NumberValidator;
-import by.epam.web.validation.UserValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.math.BigDecimal;
+import java.util.Optional;
 
 public class AddMoneyToCardCommand implements Command {
     private static Logger logger = LogManager.getLogger();
@@ -26,10 +24,9 @@ public class AddMoneyToCardCommand implements Command {
      * checks if user's card number is correct.
      * If it is, adds money to the card, if it isn't, shows error message
      *
-     * @param requestContent
-     * Request and session parameters and attributes
-     * @return
-     * Address of the next page
+     * @param requestContent Request and session parameters and attributes
+     *
+     * @return Address of the next page
      */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
@@ -38,14 +35,14 @@ public class AddMoneyToCardCommand implements Command {
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             String cardNumber = requestContent.getParameter(RequestParameter.CARD_NUMBER);
             String moneyToAdd = requestContent.getParameter(RequestParameter.MONEY);
-            if (service.findUserByIdAndCard(user.getId(), cardNumber).isPresent()) {
+            Optional<User> found = service.findUserByIdAndCard(user.getId(), cardNumber);
+            if (found.isPresent() && found.get().getId() == user.getId()) {
                 requestContent.setSessionAttribute(RequestParameter.NO_CARD_FOUND, false);
-                if (service.addMoneyToCard(cardNumber, moneyToAdd)) {
-                    router.setRedirect(true);
-                    router.setPage(PageAddress.VIEW_USER_INFO);
-                } else {
+                if (!service.addMoneyToCard(cardNumber, moneyToAdd)) {
                     logger.log(Level.ERROR, "Encountered an error while adding money to card");
                 }
+                router.setRedirect(true);
+                router.setPage(PageAddress.VIEW_USER_INFO);
             } else {
                 requestContent.setAttribute(RequestParameter.NO_CARD_FOUND, true);
                 router.setPage(PageAddress.ADD_MONEY_PAGE);

@@ -10,8 +10,8 @@ public interface ActivityDao extends AbstractDao<Activity> {
     /**
      * Adds an activity to database
      *
-     * @param activity
-     * activity to be added to database
+     * @param activity activity to be added to database
+     *
      * @throws DaoException if SQLException occurs
      */
     void addActivity(Activity activity) throws DaoException;
@@ -19,39 +19,35 @@ public interface ActivityDao extends AbstractDao<Activity> {
     /**
      * Updates an existing activity
      *
-     * @param id
-     * id of updated activity
-     * @param name
-     * new name of activity
-     * @param description
-     * new description of activity
-     * @param price
-     * new price of activity
-     * @param status
-     * new status of activity
+     * @param id          id of updated activity
+     * @param name        new name of activity
+     * @param description new description of activity
+     * @param price       new price of activity
+     * @param status      new status of activity
+     *
      * @throws DaoException if SQLException occurs
      */
     void updateActivity(int id, String name, String description,
-                                      BigDecimal price, String status) throws DaoException;
+                        BigDecimal price, String status) throws DaoException;
 
     /**
      * Looks for activity with given ID
      *
-     * @param id
-     * id of activity to look for
-     * @return
-     * Found activity
-     * @throws DaoException  if SQLException occurs
+     * @param id id of activity to look for
+     *
+     * @return Found activity
+     *
+     * @throws DaoException if SQLException occurs
      */
     Optional<Activity> findActivityById(int id) throws DaoException;
 
     /**
      * Looks for activity with given name
      *
-     * @param name
-     * name of activity to look for
-     * @return
-     * Found activity
+     * @param name name of activity to look for
+     *
+     * @return Found activity
+     *
      * @throws DaoException if SQLException occurs
      */
     Optional<Activity> findActivityByName(String name) throws DaoException;
@@ -59,8 +55,8 @@ public interface ActivityDao extends AbstractDao<Activity> {
     /**
      * Looks for all activities in the database
      *
-     * @return
-     * List of found activities
+     * @return List of found activities
+     *
      * @throws DaoException if SQLException occurs
      */
     List<Activity> findAllActivities() throws DaoException;
@@ -68,8 +64,8 @@ public interface ActivityDao extends AbstractDao<Activity> {
     /**
      * Looks for activities with 'available' status
      *
-     * @return
-     * List of found activities
+     * @return List of found activities
+     *
      * @throws DaoException if SQLException occurs
      */
     List<Activity> findAvailableActivities() throws DaoException;

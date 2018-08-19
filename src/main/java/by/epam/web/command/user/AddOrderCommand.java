@@ -30,18 +30,14 @@ public class AddOrderCommand implements Command {
         PageRouter router = new PageRouter();
         try {
             Order order = (Order) requestContent.getSessionAttribute(RequestParameter.ORDER);
-            if (!service.orderExists(order.getUserId(),order.getDateTime()) &&
-                    service.addOrder(order.getUserId(), order.getDateTime(),
-                    order.getActivityList())) {
-                requestContent.removeSessionAttribute(RequestParameter.ORDER);
-                router.setRedirect(true);
-                router.setPage(PageAddress.VIEW_USER_ORDERS);
-            } else {
+            if (service.orderExists(order.getUserId(), order.getDateTime()) ||
+                    !service.addOrder(order.getUserId(), order.getDateTime(),
+                            order.getActivityList())) {
                 logger.log(Level.ERROR, "Couldn't add order");
-                requestContent.removeSessionAttribute(RequestParameter.ORDER);
-                router.setRedirect(true);
-                router.setPage(PageAddress.VIEW_USER_ORDERS);
             }
+            requestContent.removeSessionAttribute(RequestParameter.ORDER);
+            router.setRedirect(true);
+            router.setPage(PageAddress.VIEW_USER_ORDERS);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);

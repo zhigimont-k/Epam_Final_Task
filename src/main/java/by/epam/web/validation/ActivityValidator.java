@@ -1,10 +1,8 @@
 package by.epam.web.validation;
 
 import by.epam.web.entity.Activity;
-import by.epam.web.entity.User;
 
 import java.util.Arrays;
-import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +10,7 @@ public class ActivityValidator {
     private static ActivityValidator instance = new ActivityValidator();
     private static final String NAME_FORMAT = "[\\p{L}\\s\\-]{2,40}";
     private static final String DESCRIPTION_FORMAT = "[\\p{N}\\p{L}\\p{P}\\s]{1,280}";
-    private static final String PRICE_FORMAT = "[1-9]\\d{1,5}\\.?\\d{0,2}";
+    private static final String PRICE_FORMAT = "[1-9]\\d{0,5}\\.?\\d{0,2}";
 
     private ActivityValidator() {
     }

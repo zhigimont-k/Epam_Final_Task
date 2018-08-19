@@ -70,11 +70,11 @@ public class XssFilter implements Filter {
                 return new TreeMap<>();
             }
             Map<String, String[]> encodedParameterMap = new TreeMap<>();
-            for(Map.Entry<String,String[]> entry : parameterMap.entrySet()) {
+            for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
                 String key = stripXss(entry.getKey());
                 String[] values = entry.getValue();
                 String[] encodedValues = new String[values.length];
-                for (int i = 0; i < values.length; i++){
+                for (int i = 0; i < values.length; i++) {
                     encodedValues[i] = stripXss(values[i]);
                 }
                 encodedParameterMap.put(key, encodedValues);
@@ -97,16 +97,15 @@ public class XssFilter implements Filter {
         /**
          * Removes suspicious content from request parameters
          *
-         * @param value
-         * String to check
-         * @return
-         * Cleaned string
+         * @param value Value to check
+         *
+         * @return Cleaned string
          */
         private String stripXss(String value) {
             if (value != null) {
                 value = ESAPI.encoder().canonicalize(value);
                 value = value.replaceAll(NULL_TERMINATOR, EMPTY);
-                for (Pattern scriptPattern : patterns){
+                for (Pattern scriptPattern : patterns) {
                     value = scriptPattern.matcher(value).replaceAll(EMPTY);
                 }
             }

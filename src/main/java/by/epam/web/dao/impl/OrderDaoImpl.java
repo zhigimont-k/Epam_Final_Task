@@ -21,7 +21,6 @@ public class OrderDaoImpl implements OrderDao {
     private static ConnectionPool pool = ConnectionPool.getInstance();
     private static final String DB_ORDER_ID_FIELD = "order_id";
     private static final String DB_ORDER_USER_ID_FIELD = "user_id";
-    private static final String DB_ORDER_SERVICE_ID_FIELD = "service_id";
     private static final String DB_ORDER_STATUS_FIELD = "order_status";
     private static final String DB_ORDER_TIME_FIELD = "order_time";
     private static final String DB_ORDER_PRICE_FIELD = "order_price";

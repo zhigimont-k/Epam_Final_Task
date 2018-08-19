@@ -58,7 +58,7 @@
                                 <div class="panel-body" style="background-image: url(${pageContext.request.contextPath}/images/card-bg-unavailable.png);
                                         background-size: cover;">
                                         ${activity.description}
-                                    <h4>${activity.price}</h4>
+                                    <h4>${activity.price} ${byn}</h4>
                                 </div>
                                 <c:if test="${sessionScope.user.status == 'admin'}">
                                     <form name="activityListForm" method="POST" action="app">

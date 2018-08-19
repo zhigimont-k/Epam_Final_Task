@@ -1,8 +1,5 @@
 package by.epam.web.validation;
 
-import by.epam.web.entity.Review;
-import by.epam.web.entity.User;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,15 +10,16 @@ public class ReviewValidator {
     private static final int MAX_MARK = 10;
     private static final int MIN_MARK = 1;
 
-    private ReviewValidator(){}
+    private ReviewValidator() {
+    }
 
-    public static ReviewValidator getInstance(){
+    public static ReviewValidator getInstance() {
         return instance;
     }
 
     public boolean validateMark(String mark) {
         Matcher matcher = Pattern.compile(MARK_FORMAT).matcher(mark);
-        if (!matcher.matches()){
+        if (!matcher.matches()) {
             return false;
         }
         int intMark = Integer.parseInt(mark);

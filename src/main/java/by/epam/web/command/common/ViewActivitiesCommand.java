@@ -22,10 +22,9 @@ public class ViewActivitiesCommand implements Command {
      * Looks for activities in the database, sets activity list as request attribute
      * and forwards to the page with activities table
      *
-     * @param requestContent
-     * Request and session parameters and attributes
-     * @return
-     * Address of the next page
+     * @param requestContent Request and session parameters and attributes
+     *
+     * @return Address of the next page
      */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {

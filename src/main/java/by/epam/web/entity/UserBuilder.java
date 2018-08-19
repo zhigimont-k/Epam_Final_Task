@@ -59,7 +59,7 @@ public class UserBuilder {
         return this;
     }
 
-    public User create(){
+    public User create() {
         User user = new User();
         user.setId(id);
         user.setLogin(login);

@@ -5,12 +5,10 @@ import by.epam.web.controller.PageRouter;
 import by.epam.web.constant.PageAddress;
 import by.epam.web.constant.RequestParameter;
 import by.epam.web.entity.Review;
-import by.epam.web.entity.User;
 import by.epam.web.service.ReviewService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.controller.SessionRequestContent;
-import by.epam.web.validation.NumberValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,10 +23,9 @@ public class EditReviewCommand implements Command {
      * Retrieves edited review's ID, looks for it in the database, sets it as session attribute and
      * redirects to the edit review page
      *
-     * @param requestContent
-     * Request and session parameters and attributes
-     * @return
-     * Address of the next page
+     * @param requestContent Request and session parameters and attributes
+     *
+     * @return Address of the next page
      */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
@@ -41,6 +38,7 @@ public class EditReviewCommand implements Command {
                 router.setRedirect(true);
                 router.setPage(PageAddress.EDIT_REVIEW_PAGE);
             } else {
+                logger.log(Level.ERROR, "Couldn't find review");
                 router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
         } catch (ServiceException e) {

@@ -3,7 +3,7 @@ package by.epam.web.entity;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-public class Review extends Entity{
+public class Review extends Entity {
     private int id;
     private int userId;
     private int activityId;

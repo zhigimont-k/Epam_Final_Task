@@ -50,9 +50,13 @@ public enum CommandType {
     public Command getCommand() {
         return command;
     }
-    public String getName(){
+
+    public String getName() {
         return commandName;
     }
-    public CommandAccessLevel getCommandAccessLevel(){ return commandAccessLevel; }
+
+    public CommandAccessLevel getCommandAccessLevel() {
+        return commandAccessLevel;
+    }
 }
 

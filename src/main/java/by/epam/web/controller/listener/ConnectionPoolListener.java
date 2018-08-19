@@ -17,6 +17,7 @@ public class ConnectionPoolListener implements ServletContextListener {
 
     /**
      * Calls connection pool instance to initialize it
+     *
      * @param servletContextEvent
      */
     @Override
@@ -27,13 +28,14 @@ public class ConnectionPoolListener implements ServletContextListener {
 
     /**
      * Destroys connection pool
+     *
      * @param servletContextEvent
      */
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         try {
             ConnectionPool.getInstance().closeConnectionPool();
-        } catch (PoolException e){
+        } catch (PoolException e) {
             logger.fatal("Can't close connection pool", e);
             throw new RuntimeException("Can't close connection pool", e);
         }

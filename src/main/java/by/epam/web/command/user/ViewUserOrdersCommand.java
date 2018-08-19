@@ -26,10 +26,9 @@ public class ViewUserOrdersCommand implements Command {
      * Retrieves user and page parameters from request and session, looks for the user's orders,
      * sets list of found orders as request attribute and forwards to the page with orders table
      *
-     * @param requestContent
-     * Request and session parameters and attributes
-     * @return
-     * Address of the next page
+     * @param requestContent Request and session parameters and attributes
+     *
+     * @return Address of the next page
      */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
@@ -37,13 +36,16 @@ public class ViewUserOrdersCommand implements Command {
         try {
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             String pageNumberParameter = requestContent.getParameter(RequestParameter.PAGE_NUMBER);
-            if (NumberValidator.getInstance().validatePageParameter(pageNumberParameter)){
+            if (NumberValidator.getInstance().validatePageParameter(pageNumberParameter)) {
                 int pageNumber = Integer.parseInt(requestContent.getParameter
                         (RequestParameter.PAGE_NUMBER));
                 int numberOfRecords = service.countUserOrders(user.getId());
                 int numberOfPages = (int) Math.ceil(numberOfRecords * 1.0 / RECORDS_PER_PAGE);
-                if (pageNumber > numberOfPages){
+                if (pageNumber > numberOfPages) {
                     pageNumber = numberOfPages;
+                }
+                if (numberOfPages == 0){
+                    pageNumber = 1;
                 }
                 List<Order> orderList = service.findOrdersByUser(user.getId(),
                         (pageNumber - 1) * RECORDS_PER_PAGE,

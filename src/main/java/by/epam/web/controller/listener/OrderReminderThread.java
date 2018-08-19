@@ -23,9 +23,8 @@ class OrderReminderThread implements Runnable {
 
     /**
      * Looks for upcoming orders in 1 day interval and
-     * retrieves users emails and logins from the database
+     * retrieves users emails and names or logins from the database
      * Then runs mail sender threads
-     *
      */
     @Override
     public void run() {

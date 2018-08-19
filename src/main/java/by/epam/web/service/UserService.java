@@ -21,12 +21,8 @@ public class UserService {
     public Optional<User> registerUser(String login, String password, String email,
                                        String phoneNumber, String userName, String cardNumber)
             throws ServiceException {
-        if (!UserValidator.getInstance().validateLogin(login) ||
-                !UserValidator.getInstance().validatePassword(password) ||
-                !UserValidator.getInstance().validateEmail(email) ||
-                !UserValidator.getInstance().validatePhoneNumber(phoneNumber) ||
-                !UserValidator.getInstance().validateUserName(userName) ||
-                !UserValidator.getInstance().validateCardNumber(cardNumber)) {
+        if (!UserValidator.getInstance().validateUser(login, password, email, phoneNumber,
+                userName, cardNumber)) {
             return Optional.empty();
         }
         try {

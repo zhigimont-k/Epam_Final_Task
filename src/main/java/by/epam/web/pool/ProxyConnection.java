@@ -21,7 +21,7 @@ public class ProxyConnection implements Connection {
         try {
             connection.close();
         } catch (SQLException e) {
-            logger.log(Level.ERROR,"Couldn't close connection: " + e.getMessage(), e);
+            logger.log(Level.ERROR, "Couldn't close connection: " + e.getMessage(), e);
         }
     }
 

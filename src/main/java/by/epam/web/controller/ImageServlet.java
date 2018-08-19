@@ -47,8 +47,10 @@ public class ImageServlet extends HttpServlet {
 
     /**
      * Retrieves user's ID from request and returns an image of that user from the database
+     *
      * @param request
      * @param response
+     *
      * @throws ServletException
      * @throws IOException
      */
@@ -60,7 +62,7 @@ public class ImageServlet extends HttpServlet {
         try {
             connection = pool.takeConnection();
             byte[] imageData = {};
-            String imageFileName = "";
+            String imageFileName = EMPTY;
             preparedStatement = connection.prepareStatement(FIND_IMAGE_BY_USER_ID);
             preparedStatement.setInt(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -97,6 +99,7 @@ public class ImageServlet extends HttpServlet {
      *
      * @param request
      * @param response
+     *
      * @throws ServletException
      * @throws IOException
      */
@@ -150,10 +153,9 @@ public class ImageServlet extends HttpServlet {
      * Retrieves file name from part
      * If it's too long, shortens it to acceptable length
      *
-     * @param part
-     * Part to retrieve file name of
-     * @return
-     * File name
+     * @param part Part to retrieve file name of
+     *
+     * @return File name
      */
     private String getFileName(Part part) {
         for (String content : part.getHeader(CONTENT_DISPOSITION_HEADER).split(HEADER_SPLITTER)) {

@@ -24,11 +24,13 @@ public class UserPageFilter implements Filter {
 
     /**
      * Checks if user's status is user
-     * If he's not, sends a 403 error
+     * If it's not, sends a 403 error
      * Otherwise proceeds with filtering
+     *
      * @param servletRequest
      * @param servletResponse
      * @param filterChain
+     *
      * @throws ServletException
      * @throws IOException
      */

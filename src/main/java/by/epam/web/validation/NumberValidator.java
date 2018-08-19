@@ -8,25 +8,24 @@ public class NumberValidator {
     private static NumberValidator instance = new NumberValidator();
     private static final String MONEY_FORMAT = "[1-9]\\d{1,5}\\.?\\d{0,2}";
     private static final String PAGE_PARAMETER_FORMAT = "[1-9]\\d{0,2}";
+    private static final BigDecimal MIN_MONEY = BigDecimal.valueOf(0.01);
     private static final int MIN_NUMBER = 1;
 
-    private NumberValidator(){}
+    private NumberValidator() {
+    }
 
-    public static NumberValidator getInstance(){
+    public static NumberValidator getInstance() {
         return instance;
     }
 
-    public boolean validateMoney(String money){
+    public boolean validateMoney(String money) {
         Matcher matcher = Pattern.compile(MONEY_FORMAT).matcher(money);
-        if (!matcher.matches()){
-            return false;
-        }
-        return new BigDecimal(money).compareTo(BigDecimal.ONE) >= 0;
+        return matcher.matches() && new BigDecimal(money).compareTo(MIN_MONEY) >= 0;
     }
 
-    public boolean validatePageParameter(String value){
+    public boolean validatePageParameter(String value) {
         Matcher matcher = Pattern.compile(PAGE_PARAMETER_FORMAT).matcher(value);
-        if (!matcher.matches()){
+        if (!matcher.matches()) {
             return false;
         }
         int intId = Integer.parseInt(value);

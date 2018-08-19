@@ -11,12 +11,11 @@ import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.controller.SessionRequestContent;
 import by.epam.web.service.UserService;
-import by.epam.web.validation.NumberValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
+import java.util.Optional;
 
 public class PayForOrderCommand implements Command {
     private static Logger logger = LogManager.getLogger();
@@ -28,10 +27,9 @@ public class PayForOrderCommand implements Command {
      * If user doesn't have enough money on his card to pay for the order, shows error message
      * Otherwise pays for the order
      *
-     * @param requestContent
-     * Request and session parameters and attributes
-     * @return
-     * Address of the next page
+     * @param requestContent Request and session parameters and attributes
+     *
+     * @return Address of the next page
      */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
@@ -40,18 +38,22 @@ public class PayForOrderCommand implements Command {
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             String id = requestContent.getParameter(RequestParameter.ORDER_ID);
             int orderId = Integer.parseInt(id);
-            if (service.findOrderById(orderId).get().getPrice().compareTo(
-                    userService.findMoneyByCardNumber(user.getCardNumber())) <= 0){
-                requestContent.setSessionAttribute(
-                        RequestParameter.NOT_ENOUGH_MONEY, false);
-                service.payForOrder(Integer.parseInt(id));
+            Optional<Order> found = service.findOrderById(orderId);
+            if (found.isPresent()) {
+                if (found.get().getPrice().compareTo(
+                        userService.findMoneyByCardNumber(user.getCardNumber())) <= 0) {
+                    requestContent.setSessionAttribute(
+                            RequestParameter.NOT_ENOUGH_MONEY, false);
+                    service.payForOrder(Integer.parseInt(id));
+                } else {
+                    requestContent.setSessionAttribute(
+                            RequestParameter.NOT_ENOUGH_MONEY, true);
+                }
                 router.setRedirect(true);
                 router.setPage(PageAddress.VIEW_USER_ORDERS);
             } else {
-                requestContent.setSessionAttribute(
-                        RequestParameter.NOT_ENOUGH_MONEY, true);
-                router.setRedirect(true);
-                router.setPage(PageAddress.VIEW_USER_ORDERS);
+                logger.log(Level.ERROR, "Couldn't find order");
+                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);

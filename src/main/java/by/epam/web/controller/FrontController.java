@@ -1,11 +1,7 @@
 package by.epam.web.controller;
 
 import by.epam.web.command.Command;
-import by.epam.web.command.CommandAccessLevel;
 import by.epam.web.command.CommandFactory;
-import by.epam.web.command.common.RegisterCommand;
-import by.epam.web.command.user.LoginCommand;
-import by.epam.web.command.user.ResetPasswordCommand;
 import by.epam.web.constant.PageAddress;
 import by.epam.web.constant.RequestParameter;
 import org.apache.logging.log4j.Level;
@@ -50,12 +46,11 @@ public class FrontController extends HttpServlet {
         /**
          * Checks if given command is a GET command
          *
-         * @param commandName
-         * Name of the command to check
-         * @return
-         * Result of check
+         * @param commandName Name of the command to check
+         *
+         * @return Result of check
          */
-        public static boolean isGetMethodCommand(String commandName){
+        public static boolean isGetMethodCommand(String commandName) {
             return Arrays.stream(GetMethodCommand.values())
                     .anyMatch(command -> command.getName().equalsIgnoreCase(commandName));
         }
@@ -68,6 +63,7 @@ public class FrontController extends HttpServlet {
      *
      * @param request
      * @param response
+     *
      * @throws ServletException
      * @throws IOException
      */
@@ -77,7 +73,7 @@ public class FrontController extends HttpServlet {
         if (GetMethodCommand.isGetMethodCommand(commandName)) {
             processRequest(request, response);
         } else {
-            logger.log(Level.ERROR, "Tried to call "+commandName+" command through GET method");
+            logger.log(Level.ERROR, "Tried to call " + commandName + " command through GET method");
             response.sendRedirect(PageAddress.HOME_PAGE);
         }
     }
@@ -94,6 +90,7 @@ public class FrontController extends HttpServlet {
      *
      * @param request
      * @param response
+     *
      * @throws ServletException
      * @throws IOException
      */
@@ -112,6 +109,9 @@ public class FrontController extends HttpServlet {
                     RequestDispatcher dispatcher = request.getRequestDispatcher(router.getPage());
                     dispatcher.forward(request, response);
                 }
+            } else {
+                logger.log(Level.ERROR, "Page router is null");
+                response.sendRedirect(PageAddress.HOME_PAGE);
             }
         }
     }

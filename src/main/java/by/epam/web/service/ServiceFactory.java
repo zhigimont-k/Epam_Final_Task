@@ -1,7 +1,6 @@
 package by.epam.web.service;
 
 public class ServiceFactory {
-
     private static ServiceFactory instance = new ServiceFactory();
     private OrderService orderService = new OrderService();
     private UserService userService = new UserService();

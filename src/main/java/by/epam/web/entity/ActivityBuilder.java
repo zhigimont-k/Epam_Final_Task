@@ -43,7 +43,7 @@ public class ActivityBuilder {
         return this;
     }
 
-    public Activity create(){
+    public Activity create() {
         Activity activity = new Activity();
         activity.setId(id);
         activity.setName(name);

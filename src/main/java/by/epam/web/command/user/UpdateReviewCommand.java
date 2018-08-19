@@ -5,13 +5,10 @@ import by.epam.web.controller.PageRouter;
 import by.epam.web.constant.PageAddress;
 import by.epam.web.constant.RequestParameter;
 import by.epam.web.entity.Review;
-import by.epam.web.entity.User;
 import by.epam.web.service.ReviewService;
 import by.epam.web.service.ServiceException;
 import by.epam.web.service.ServiceFactory;
 import by.epam.web.controller.SessionRequestContent;
-import by.epam.web.validation.NumberValidator;
-import by.epam.web.validation.ReviewValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +20,7 @@ public class UpdateReviewCommand implements Command {
     private static ReviewService service = ServiceFactory.getInstance().getReviewService();
 
     /**
-     * Retieves review's ID and new properties from request parameters, then updates the review
+     * Retrieves review's ID and new properties from request parameters, then updates the review
      * in the database and redirects to the page of activity that the review was for
      *
      * @param requestContent Request and session parameters and attributes
@@ -38,13 +35,19 @@ public class UpdateReviewCommand implements Command {
             String newMark = requestContent.getParameter(RequestParameter.REVIEW_MARK);
             String newMessage = requestContent.getParameter(RequestParameter.REVIEW_MESSAGE).trim();
             Optional<Review> found = service.findReviewById(Integer.parseInt(id));
-            if (service.updateReview(Integer.parseInt(id), Integer.parseInt(newMark),
-                    newMessage)) {
-                requestContent.setSessionAttribute(RequestParameter.REVIEW, null);
-                router.setRedirect(true);
-                router.setPage(PageAddress.VIEW_ACTIVITY + found.get().getActivityId());
+            if (found.isPresent()) {
+                if (service.updateReview(Integer.parseInt(id), Integer.parseInt(newMark),
+                        newMessage)) {
+                    requestContent.setSessionAttribute(RequestParameter.REVIEW, null);
+                    router.setRedirect(true);
+                    router.setPage(PageAddress.VIEW_ACTIVITY + found.get().getActivityId());
+                } else {
+                    logger.log(Level.ERROR, "Couldn't update review");
+                    router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
+                }
             } else {
-                logger.log(Level.ERROR, "Couldn't update review");
+                logger.log(Level.ERROR, "Couldn't find review");
+                router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);

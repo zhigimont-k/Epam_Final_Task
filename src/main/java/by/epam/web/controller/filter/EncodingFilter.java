@@ -9,8 +9,8 @@ public class EncodingFilter implements Filter {
     private static final String HTML_CONTENT_TYPE = "text/html";
     private String code;
 
-    public void init(FilterConfig fConfig) {
-        code = fConfig.getInitParameter("encoding");
+    public void init(FilterConfig filterConfig) {
+        code = filterConfig.getInitParameter("encoding");
     }
 
     /**
@@ -19,6 +19,7 @@ public class EncodingFilter implements Filter {
      * @param request
      * @param response
      * @param chain
+     *
      * @throws IOException
      * @throws ServletException
      */

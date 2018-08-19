@@ -2,21 +2,13 @@ package by.epam.web.service;
 
 import by.epam.web.dao.DaoException;
 import by.epam.web.dao.OrderDao;
-import by.epam.web.dao.UserDao;
 import by.epam.web.dao.impl.OrderDaoImpl;
-import by.epam.web.dao.impl.UserDaoImpl;
 import by.epam.web.entity.Activity;
 import by.epam.web.entity.Order;
-import by.epam.web.entity.User;
-import by.epam.web.validation.NumberValidator;
 import by.epam.web.validation.OrderValidator;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.sql.Timestamp;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,7 +87,7 @@ public class OrderService {
 
     public boolean changeOrderStatus(int id, String status) throws ServiceException {
         try {
-            if (OrderValidator.getInstance().validateStatus(status)){
+            if (OrderValidator.getInstance().validateStatus(status)) {
                 orderDao.changeOrderStatus(id, status);
                 return true;
             }
@@ -108,7 +100,8 @@ public class OrderService {
     public void cancelOrder(int id) throws ServiceException {
         try {
             Optional<Order> orderOptional = orderDao.findOrderById(id);
-            if (OrderValidator.getInstance().validateOrderTimeAfterNow
+            if (orderOptional.isPresent() &&
+                    OrderValidator.getInstance().validateOrderTimeAfterNow
                             (orderOptional.get().getDateTime())) {
                 orderDao.cancelOrder(id);
             }
@@ -121,8 +114,8 @@ public class OrderService {
     public void payForOrder(int orderId) throws ServiceException {
         try {
             Optional<Order> orderOptional = orderDao.findOrderById(orderId);
-            if (OrderValidator.getInstance().validateOrderTimeAfterNow
-                            (orderOptional.get().getDateTime())) {
+            if (orderOptional.isPresent() && OrderValidator.getInstance().validateOrderTimeAfterNow
+                    (orderOptional.get().getDateTime())) {
                 orderDao.payForOrder(orderId);
             }
         } catch (DaoException e) {

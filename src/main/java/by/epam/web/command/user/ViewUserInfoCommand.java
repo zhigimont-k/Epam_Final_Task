@@ -23,10 +23,9 @@ public class ViewUserInfoCommand implements Command {
      * Retrieves user from session attributes, retrieves user's money from the database and
      * forwards to the account page
      *
-     * @param requestContent
-     * Request and session parameters and attributes
-     * @return
-     * Address of the next page
+     * @param requestContent Request and session parameters and attributes
+     *
+     * @return Address of the next page
      */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {

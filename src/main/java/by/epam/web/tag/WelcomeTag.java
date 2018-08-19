@@ -1,9 +1,10 @@
 package by.epam.web.tag;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 
-public class WelcomeTag extends TagSupport{
+public class WelcomeTag extends TagSupport {
     private String name;
     private String message;
 
@@ -17,7 +18,7 @@ public class WelcomeTag extends TagSupport{
             result.append(name);
             result.append("!");
             pageContext.getOut().write(result.toString());
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new JspException(e.getMessage());
         }
         return SKIP_BODY;

@@ -7,13 +7,16 @@ public class Activity extends Entity {
     public enum Status {
         AVAILABLE("available"), UNAVAILABLE("unavailable");
         private String statusName;
-        Status(String statusName){
+
+        Status(String statusName) {
             this.statusName = statusName;
         }
-        public String getName(){
+
+        public String getName() {
             return statusName;
         }
     }
+
     private int id;
     private BigDecimal price;
     private String name;
@@ -52,7 +55,7 @@ public class Activity extends Entity {
         this.description = description;
     }
 
-    public String getStatus(){
+    public String getStatus() {
         return status.getName();
     }
 

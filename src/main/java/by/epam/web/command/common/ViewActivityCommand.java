@@ -26,28 +26,39 @@ public class ViewActivityCommand implements Command {
      * in the database, looks for reviews for that activity, sets them as request attributes and
      * forwards to the page with activity information
      *
-     * @param requestContent
-     * Request and session parameters and attributes
-     * @return
-     * Address of the next page
+     * @param requestContent Request and session parameters and attributes
+     *
+     * @return Address of the next page
      */
     @Override
     public PageRouter execute(SessionRequestContent requestContent) {
         PageRouter router = new PageRouter();
         try {
-            int activityId = Integer.parseInt(requestContent.getParameter
-                    (RequestParameter.ACTIVITY_ID));
-            Optional<Activity> found = service.findActivityById(activityId);
-            ReviewService reviewService = ServiceFactory.getInstance().getReviewService();
-            List<Review> reviewList = reviewService.findReviewByActivityId(activityId);
-            UserService userService = ServiceFactory.getInstance().getUserService();
-            for (Review review : reviewList) {
-                Optional<User> foundUser = userService.findUserById(review.getUserId());
-                review.setUserLogin(foundUser.get().getLogin());
+            String activityId = requestContent.getParameter(RequestParameter.ACTIVITY_ID);
+            if (NumberValidator.getInstance().validatePageParameter(activityId)) {
+                Optional<Activity> found = service.findActivityById(Integer.parseInt(activityId));
+                ReviewService reviewService = ServiceFactory.getInstance().getReviewService();
+                List<Review> reviewList = reviewService.findReviewByActivityId(Integer.parseInt(activityId));
+                UserService userService = ServiceFactory.getInstance().getUserService();
+                for (Review review : reviewList) {
+                    Optional<User> foundUser = userService.findUserById(review.getUserId());
+                    if (foundUser.isPresent()) {
+                        review.setUserLogin(foundUser.get().getLogin());
+                    } else {
+                        logger.log(Level.ERROR, "Couldn't find review author");
+                    }
+                }
+                if (found.isPresent()) {
+                    requestContent.setAttribute(RequestParameter.ACTIVITY, found.get());
+                    requestContent.setAttribute(RequestParameter.REVIEW_LIST, reviewList);
+                    router.setPage(PageAddress.VIEW_ACTIVITY_PAGE);
+                } else {
+                    logger.log(Level.ERROR, "Couldn't find activity");
+                    router.setPage(PageAddress.NOT_FOUND_ERROR_PAGE);
+                }
+            } else {
+                router.setPage(PageAddress.BAD_REQUEST_ERROR_PAGE);
             }
-            requestContent.setAttribute(RequestParameter.ACTIVITY, found.get());
-            requestContent.setAttribute(RequestParameter.REVIEW_LIST, reviewList);
-            router.setPage(PageAddress.VIEW_ACTIVITY_PAGE);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             router.setPage(PageAddress.ERROR_PAGE);

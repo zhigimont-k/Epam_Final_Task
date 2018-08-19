@@ -46,7 +46,7 @@ public class ReviewBuilder {
         return this;
     }
 
-    public Review create(){
+    public Review create() {
         Review review = new Review();
         review.setId(id);
         review.setCreationDate(creationDate);

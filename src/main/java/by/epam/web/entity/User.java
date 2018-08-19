@@ -6,10 +6,12 @@ public class User extends Entity {
     public enum Status {
         USER("user"), ADMIN("admin"), BANNED("banned");
         private String statusName;
-        Status(String statusName){
+
+        Status(String statusName) {
             this.statusName = statusName;
         }
-        public String getName(){
+
+        public String getName() {
             return statusName;
         }
     }
@@ -75,7 +77,7 @@ public class User extends Entity {
         return status.getName();
     }
 
-    public Status getUserStatus(){
+    public Status getUserStatus() {
         return status;
     }
 

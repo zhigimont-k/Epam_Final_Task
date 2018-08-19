@@ -13,14 +13,13 @@ class OrderStatusUpdaterThread implements Runnable {
 
     /**
      * Cancels outdated orders that have 'pending' status
-     *
      */
     @Override
     public void run() {
         logger.log(Level.INFO, "Cancelling unconfirmed outdated orders...");
         try {
             orderDao.cancelUnconfirmedOutdatedOrders();
-        } catch (DaoException e){
+        } catch (DaoException e) {
             logger.log(Level.ERROR, "Couldn't cancel outdated orders: " + e.getMessage());
         }
     }

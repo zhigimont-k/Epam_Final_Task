@@ -81,7 +81,7 @@ public class UserDaoImpl implements UserDao {
             "WHERE user.user_id = ? AND card.card_number = ?";
 
     @Override
-    public User register(User user) throws DaoException{
+    public User register(User user) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -137,7 +137,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean propertyExists(UniqueUserInfo property, String value) throws DaoException{
+    public boolean propertyExists(UniqueUserInfo property, String value) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet;
@@ -175,7 +175,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findUserByLoginAndPassword(String login, String password)
-            throws DaoException{
+            throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -213,7 +213,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> findUserById(int id) throws DaoException{
+    public Optional<User> findUserById(int id) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -250,7 +250,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> findAllUsers() throws DaoException{
+    public List<User> findAllUsers() throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         Statement statement = null;
@@ -285,7 +285,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void changeUserStatus(int userId, String status) throws DaoException{
+    public void changeUserStatus(int userId, String status) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -308,7 +308,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void updateUser(int id, String password, String userName) throws DaoException{
+    public void updateUser(int id, String password, String userName) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -317,7 +317,6 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(1, password);
             preparedStatement.setString(2, userName);
             preparedStatement.setInt(3, id);
-            logger.log(Level.INFO, preparedStatement);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DaoException("Failed to update user: " + e.getMessage(), e);
@@ -333,7 +332,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void updateUserName(int id, String userName) throws DaoException{
+    public void updateUserName(int id, String userName) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -356,7 +355,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> findUserByEmail(String email) throws DaoException{
+    public Optional<User> findUserByEmail(String email) throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
@@ -391,7 +390,7 @@ public class UserDaoImpl implements UserDao {
         return result;
     }
 
-    public void addMoneyToCard(String cardNumber, BigDecimal amount) throws DaoException{
+    public void addMoneyToCard(String cardNumber, BigDecimal amount) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -414,7 +413,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public BigDecimal findMoneyByCardNumber(String cardNumber) throws DaoException{
+    public BigDecimal findMoneyByCardNumber(String cardNumber) throws DaoException {
         ProxyConnection connection = null;
         PreparedStatement preparedStatement = null;
         BigDecimal money = BigDecimal.ZERO;
@@ -442,7 +441,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findUserByIdAndCardNumber(int userId, String cardNumber)
-            throws DaoException{
+            throws DaoException {
         ProxyConnection connection = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement = null;
