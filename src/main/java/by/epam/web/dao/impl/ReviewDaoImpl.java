@@ -24,6 +24,7 @@ public class ReviewDaoImpl implements ReviewDao {
     private static final String DB_REVIEW_CREATION_DATE_FIELD = "creation_date";
     private static final String DB_REVIEW_MARK_FIELD = "mark";
     private static final String DB_REVIEW_MESSAGE_FIELD = "message";
+    private static final String DB_USER_LOGIN_FIELD = "login";
     private static final String INSERT_REVIEW = "INSERT INTO review " +
             "(user_id, service_id, mark, message) " +
             "VALUES (?, ?, ?, ?)";
@@ -31,12 +32,14 @@ public class ReviewDaoImpl implements ReviewDao {
             "SET mark = ?, message = ?, creation_date = creation_date " +
             "WHERE review_id = ? AND review.review_deleted = 0";
     private static final String FIND_REVIEW_BY_ID = "SELECT review.review_id, " +
-            "review.user_id, review.service_id, review.creation_date, review.mark, review.message " +
+            "review.user_id, review.service_id, review.creation_date, review.mark, review.message, login " +
             "FROM review " +
+            "JOIN user ON review.user_id = user.user_id " +
             "WHERE review.review_id = ? AND review.review_deleted = 0";
     private static final String FIND_REVIEW_BY_ACTIVITY_ID = "SELECT review.review_id, " +
-            "review.user_id, review.service_id, review.creation_date, review.mark, review.message " +
+            "review.user_id, review.service_id, review.creation_date, review.mark, review.message, login " +
             "FROM review " +
+            "JOIN user ON review.user_id = user.user_id " +
             "WHERE review.service_id = ? AND review.review_deleted = 0  " +
             "ORDER BY review.creation_date ASC";
     private static final String DELETE_REVIEW_BY_ID = "UPDATE review  " +
@@ -113,6 +116,7 @@ public class ReviewDaoImpl implements ReviewDao {
                         .setCreationDate(resultSet.getTimestamp(DB_REVIEW_CREATION_DATE_FIELD))
                         .setMark(resultSet.getInt(DB_REVIEW_MARK_FIELD))
                         .setMessage(resultSet.getString(DB_REVIEW_MESSAGE_FIELD).trim())
+                        .setUserLogin(resultSet.getString(DB_USER_LOGIN_FIELD))
                         .create());
             }
         } catch (SQLException e) {
@@ -148,6 +152,7 @@ public class ReviewDaoImpl implements ReviewDao {
                         .setCreationDate(resultSet.getTimestamp(DB_REVIEW_CREATION_DATE_FIELD))
                         .setMark(resultSet.getInt(DB_REVIEW_MARK_FIELD))
                         .setMessage(resultSet.getString(DB_REVIEW_MESSAGE_FIELD).trim())
+                        .setUserLogin(resultSet.getString(DB_USER_LOGIN_FIELD))
                         .create());
             }
         } catch (SQLException e) {

@@ -33,7 +33,7 @@ public class ViewOrdersCommand implements Command {
         PageRouter router = new PageRouter();
         try {
             String pageNumberParameter = requestContent.getParameter(RequestParameter.PAGE_NUMBER);
-            if (NumberValidator.getInstance().validatePageParameter(pageNumberParameter)) {
+            if (NumberValidator.getInstance().validateNumber(pageNumberParameter)) {
                 int pageNumber = Integer.parseInt(requestContent.getParameter
                         (RequestParameter.PAGE_NUMBER));
                 int numberOfRecords = service.countOrders();

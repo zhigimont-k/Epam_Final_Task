@@ -6,7 +6,6 @@ import by.epam.web.constant.PageAddress;
 import by.epam.web.constant.RequestParameter;
 import by.epam.web.entity.Activity;
 import by.epam.web.entity.Review;
-import by.epam.web.entity.User;
 import by.epam.web.service.*;
 import by.epam.web.controller.SessionRequestContent;
 import by.epam.web.validation.NumberValidator;
@@ -35,19 +34,10 @@ public class ViewActivityCommand implements Command {
         PageRouter router = new PageRouter();
         try {
             String activityId = requestContent.getParameter(RequestParameter.ACTIVITY_ID);
-            if (NumberValidator.getInstance().validatePageParameter(activityId)) {
+            if (NumberValidator.getInstance().validateNumber(activityId)) {
                 Optional<Activity> found = service.findActivityById(Integer.parseInt(activityId));
                 ReviewService reviewService = ServiceFactory.getInstance().getReviewService();
                 List<Review> reviewList = reviewService.findReviewByActivityId(Integer.parseInt(activityId));
-                UserService userService = ServiceFactory.getInstance().getUserService();
-                for (Review review : reviewList) {
-                    Optional<User> foundUser = userService.findUserById(review.getUserId());
-                    if (foundUser.isPresent()) {
-                        review.setUserLogin(foundUser.get().getLogin());
-                    } else {
-                        logger.log(Level.ERROR, "Couldn't find review author");
-                    }
-                }
                 if (found.isPresent()) {
                     requestContent.setAttribute(RequestParameter.ACTIVITY, found.get());
                     requestContent.setAttribute(RequestParameter.REVIEW_LIST, reviewList);

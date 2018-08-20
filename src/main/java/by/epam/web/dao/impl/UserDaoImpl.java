@@ -113,7 +113,6 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setInt(2, user.getId());
             preparedStatement.executeUpdate();
             connection.commit();
-            connection.setAutoCommit(true);
         } catch (SQLException e) {
             try {
                 if (connection != null) {
@@ -121,7 +120,7 @@ public class UserDaoImpl implements UserDao {
                     logger.log(Level.INFO, "Encountered an error, made a rollback");
                 }
             } catch (SQLException ex) {
-                logger.log(Level.ERROR, "Couldn't rollback connection: " + e.getMessage(), e);
+                logger.log(Level.ERROR, "Couldn't rollback connection: " + ex.getMessage(), ex);
             }
             throw new DaoException("Failed to register user" + e.getMessage(), e);
         } finally {

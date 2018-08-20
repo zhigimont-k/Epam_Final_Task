@@ -36,7 +36,7 @@ public class ViewUserOrdersCommand implements Command {
         try {
             User user = (User) requestContent.getSessionAttribute(RequestParameter.USER);
             String pageNumberParameter = requestContent.getParameter(RequestParameter.PAGE_NUMBER);
-            if (NumberValidator.getInstance().validatePageParameter(pageNumberParameter)) {
+            if (NumberValidator.getInstance().validateNumber(pageNumberParameter)) {
                 int pageNumber = Integer.parseInt(requestContent.getParameter
                         (RequestParameter.PAGE_NUMBER));
                 int numberOfRecords = service.countUserOrders(user.getId());

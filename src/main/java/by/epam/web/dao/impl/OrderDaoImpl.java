@@ -140,7 +140,6 @@ public class OrderDaoImpl implements OrderDao {
             preparedStatement.setInt(2, order.getId());
             preparedStatement.executeUpdate();
             connection.commit();
-            connection.setAutoCommit(true);
         } catch (SQLException e) {
             try {
                 if (connection != null) {
@@ -148,7 +147,7 @@ public class OrderDaoImpl implements OrderDao {
                     logger.log(Level.INFO, "Encountered an error, made a rollback");
                 }
             } catch (SQLException ex) {
-                logger.log(Level.ERROR, "Couldn't rollback connection: " + e.getMessage(), e);
+                logger.log(Level.ERROR, "Couldn't rollback connection: " + ex.getMessage(), ex);
             }
             throw new DaoException("Failed to add order" + e.getMessage(), e);
         } finally {
@@ -179,7 +178,6 @@ public class OrderDaoImpl implements OrderDao {
             preparedStatement.setInt(2, id);
             preparedStatement.executeUpdate();
             connection.commit();
-            connection.setAutoCommit(true);
         } catch (SQLException e) {
             try {
                 if (connection != null) {
@@ -187,7 +185,7 @@ public class OrderDaoImpl implements OrderDao {
                     logger.log(Level.INFO, "Encountered an error, made a rollback");
                 }
             } catch (SQLException ex) {
-                logger.log(Level.ERROR, "Couldn't rollback connection: " + e.getMessage(), e);
+                logger.log(Level.ERROR, "Couldn't rollback connection: " + ex.getMessage(), ex);
             }
             throw new DaoException("Failed to change order status" + e.getMessage(), e);
         } finally {
@@ -215,7 +213,6 @@ public class OrderDaoImpl implements OrderDao {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
             connection.commit();
-            connection.setAutoCommit(true);
         } catch (SQLException e) {
             try {
                 if (connection != null) {
@@ -223,7 +220,7 @@ public class OrderDaoImpl implements OrderDao {
                     logger.log(Level.INFO, "Encountered an error, made a rollback");
                 }
             } catch (SQLException ex) {
-                logger.log(Level.ERROR, "Couldn't rollback connection: " + e.getMessage(), e);
+                logger.log(Level.ERROR, "Couldn't rollback connection: " + ex.getMessage(), ex);
             }
             throw new DaoException("Failed to change order status" + e.getMessage(), e);
         } finally {
@@ -425,8 +422,6 @@ public class OrderDaoImpl implements OrderDao {
                 logger.log(Level.INFO, "No confirmed orders to remind of");
             }
             connection.commit();
-            connection.setAutoCommit(true);
-
         } catch (SQLException e) {
             try {
                 if (connection != null) {
@@ -434,7 +429,7 @@ public class OrderDaoImpl implements OrderDao {
                     logger.log(Level.INFO, "Encountered an error, made a rollback");
                 }
             } catch (SQLException ex) {
-                logger.log(Level.ERROR, "Couldn't rollback connection: " + e.getMessage(), e);
+                logger.log(Level.ERROR, "Couldn't rollback connection: " + ex.getMessage(), ex);
             }
             throw new DaoException("Failed to find emails for upcoming orders" + e.getMessage(), e);
         } finally {

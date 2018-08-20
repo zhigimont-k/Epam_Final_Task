@@ -32,11 +32,11 @@
 <footer>
     <p class="text-center text-muted text-lowercase">
         <span class="glyphicon glyphicon-envelope"></span> <a href="mailto:${emailLink}">${email}</a>
-        <i class="fab fa-github"></i> <a href="${githubLink}">${github}</a>
+        <i class="fab fa-github"></i> <a href="${githubLink}" target="_blank">${github}</a>
         <br/>
     </p>
     <p class="text-center text-uppercase text-muted">
-        <cbb:copyright projectName="Cat Beauty Bar" year="2018"/>
+        <cbb:copyright projectName="${fullName}" year="${year}"/>
     </p>
 </footer>
 </body>

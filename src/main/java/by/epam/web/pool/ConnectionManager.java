@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,8 +39,10 @@ class ConnectionManager {
     }
 
     private void register() {
-        ResourceBundle bundle = ResourceBundle.getBundle(BASE_NAME);
-        if (bundle == null) {
+        ResourceBundle bundle;
+        try {
+            bundle = ResourceBundle.getBundle(BASE_NAME);
+        } catch (MissingResourceException e) {
             logger.fatal("Couldn't process DB property file");
             throw new RuntimeException("Couldn't process DB property file");
         }

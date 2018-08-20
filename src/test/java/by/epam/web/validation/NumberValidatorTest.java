@@ -36,6 +36,6 @@ public class NumberValidatorTest {
 
     @Test(dataProvider = "page")
     public void validatePage(String page, boolean expected){
-        Assert.assertEquals(validator.validatePageParameter(page), expected);
+        Assert.assertEquals(validator.validateNumber(page), expected);
     }
 }

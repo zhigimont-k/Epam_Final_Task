@@ -5,6 +5,7 @@ import by.epam.web.constant.RequestParameter;
 import by.epam.web.pool.ConnectionPool;
 import by.epam.web.pool.PoolException;
 import by.epam.web.pool.ProxyConnection;
+import by.epam.web.validation.NumberValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -56,40 +57,43 @@ public class ImageServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int userId = Integer.parseInt(request.getParameter(RequestParameter.USER_ID));
-        ProxyConnection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = pool.takeConnection();
-            byte[] imageData = {};
-            String imageFileName = EMPTY;
-            preparedStatement = connection.prepareStatement(FIND_IMAGE_BY_USER_ID);
-            preparedStatement.setInt(1, userId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                imageData = resultSet.getBytes(DB_USER_IMAGE_FIELD);
-                imageFileName = resultSet.getString(DB_USER_IMAGE_NAME_FIELD);
-            }
-            String contentType = this.getServletContext().getMimeType(imageFileName);
-            response.setHeader(CONTENT_TYPE_HEADER, contentType);
-            response.setHeader(CONTENT_LENGTH_HEADER, String.valueOf(imageData.length));
-            response.setHeader(CONTENT_DISPOSITION_HEADER,
-                    CONTENT_DISPOSITION_HEADER_VALUE + imageFileName + BACK_SLASH);
-            response.getOutputStream().write(imageData);
-
-        } catch (PoolException e) {
-            logger.fatal(e.getMessage(), e);
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, e.getMessage(), e);
-        } finally {
-            closeStatement(preparedStatement);
+        String userId = request.getParameter(RequestParameter.USER_ID);
+        if (NumberValidator.getInstance().validateNumber(userId)){
+            ProxyConnection connection = null;
+            PreparedStatement preparedStatement = null;
             try {
-                pool.releaseConnection(connection);
+                connection = pool.takeConnection();
+                byte[] imageData = {};
+                String imageFileName = EMPTY;
+                preparedStatement = connection.prepareStatement(FIND_IMAGE_BY_USER_ID);
+                preparedStatement.setInt(1, Integer.parseInt(userId));
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    imageData = resultSet.getBytes(DB_USER_IMAGE_FIELD);
+                    imageFileName = resultSet.getString(DB_USER_IMAGE_NAME_FIELD);
+                }
+                String contentType = this.getServletContext().getMimeType(imageFileName);
+                response.setHeader(CONTENT_TYPE_HEADER, contentType);
+                response.setHeader(CONTENT_LENGTH_HEADER, String.valueOf(imageData.length));
+                response.setHeader(CONTENT_DISPOSITION_HEADER,
+                        CONTENT_DISPOSITION_HEADER_VALUE + imageFileName + BACK_SLASH);
+                response.getOutputStream().write(imageData);
             } catch (PoolException e) {
-                logger.fatal("Can't release connection: " + e.getMessage(), e);
+                logger.fatal(e.getMessage(), e);
                 throw new RuntimeException(e);
+            } catch (SQLException e) {
+                logger.log(Level.ERROR, e.getMessage(), e);
+            } finally {
+                closeStatement(preparedStatement);
+                try {
+                    pool.releaseConnection(connection);
+                } catch (PoolException e) {
+                    logger.fatal("Can't release connection: " + e.getMessage(), e);
+                    throw new RuntimeException(e);
+                }
             }
+        } else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 

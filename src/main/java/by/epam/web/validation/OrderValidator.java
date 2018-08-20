@@ -2,6 +2,8 @@ package by.epam.web.validation;
 
 import by.epam.web.entity.Order;
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -9,14 +11,12 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class OrderValidator {
+    private static Logger logger = LogManager.getLogger();
     private static OrderValidator instance = new OrderValidator();
     private static final String DATE_FORMAT_REGEX = "\\d{4}-\\d{2}-\\d{2}";
     private static final String DATE_FORMAT = "yyyy-MM-dd";
@@ -32,10 +32,16 @@ public class OrderValidator {
     private static String workingHoursEnd;
 
     private OrderValidator() {
-        bundle = ResourceBundle.getBundle(BUNDLE_NAME);
-        workingHoursStart = bundle.getString(WORKING_HOURS_BEGIN_KEY);
-        workingHoursEnd = bundle.getString(WORKING_HOURS_END_KEY);
-        if (validateWorkingHours(workingHoursStart) && validateWorkingHours(workingHoursEnd)){
+        try {
+            bundle = ResourceBundle.getBundle(BUNDLE_NAME);
+            workingHoursStart = bundle.getString(WORKING_HOURS_BEGIN_KEY);
+            workingHoursEnd = bundle.getString(WORKING_HOURS_END_KEY);
+        } catch (MissingResourceException e) {
+            logger.error("Couldn't find property file with working hours, setting to default", e);
+            minTime = DEFAULT_TIME;
+            maxTime = DEFAULT_TIME;
+        }
+        if (validateWorkingHours(workingHoursStart) && validateWorkingHours(workingHoursEnd)) {
             minTime = LocalTime.parse(workingHoursStart).minusSeconds(1);
             maxTime = LocalTime.parse(workingHoursEnd).plusSeconds(1);
         } else {
@@ -94,7 +100,7 @@ public class OrderValidator {
         return result;
     }
 
-    public boolean validateOrderTimeAfterNow(Timestamp timestamp){
+    public boolean validateOrderTimeAfterNow(Timestamp timestamp) {
         LocalDateTime orderTime = timestamp.toLocalDateTime();
         LocalDateTime now = LocalDateTime.now();
         return orderTime.isAfter(now);
@@ -104,12 +110,12 @@ public class OrderValidator {
         try {
             LocalTime.parse(time);
             return true;
-        } catch (DateTimeParseException | NullPointerException e) {
+        } catch (DateTimeParseException e) {
             return false;
         }
     }
 
-    public boolean validateStatus(String status){
+    public boolean validateStatus(String status) {
         return Arrays.stream(Order.Status.values())
                 .anyMatch(orderStatus -> orderStatus.getName().equalsIgnoreCase(status));
     }
