@@ -57,10 +57,9 @@ public class CommandAccessCheckFilter implements Filter {
             if (accessGranted(commandAccessLevel, user)) {
                 filterChain.doFilter(servletRequest, servletResponse);
             } else {
-                logger.log(Level.ERROR, "Tried to call command " + command + " without access");
-                logger.log(Level.INFO, "User: " + user.getLogin() + ", command right: " + commandAccessLevel);
                 HttpServletResponse response = (HttpServletResponse) servletResponse;
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                logger.log(Level.ERROR, "Tried to call command " + command + " without access");
             }
         } else {
             logger.log(Level.ERROR, "No such command: " + command);

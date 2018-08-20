@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suite userName="final" verbose="2">
-    <test userName="Test">
+<suite name="final" verbose="2">
+    <test name="Test">
         <classes>
-            <class userName="by.epam.web.pool.ConnectionPoolTest"/>
-            <class userName="by.epam.web.validation.ActivityValidatorTest"/>
-            <class userName="by.epam.web.validation.OrderValidatorTest"/>
-            <class userName="by.epam.web.validation.ReviewValidatorTest"/>
-            <class userName="by.epam.web.validation.UserValidatorTest"/>
+            <class name="by.epam.web.pool.ConnectionPoolTest"/>
+            <class name="by.epam.web.validation.ActivityValidatorTest"/>
+            <class name="by.epam.web.validation.OrderValidatorTest"/>
+            <class name="by.epam.web.validation.ReviewValidatorTest"/>
+            <class name="by.epam.web.validation.UserValidatorTest"/>
+            <class name="by.epam.web.validation.NumberValidatorTest"/>
         </classes>
     </test>
 </suite>

@@ -77,7 +77,7 @@
                                name="activityPrice"
                                maxlength="10"
                                minlength="1"
-                               pattern="[1-9]\d{1,5}\.?\d{0,2}"
+                               pattern="[1-9]\d{0,5}\.?\d{0,2}"
                                title="<fmt:message bundle="${locale}" key="locale.requirement.price"/>"
                                placeholder="<fmt:message bundle="${locale}" key="locale.placeholder.price"/>"
                                required/> ${byn}
